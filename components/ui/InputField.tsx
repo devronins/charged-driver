@@ -40,13 +40,13 @@ const InputField = ({
           {icon && <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />}
           <TextInput
             className={`rounded-md font-normal text-lg text-text-300 bg-input-300 flex-1 ${inputStyle} text-left`}
-            secureTextEntry={secure}
+            secureTextEntry={type === "password" && secure} //allow only for type password
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             {...props}
             placeholderTextColor="#333333"
           />
-          {type == "password" && (
+          {type === "password" && (
             <Pressable onPress={() => setSecure(!secure)}>
               {secure ? (
                 <icons.EyeOff size={20} color="gray" />
