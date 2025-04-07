@@ -86,6 +86,7 @@ const Register = () => {
             name="password"
             render={({ field: { onChange, value } }) => (
               <InputField
+                type="password"
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
@@ -100,6 +101,7 @@ const Register = () => {
             name="confirmPassword"
             render={({ field: { onChange, value } }) => (
               <InputField
+                type="password"
                 placeholder="Confirm password"
                 value={value}
                 onChangeText={onChange}

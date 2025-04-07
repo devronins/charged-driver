@@ -79,6 +79,7 @@ const Login = () => {
             name="password"
             render={({ field: { onChange, value } }) => (
               <InputField
+                type="password"
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}

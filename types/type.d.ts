@@ -10,6 +10,7 @@ declare interface ButtonProps extends TouchableOpacityProps {
 }
 
 declare interface InputFieldProps extends TextInputProps {
+  type?: "password" | "text";
   label?: string;
   icon?: any;
   secureTextEntry?: boolean;
