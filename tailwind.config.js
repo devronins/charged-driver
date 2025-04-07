@@ -22,7 +22,7 @@ module.exports = {
         secondary: {
           100: "#FAFBFC", //background
           200: "#F5F7FA",
-          300: "#E5E9F0",
+          300: "#F5F7FA",
         },
         input: {
           100: "#FCFCFC", // input background
@@ -32,13 +32,16 @@ module.exports = {
         border: {
           100: "#EDEDED", // input border
           200: "#DDDDDD",
-          300: "#CCCCCC",
+          300: "#5A5660",
         },
         text: {
           100: "#999999", // input text or normal text
           200: "#666666",
-          300: "#333333",
+          300: "#5A5660",
         },
+      },
+      boxShadow: {
+        "custom-card": "0px 6px 12px rgba(0, 0, 0, 0.35)",
       },
     },
   },

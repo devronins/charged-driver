@@ -41,7 +41,7 @@ const Login = () => {
     <ScrollView className="flex-1 bg-secondary-300">
       <View className="min-h-screen w-full flex flex-col items-center justify-center px-7">
         <View className="w-full flex flex-col items-center justify-center gap-6">
-          <View className="flex items-center justify-center h-[205px] w-[205px] rounded-full bg-white">
+          <View className="flex items-center justify-center h-[205px] w-[205px] rounded-full bg-white shadow-custom-card">
             <Image
               source={images.driverCharged}
               className="h-[200px] w-[200px]"

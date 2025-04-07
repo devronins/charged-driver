@@ -6,19 +6,25 @@ import { Link } from "expo-router";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 
 export interface RegisterFormDataType {
+  fullName: string;
   email: string;
+  phoneNumber: string;
   password: string;
   confirmPassword: string;
 }
 
 const registerFormData: RegisterFormDataType = {
+  fullName: "",
   email: "",
+  phoneNumber: "",
   password: "",
   confirmPassword: "",
 };
 
 const schema = yup.object().shape({
+  fullName: yup.string().required(),
   email: yup.string().email("Invalid email address").required("Email is required"),
+  phoneNumber: yup.string().required(),
   password: yup.string().min(6, "Password length should be min 6").required("Password is required"),
   confirmPassword: yup
     .string()
@@ -33,7 +39,9 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormDataType>({
     defaultValues: {
+      fullName: registerFormData?.email || "",
       email: registerFormData?.email || "",
+      phoneNumber: registerFormData?.phoneNumber || "",
       password: registerFormData?.password || "",
       confirmPassword: registerFormData?.confirmPassword || "",
     },
@@ -48,7 +56,7 @@ const Register = () => {
     <ScrollView className="flex-1 bg-secondary-300">
       <View className="min-h-screen w-full flex flex-col items-center justify-center px-7">
         <View className="w-full flex flex-col items-center justify-center gap-6">
-          <View className="flex items-center justify-center h-[205px] w-[205px] rounded-full bg-white">
+          <View className="flex items-center justify-center h-[205px] w-[205px] rounded-full bg-white shadow-custom-card">
             <Image
               source={images.driverCharged}
               className="h-[200px] w-[200px]"
@@ -69,11 +77,38 @@ const Register = () => {
         <View className="w-full flex flex-col justify-center gap-5 mt-12">
           <Controller
             control={control}
+            name="fullName"
+            render={({ field: { onChange, value } }) => (
+              <InputField
+                placeholder="Full Name"
+                value={value}
+                onChangeText={onChange}
+                editable={true}
+                error={errors.email?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
             name="email"
             render={({ field: { onChange, value } }) => (
               <InputField
                 keyboardType="email-address"
                 placeholder="Email"
+                value={value}
+                onChangeText={onChange}
+                editable={true}
+                error={errors.email?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="phoneNumber"
+            render={({ field: { onChange, value } }) => (
+              <InputField
+                keyboardType="numeric"
+                placeholder="Phone Number"
                 value={value}
                 onChangeText={onChange}
                 editable={true}
