@@ -1,11 +1,11 @@
-interface dataModel  {
-    statusCode?: number;
-    message?: string;
-    data?: any
+interface dataModel {
+  statusCode?: number;
+  message?: string;
+  data?: any;
 }
 
 export interface ErrorResponse {
-    status?: number;
-    message?: string;
-    data?: dataModel;
-  }
+  status?: number;
+  message?: string;
+  data?: dataModel;
+}

@@ -1,71 +1,68 @@
-
 export const RoutesName = {
-    Login: '/',
-    
-    Dashboard: '/dashboard',
+  Login: "/",
 
-    Homes: '/homes',
-    HomeAdd: '/homes/add',
-    HomeEdit: '/homes/edit',
+  Dashboard: "/dashboard",
 
-    Pages: '/pages',
-    PageAdd: '/pages/add',
-    PageEdit: '/pages/edit',
+  Homes: "/homes",
+  HomeAdd: "/homes/add",
+  HomeEdit: "/homes/edit",
 
-    Services: '/services',
-    ServiceAdd: '/services/add',
-    ServiceEdit: '/services/edit',
+  Pages: "/pages",
+  PageAdd: "/pages/add",
+  PageEdit: "/pages/edit",
 
-    Properties: '/properties',
-    PropertyAdd: '/properties/add',
-    PropertyEdit: '/properties/edit',
+  Services: "/services",
+  ServiceAdd: "/services/add",
+  ServiceEdit: "/services/edit",
 
-    Users: '/users',
-    UserAdd: '/users/add',
-    UserEdit: '/users/edit',
+  Properties: "/properties",
+  PropertyAdd: "/properties/add",
+  PropertyEdit: "/properties/edit",
 
-    Categories: '/categories',
-    CategoryAdd: '/categories/add',
-    CategoryEdit: '/categories/edit',
+  Users: "/users",
+  UserAdd: "/users/add",
+  UserEdit: "/users/edit",
 
-    Events: '/events',
-    EventAdd: '/events/add',
-    EventEdit: '/events/edit',
+  Categories: "/categories",
+  CategoryAdd: "/categories/add",
+  CategoryEdit: "/categories/edit",
 
-    Tags: '/tags',
-    TagAdd: '/tags/add',
-    TagEdit: '/tags/edit',
+  Events: "/events",
+  EventAdd: "/events/add",
+  EventEdit: "/events/edit",
 
-    Rooms: '/rooms',
-    RoomAdd: '/rooms/add',
-    RoomEdit: '/rooms/edit',
+  Tags: "/tags",
+  TagAdd: "/tags/add",
+  TagEdit: "/tags/edit",
 
-    Abouts: '/abouts',
-    AboutAdd: '/abouts/add',
-    AboutEdit: '/abouts/edit',
+  Rooms: "/rooms",
+  RoomAdd: "/rooms/add",
+  RoomEdit: "/rooms/edit",
 
-    Experiences: '/experiences',
-    ExperienceAdd: '/experiences/add',
-    ExperienceEdit: '/experiences/edit',
+  Abouts: "/abouts",
+  AboutAdd: "/abouts/add",
+  AboutEdit: "/abouts/edit",
 
-
-}
+  Experiences: "/experiences",
+  ExperienceAdd: "/experiences/add",
+  ExperienceEdit: "/experiences/edit",
+};
 
 export const AvailableRoutes = Object.values(RoutesName);
 
 //--------------------funtion to convert valid route name
 
-export const ConvertIntoValidRoute = (path: string)=>{
-    return path?.toLocaleLowerCase()?.split(" ")?.join("-")
-}
+export const ConvertIntoValidRoute = (path: string) => {
+  return path?.toLocaleLowerCase()?.split(" ")?.join("-");
+};
 
 //firebase collection names
 
 export const firebaseCollectionName = {
-    ClientReviews: 'client_reviews',
-    Devronins: 'devronins',
-    Services: 'services',
-    TeamMembers: 'team_members',
-    Technologies: 'technologies',
-    Projects: 'projects'
-}
+  ClientReviews: "client_reviews",
+  Devronins: "devronins",
+  Services: "services",
+  TeamMembers: "team_members",
+  Technologies: "technologies",
+  Projects: "projects",
+};

@@ -8,11 +8,15 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/srore";
 import { ToastComponent } from "@/components/toast";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    "normal-font": require("../assets/fonts/SpaceMono-Regular.ttf")
-  })
+    normal: require("../assets/fonts/Roboto-Regular.ttf"),
+    medium: require("../assets/fonts/Roboto-Medium.ttf"),
+    bold: require("../assets/fonts/Roboto-Bold.ttf"),
+    italic: require("../assets/fonts/Roboto-Italic.ttf"),
+  });
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
@@ -24,9 +28,14 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Stack />
-        <ToastComponent/>
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <Stack />
+        </KeyboardAvoidingView>
+        <ToastComponent />
       </PersistGate>
     </Provider>
-  )
+  );
 }

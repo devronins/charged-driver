@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "template",
-    "slug": "template",
+    "name": "CHARGED",
+    "slug": "CHARGED",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -34,9 +34,13 @@
         }
       ],
       [
-        "expo-font", {
+        "expo-font",
+        {
           "fonts": [
-            "./assets/fonsts/SpaceMono-Regular.ttf"
+            "./assets/fonsts/Roboto-Regular.ttf",
+            "./assets/fonsts/Roboto-Medium.ttf",
+            "./assets/fonsts/Roboto-Bold.ttf",
+            "./assets/fonsts/Roboto-Italic.ttf"
           ]
         }
       ]
