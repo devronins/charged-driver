@@ -5,35 +5,42 @@ import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
 import { Link } from "expo-router";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 
-export interface LoginFormDataType {
+export interface RegisterFormDataType {
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-const loginFormData: LoginFormDataType = {
+const registerFormData: RegisterFormDataType = {
   email: "",
   password: "",
+  confirmPassword: "",
 };
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email address").required("Email is required"),
   password: yup.string().min(6, "Password length should be min 6").required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .min(6, "Password length should be min 6")
+    .required("Confirm password is required"),
 });
 
-const Login = () => {
+const Register = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormDataType>({
+  } = useForm<RegisterFormDataType>({
     defaultValues: {
-      email: loginFormData?.email || "",
-      password: loginFormData?.password || "",
+      email: registerFormData?.email || "",
+      password: registerFormData?.password || "",
+      confirmPassword: registerFormData?.confirmPassword || "",
     },
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: LoginFormDataType) => {
+  const onSubmit = (data: RegisterFormDataType) => {
     console.log("433>>>>>>", data);
   };
 
@@ -54,7 +61,7 @@ const Login = () => {
               <Text className="text-3xl font-bold">Charged Driver</Text>
             </View>
             <View className="flex">
-              <Text className="text-lg text-text-300">Login to your account</Text>
+              <Text className="text-lg text-text-300">Register to your account</Text>
             </View>
           </View>
         </View>
@@ -88,19 +95,33 @@ const Login = () => {
             )}
           />
 
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, value } }) => (
+              <InputField
+                placeholder="Confirm password"
+                value={value}
+                onChangeText={onChange}
+                editable={true}
+                error={errors.confirmPassword?.message}
+              />
+            )}
+          />
+
           <CustomButton
-            title="Login"
+            title="Register"
             className={`${Platform.OS === "ios" ? "py-4" : "py-3"}`}
             onPress={handleSubmit(onSubmit)}
           />
 
           <View className="w-full flex flex-row items-center justify-center gap-1">
             <View className="block">
-              <Text className=" text-text-300">Don't have an account?</Text>
+              <Text className=" text-text-300">Already have an account?</Text>
             </View>
             <View className="block">
-              <Link href="/register" className="text-primary-300">
-                Register
+              <Link href="/login" className="text-primary-300">
+                Login
               </Link>
             </View>
           </View>
@@ -110,4 +131,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
