@@ -1,3 +1,4 @@
+import PermissionModal from "@/components/permission/permission";
 import Icons from "@/constants/icons";
 import { Tabs } from "expo-router";
 import { LucideProps } from "lucide-react-native";
@@ -34,57 +35,60 @@ const tabScreenHeaderStyles = {
 
 export default function Layout() {
   return (
-    <Tabs
-      initialRouteName="home"
-      screenOptions={{
-        tabBarShowLabel: false,
-        headerTitleAlign: "center",
-        tabBarStyle: {
-          backgroundColor: "white",
-          overflow: "hidden",
-          height: Platform.OS === "ios" ? 100 : 80,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "start",
-          flexDirection: "row",
-          paddingTop: 20,
-          borderTopWidth: 0,
-          elevation: 0,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon Icon={Icons.HomeIcon} title="Home" focused={focused} />
-          ),
+    <>
+      <Tabs
+        initialRouteName="home"
+        screenOptions={{
+          tabBarShowLabel: false,
+          headerTitleAlign: "center",
+          tabBarStyle: {
+            backgroundColor: "white",
+            overflow: "hidden",
+            height: Platform.OS === "ios" ? 100 : 80,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "start",
+            flexDirection: "row",
+            paddingTop: 20,
+            borderTopWidth: 0,
+            elevation: 0,
+          },
         }}
-      />
-      <Tabs.Screen
-        name="earning"
-        options={{
-          title: "Earnings",
-          headerTitleStyle: tabScreenHeaderStyles.headerTitleStyle,
-          headerStyle: tabScreenHeaderStyles.headerStyle,
-          tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon Icon={Icons.Wallet} title="Earnings" focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          headerTitleStyle: tabScreenHeaderStyles.headerTitleStyle,
-          headerStyle: tabScreenHeaderStyles.headerStyle,
-          tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon Icon={Icons.UserRound} title="Profile" focused={focused} />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: "Home",
+            headerShown: false,
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
+              <TabIcon Icon={Icons.HomeIcon} title="Home" focused={focused} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="earning"
+          options={{
+            title: "Earnings",
+            headerTitleStyle: tabScreenHeaderStyles.headerTitleStyle,
+            headerStyle: tabScreenHeaderStyles.headerStyle,
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
+              <TabIcon Icon={Icons.Wallet} title="Earnings" focused={focused} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            headerTitleStyle: tabScreenHeaderStyles.headerTitleStyle,
+            headerStyle: tabScreenHeaderStyles.headerStyle,
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
+              <TabIcon Icon={Icons.UserRound} title="Profile" focused={focused} />
+            ),
+          }}
+        />
+      </Tabs>
+      <PermissionModal />
+    </>
   );
 }

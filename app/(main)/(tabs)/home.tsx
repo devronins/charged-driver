@@ -2,8 +2,6 @@ import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Icons from "@/constants/icons";
 import { useAppDispatch, useTypedSelector } from "@/srore";
-import { useEffect } from "react";
-import { requestFullLocationAccess } from "@/services/permission";
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -13,12 +11,7 @@ const coordinatesObj = {
 };
 
 const Home = () => {
-  const dispatch = useAppDispatch();
   const { location } = useTypedSelector(state => state.Permission);
-
-  useEffect(() => {
-    dispatch(requestFullLocationAccess());
-  }, []);
 
   console.log("23>>>>>>>", location);
 
