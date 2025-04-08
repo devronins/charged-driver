@@ -54,7 +54,7 @@ const Register = () => {
 
   return (
     <ScrollView className="flex-1 bg-secondary-300">
-      <View className="min-h-screen w-full flex flex-col items-center justify-center px-7">
+      <View className="min-h-screen w-full flex flex-col items-center justify-center px-7 pb-12">
         <View className="w-full flex flex-col items-center justify-center gap-6">
           <View className="flex items-center justify-center h-[205px] w-[205px] rounded-full bg-white shadow-custom-card">
             <Image
@@ -84,7 +84,7 @@ const Register = () => {
                 value={value}
                 onChangeText={onChange}
                 editable={true}
-                error={errors.email?.message}
+                error={errors.fullName?.message}
               />
             )}
           />
@@ -112,7 +112,7 @@ const Register = () => {
                 value={value}
                 onChangeText={onChange}
                 editable={true}
-                error={errors.email?.message}
+                error={errors.phoneNumber?.message}
               />
             )}
           />
@@ -152,12 +152,12 @@ const Register = () => {
             onPress={handleSubmit(onSubmit)}
           />
 
-          <View className="w-full flex flex-row items-center justify-center gap-1">
+          <View className="w-full flex flex-row items-center justify-center">
             <View className="block">
               <Text className=" text-text-300">Already have an account?</Text>
             </View>
             <View className="block">
-              <Link href="/login" className="text-primary-300">
+              <Link href="/login" className="text-primary-300 px-1">
                 Login
               </Link>
             </View>
