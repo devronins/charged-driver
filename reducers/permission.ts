@@ -1,10 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { requestFullLocationAccess } from "@/services/permission";
+import { requestBackgroundLocationAccess } from "@/services/permission";
+
+export enum PermissionTypeEnum {
+  GRANTED = "granted",
+  UNDETERMINED = "undetermined",
+  DENIED = "denied",
+}
 
 interface PermissionInitialStateType {
   location: {
-    grantedForeground: boolean;
-    grantedBackground: boolean;
+    grantedForeground: PermissionTypeEnum;
+    grantedBackground: PermissionTypeEnum;
+    error: boolean;
+    loading: boolean;
+  };
+  memory: {
+    camera: PermissionTypeEnum;
     error: boolean;
     loading: boolean;
   };
@@ -12,8 +23,13 @@ interface PermissionInitialStateType {
 
 const initialState: PermissionInitialStateType = {
   location: {
-    grantedForeground: false,
-    grantedBackground: false,
+    grantedForeground: PermissionTypeEnum.UNDETERMINED,
+    grantedBackground: PermissionTypeEnum.UNDETERMINED,
+    error: false,
+    loading: false,
+  },
+  memory: {
+    camera: PermissionTypeEnum.UNDETERMINED,
     error: false,
     loading: false,
   },
@@ -26,13 +42,25 @@ const PermissionSlice = createSlice({
   extraReducers: builder => {
     builder.addCase("RESET_STATE", () => initialState);
 
-    builder.addCase(requestFullLocationAccess.pending, (state, action) => {
+    // builder.addCase(requestForegroundLocationAccess.pending, (state, action) => {
+    //   state.location.loading = true;
+    // });
+    // builder.addCase(requestForegroundLocationAccess.fulfilled, (state, action) => {
+    //   //@ts-ignore
+    //   state.location.grantedForeground = action.payload.grantedForeground;
+    // });
+    // builder.addCase(requestForegroundLocationAccess.rejected, (state, action) => {
+    //   state.location.error = true;
+    // });
+
+    builder.addCase(requestBackgroundLocationAccess.pending, (state, action) => {
       state.location.loading = true;
     });
-    builder.addCase(requestFullLocationAccess.fulfilled, (state, action) => {
-      state.location = action.payload;
+    builder.addCase(requestBackgroundLocationAccess.fulfilled, (state, action) => {
+      //@ts-ignore
+      state.location.grantedBackground = action.payload.grantedBackground;
     });
-    builder.addCase(requestFullLocationAccess.rejected, (state, action) => {
+    builder.addCase(requestBackgroundLocationAccess.rejected, (state, action) => {
       state.location.error = true;
     });
   },

@@ -1,37 +1,41 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as Location from "expo-location";
 
-export const requestFullLocationAccess = createAsyncThunk(
-  "PermissionSlice/requestFullLocationAccess",
+// export const requestForegroundLocationAccess = createAsyncThunk(
+//   "PermissionSlice/requestForegroundLocationAccess",
+//   async (_, thunkAPI) => {
+//     try {
+//       //Foreground Permission
+//       let { status } = await Location.getForegroundPermissionsAsync();
+//       if (status !== "granted") {
+//         const fgRequest = await Location.requestForegroundPermissionsAsync();
+//         status = fgRequest.status;
+//       }
+
+//       thunkAPI.fulfillWithValue({ grantedForeground: status });
+//       thunkAPI.dispatch(requestBackgroundLocationAccess());
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue("Foreground location permission error");
+//     }
+//   }
+// );
+
+export const requestBackgroundLocationAccess = createAsyncThunk(
+  "PermissionSlice/requestBackgroundLocationAccess",
   async (_, thunkAPI) => {
     try {
-      // 1. Foreground Permission
-      let { status: fgStatus } = await Location.getForegroundPermissionsAsync();
-      if (fgStatus !== "granted") {
-        const fgRequest = await Location.requestForegroundPermissionsAsync();
-        fgStatus = fgRequest.status;
-      }
-
-      // 2. Background Permission (only ask if foreground is granted)
-      let bgStatus = "undetermined";
-      if (fgStatus === "granted") {
-        const bgCheck = await Location.getBackgroundPermissionsAsync();
-        bgStatus = bgCheck.status;
-
-        if (bgStatus !== "granted") {
-          const bgRequest = await Location.requestBackgroundPermissionsAsync();
-          bgStatus = bgRequest.status;
-        }
+      //Background Permission
+      let { status } = await Location.getBackgroundPermissionsAsync();
+      if (status !== "granted") {
+        const fgRequest = await Location.requestBackgroundPermissionsAsync();
+        status = fgRequest.status;
       }
 
       return {
-        grantedForeground: fgStatus === "granted",
-        grantedBackground: bgStatus === "granted",
-        error: false,
-        loading: false,
+        grantedBackground: status,
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue("Location permission error");
+      return thunkAPI.rejectWithValue("Background location permission error");
     }
   }
 );
