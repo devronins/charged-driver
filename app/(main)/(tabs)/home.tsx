@@ -1,13 +1,55 @@
-import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
+import Icons from "@/constants/icons";
+import { useAppDispatch, useTypedSelector } from "@/srore";
+import { useEffect } from "react";
+import { requestFullLocationAccess } from "@/services/permission";
+
+const coordinatesObj = {
+  latitude: 37.7749,
+  longitude: -122.4194,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
 
 const Home = () => {
+  const dispatch = useAppDispatch();
+  const { location } = useTypedSelector(state => state.Permission);
+
+  useEffect(() => {
+    dispatch(requestFullLocationAccess());
+  }, []);
+
+  console.log("23>>>>>>>", location);
+
   return (
-    <SafeAreaView className=" bg-secondary-300">
-      <View className="min-h-screen w-full flex flex-col items-center justify-center">
-        <Text className="text-4xl text-black">Home</Text>
-      </View>
-    </SafeAreaView>
+    <View className="flex-1">
+      <MapView
+        style={{ width: "100%", height: "100%" }}
+        className="w-full h-full"
+        initialRegion={coordinatesObj}
+        region={coordinatesObj}
+        showsUserLocation
+        followsUserLocation
+      >
+        <Marker
+          coordinate={{
+            latitude: coordinatesObj.latitude,
+            longitude: coordinatesObj.longitude,
+          }}
+        >
+          <View className="w-[36px] h-[36px] rounded-full flex items-center justify-center border-[2px] border-white bg-primary-300">
+            <Icons.CarFront size={17} color={"#FFFFFF"} />
+          </View>
+        </Marker>
+        {/* TODO: we can pass multiple marker to this */}
+      </MapView>
+
+      {/*Center map on current location */}
+      <TouchableOpacity className="w-12 h-12 flex items-center justify-center bg-primary-300 rounded-full absolute bottom-8 right-5">
+        <Icons.Locate size={20} color={"#FFFFFF"} />
+      </TouchableOpacity>
+    </View>
   );
 };
 

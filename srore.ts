@@ -3,11 +3,12 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserReducer } from "@/reducers";
+import { UserReducer, PermissionReducer } from "@/reducers";
 
 // Combine all reducers
 const rootReducer = combineReducers({
   User: UserReducer,
+  Permission: PermissionReducer,
 });
 
 // Configure redux-persist for React Native
