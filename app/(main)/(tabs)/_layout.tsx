@@ -59,7 +59,7 @@ export default function Layout() {
           title: "Home",
           headerShown: false,
           tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon Icon={Icons.UserRound} title="Home" focused={focused} />
+            <TabIcon Icon={Icons.HomeIcon} title="Home" focused={focused} />
           ),
         }}
       />
