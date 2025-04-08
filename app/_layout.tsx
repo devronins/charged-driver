@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/srore";
 import { ToastComponent } from "@/components/toast";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAvoidingView, Platform, StatusBar } from "react-native";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -32,6 +32,8 @@ export default function RootLayout() {
           className="flex-1"
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
+          {/* For Ios change the status base text color */}
+          <StatusBar barStyle="dark-content" />
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />

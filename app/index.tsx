@@ -5,7 +5,7 @@ export default function Index() {
   const dispatch = useAppDispatch();
   const { isLogin } = useTypedSelector(state => state.User);
 
-  if (!isLogin) return <Redirect href="/(auth)/login" />;
+  if (isLogin) return <Redirect href="/(auth)/login" />;
 
-  return <Redirect href="/(main)/home" />;
+  return <Redirect href="/(main)/(tabs)/home" />;
 }
