@@ -1,33 +1,111 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createUser, deleteUser, fetchUser, fetchUsers, updateUser } from "@/api/axios";
+import { fetchUser, fetchUsers, updateUser } from "@/api/axios";
 import { RoutesName } from "@/constants/routes-name";
 import { Toast } from "@/utils/toast";
+import { firebaseApi } from "@/api/firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const addUser = createAsyncThunk<any, any>("UserSlice/addUser", async (params, thunkApi) => {
-  try {
-    const { data } = await createUser({ ...params?.data });
-    params?.navigate(RoutesName.Users);
+export const registerUser = createAsyncThunk<any, any>(
+  "UserSlice/registerUser",
+  async (params, thunkApi) => {
+    try {
+      const data = await firebaseApi.registerUserWithEmailAndPassword({
+        email: params?.data?.email,
+        password: params?.data?.password,
+      });
 
-    Toast.show({
-      type: "success",
-      text1: "User added successfully",
-    });
-    return thunkApi.fulfillWithValue(data.data);
-  } catch (err) {
-    const error: any = err;
-    Toast.show({
-      type: "Error ",
-      text1: error?.message || "Oop's something went wrong!",
-    });
-    return thunkApi.rejectWithValue(error.response?.status);
+      //set accesstoken to localStorage
+      await AsyncStorage.setItem("accessToken", data.accessToken);
+
+      //call this api neccessary to register the user in our system database
+      await fetchUser();
+
+      // update user details in our system database
+      await updateUser(params?.data);
+
+      Toast.show({
+        type: "success",
+        text1: "User Resgistered successfully",
+      });
+
+      // params?.navigate()// call navigate function
+      return thunkApi.fulfillWithValue({
+        accessToken: data.accessToken,
+        navigate: params?.navigate,
+      }); // save user data;
+    } catch (err) {
+      const error: any = err;
+      Toast.show({
+        type: "error",
+        text1: error?.data?.message || "Oop's something went wrong!",
+      });
+      return thunkApi.rejectWithValue(error.response?.status);
+    }
   }
-});
+);
+
+export const loginUser = createAsyncThunk<any, any>(
+  "UserSlice/loginUser",
+  async (params, thunkApi) => {
+    try {
+      const data = await firebaseApi.loginWithEmailAndPassword({
+        email: params?.data?.email,
+        password: params?.data?.password,
+      });
+
+      //set accesstoken to localStorage
+      await AsyncStorage.setItem("accessToken", data.accessToken);
+
+      //call this api to register this user if somehow this user entry not exist in our system database
+      await fetchUser();
+
+      Toast.show({
+        type: "success",
+        text1: "User Login successfully",
+      });
+      return thunkApi.fulfillWithValue({
+        accessToken: data.accessToken,
+        navigate: params?.navigate,
+      });
+    } catch (err) {
+      const error: any = err;
+      Toast.show({
+        type: "error",
+        text1: error?.data?.message || "Oop's something went wrong!",
+      });
+      return thunkApi.rejectWithValue(error.response?.status);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk<any, any>(
+  "UserSlice/logoutUser",
+  async (params, thunkApi) => {
+    try {
+      const data = await AsyncStorage.clear();
+      params?.navigate();
+
+      Toast.show({
+        type: "success",
+        text1: "User Logout successfully",
+      });
+      return thunkApi.fulfillWithValue({});
+    } catch (err) {
+      const error: any = err;
+      Toast.show({
+        type: "error",
+        text1: error?.message || "Oop's something went wrong!",
+      });
+      return thunkApi.rejectWithValue(error.response?.status);
+    }
+  }
+);
 
 export const editUser = createAsyncThunk<any, any>(
   "UserSlice/editUser",
   async (params, thunkApi) => {
     try {
-      const { data } = await updateUser(params?.data?.id, params?.data);
+      const { data } = await updateUser(params?.data);
       params?.navigate(RoutesName.Users);
 
       Toast.show({
@@ -63,7 +141,7 @@ export const getUsers = createAsyncThunk("UserSlice/getUsers", async (_, thunkAp
 
 export const getUser = createAsyncThunk<any, any>("UserSlice/getUser", async (params, thunkApi) => {
   try {
-    const { data } = await fetchUser(params?.id);
+    const { data } = await fetchUser();
     return thunkApi.fulfillWithValue(data.data);
   } catch (err) {
     const error: any = err;
@@ -74,24 +152,3 @@ export const getUser = createAsyncThunk<any, any>("UserSlice/getUser", async (pa
     return thunkApi.rejectWithValue(error.response?.status);
   }
 });
-
-export const removeUser = createAsyncThunk<any, any>(
-  "UserSlice/removeUser",
-  async (params, thunkApi) => {
-    try {
-      await deleteUser(params?.id);
-      Toast.show({
-        type: "Success",
-        text1: "User remove successfully",
-      });
-      thunkApi.dispatch(getUsers());
-    } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: "Error ",
-        text1: error?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
-    }
-  }
-);
