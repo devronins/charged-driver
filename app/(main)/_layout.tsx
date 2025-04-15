@@ -1,6 +1,11 @@
-import { Stack } from "expo-router";
+import { useTypedSelector } from "@/srore";
+import { Redirect, Stack } from "expo-router";
 
 const Layout = () => {
+  const { isLogin } = useTypedSelector(state => state.User);
+
+  if (!isLogin) return <Redirect href="/(auth)/login" />;
+
   return (
     <Stack
       screenOptions={{

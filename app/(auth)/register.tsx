@@ -4,27 +4,33 @@ import images from "@/constants/images";
 import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
 import { Link } from "expo-router";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useAppDispatch, useTypedSelector } from "@/srore";
+import { registerUser } from "@/services";
 
 export interface RegisterFormDataType {
-  fullName: string;
+  name: string;
   email: string;
-  phoneNumber: string;
+  phone: string;
   password: string;
   confirmPassword: string;
 }
 
 const registerFormData: RegisterFormDataType = {
-  fullName: "",
+  name: "",
   email: "",
-  phoneNumber: "",
+  phone: "",
   password: "",
   confirmPassword: "",
 };
 
 const schema = yup.object().shape({
-  fullName: yup.string().required(),
+  name: yup.string().required(),
   email: yup.string().email("Invalid email address").required("Email is required"),
-  phoneNumber: yup.string().required(),
+  phone: yup
+    .string()
+    .required()
+    .matches(/^[6-9]\d{9}$/, "Phone number must be a valid 10-digit Indian number"),
   password: yup.string().min(6, "Password length should be min 6").required("Password is required"),
   confirmPassword: yup
     .string()
@@ -39,17 +45,26 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormDataType>({
     defaultValues: {
-      fullName: registerFormData?.email || "",
+      name: registerFormData?.email || "",
       email: registerFormData?.email || "",
-      phoneNumber: registerFormData?.phoneNumber || "",
+      phone: registerFormData?.phone || "",
       password: registerFormData?.password || "",
       confirmPassword: registerFormData?.confirmPassword || "",
     },
     resolver: yupResolver(schema),
   });
 
+  const { loading } = useTypedSelector((state)=>state.User);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const onSubmit = (data: RegisterFormDataType) => {
-    console.log("433>>>>>>", data);
+    dispatch(
+      registerUser({
+        data: data,
+        navigate: () => router.navigate("/(main)/(tabs)/home"),
+      })
+    );
   };
 
   return (
@@ -77,14 +92,14 @@ const Register = () => {
         <View className="w-full flex flex-col justify-center gap-5 mt-12">
           <Controller
             control={control}
-            name="fullName"
+            name="name"
             render={({ field: { onChange, value } }) => (
               <InputField
                 placeholder="Full Name"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
-                error={errors.fullName?.message}
+                editable={!loading}
+                error={errors.name?.message}
               />
             )}
           />
@@ -97,22 +112,22 @@ const Register = () => {
                 placeholder="Email"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
+                editable={!loading}
                 error={errors.email?.message}
               />
             )}
           />
           <Controller
             control={control}
-            name="phoneNumber"
+            name="phone"
             render={({ field: { onChange, value } }) => (
               <InputField
                 keyboardType="numeric"
                 placeholder="Phone Number"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
-                error={errors.phoneNumber?.message}
+                editable={!loading}
+                error={errors.phone?.message}
               />
             )}
           />
@@ -125,7 +140,7 @@ const Register = () => {
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
+                editable={!loading}
                 error={errors.password?.message}
               />
             )}
@@ -140,7 +155,7 @@ const Register = () => {
                 placeholder="Confirm password"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
+                editable={!loading}
                 error={errors.confirmPassword?.message}
               />
             )}
@@ -150,6 +165,7 @@ const Register = () => {
             title="Register"
             className={`${Platform.OS === "ios" ? "py-4" : "py-3"}`}
             onPress={handleSubmit(onSubmit)}
+            disabled={loading}
           />
 
           <View className="w-full flex flex-row items-center justify-center">
