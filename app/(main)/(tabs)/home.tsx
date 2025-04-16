@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Icons from "@/constants/icons";
-import { useAppDispatch, useTypedSelector } from "@/srore";
+import { useTypedSelector } from "@/srore";
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -12,8 +12,6 @@ const coordinatesObj = {
 
 const Home = () => {
   const { location } = useTypedSelector(state => state.Permission);
-
-  console.log("23>>>>>>>", location);
 
   return (
     <View className="flex-1">

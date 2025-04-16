@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchUser, fetchUsers, updateUser } from "@/api/axios";
 import { RoutesName } from "@/constants/routes-name";
 import { Toast } from "@/utils/toast";
-import { firebaseApi } from "@/api/firebase";
+import { firebaseApi, formatFirebaseError } from "@/api/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const registerUser = createAsyncThunk<any, any>(
@@ -23,6 +23,8 @@ export const registerUser = createAsyncThunk<any, any>(
       // update user details in our system database
       await updateUser(params?.data);
 
+      const { data: userUpdatedDataRes } = await fetchUser();
+
       Toast.show({
         type: "success",
         text1: "User Resgistered successfully",
@@ -31,6 +33,7 @@ export const registerUser = createAsyncThunk<any, any>(
       // params?.navigate()// call navigate function
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
+        userDetails: userUpdatedDataRes.data,
         navigate: params?.navigate,
       }); // save user data;
     } catch (err) {
@@ -57,7 +60,10 @@ export const loginUser = createAsyncThunk<any, any>(
       await AsyncStorage.setItem("accessToken", data.accessToken);
 
       //call this api to register this user if somehow this user entry not exist in our system database
-      await fetchUser();
+      const { data: userDataRes } = await fetchUser();
+      if (userDataRes.data.user_type != "driver") {
+        throw formatFirebaseError('"auth/invalid-credential"');
+      }
 
       Toast.show({
         type: "success",
@@ -65,6 +71,7 @@ export const loginUser = createAsyncThunk<any, any>(
       });
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
+        userDetails: userDataRes.data,
         navigate: params?.navigate,
       });
     } catch (err) {

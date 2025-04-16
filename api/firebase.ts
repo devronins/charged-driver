@@ -26,7 +26,7 @@ const firebaseErrorMap: Record<string, string> = {
   "auth/invalid-credential": "Invalid Credentials",
 };
 
-const formatFirebaseError = (code: any) => {
+export const formatFirebaseError = (code: any) => {
   const errorMessage = firebaseErrorMap[code] || "An unexpected error occurred.";
 
   return {

@@ -2,17 +2,10 @@ import { UserModal } from "@/utils/modals/user";
 import { registerUser, editUser, getUser, loginUser, logoutUser } from "@/services/user";
 import { createSlice } from "@reduxjs/toolkit";
 
-interface UsersModal {
-  count: number;
-  rows: UserModal[];
-}
-
 interface UserInitialStateType {
   isLogin: boolean;
   accessToken: string | null;
-  users: null | UsersModal;
   loading: boolean;
-  usersLoading: boolean;
   userDetails: null | UserModal;
   userDetailsLoading: boolean;
   error: boolean;
@@ -21,9 +14,7 @@ interface UserInitialStateType {
 const initialState: UserInitialStateType = {
   isLogin: false,
   accessToken: null,
-  users: null,
   loading: false,
-  usersLoading: false,
   userDetails: null,
   userDetailsLoading: false,
   error: false,
@@ -45,6 +36,7 @@ const UserSlice = createSlice({
       state.accessToken = action.payload?.accessToken || null;
       if (state.accessToken) {
         state.isLogin = true;
+        state.userDetails = action.payload.userDetails;
         //call navigate function
         action.payload?.navigate();
       }
@@ -97,6 +89,7 @@ const UserSlice = createSlice({
       state.accessToken = action.payload?.accessToken || null;
       if (state.accessToken) {
         state.isLogin = true;
+        state.userDetails = action.payload.userDetails;
 
         //call navigate function
         action.payload?.navigate();
