@@ -14,6 +14,7 @@ import {
   FileText,
   Clock,
   HelpCircle,
+  ChevronLeft,
 } from "lucide-react-native";
 
 export default {
@@ -31,4 +32,5 @@ export default {
   FileText,
   Clock,
   HelpCircle,
+  ChevronLeft,
 };

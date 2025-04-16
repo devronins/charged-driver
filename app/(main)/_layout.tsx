@@ -1,3 +1,4 @@
+import Icons from "@/constants/icons";
 import { useTypedSelector } from "@/store";
 import { Redirect, Stack } from "expo-router";
 
@@ -13,6 +14,20 @@ const Layout = () => {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="profile/vehicle-infromation"
+        //@ts-ignore
+        options={({ navigation }) => ({
+          headerTitle: "Vehicle Information",
+          headerTitleStyle: {
+            color: "#007FFF",
+            paddingLeft: 0,
+          },
+          headerLeft: () => (
+            <Icons.ChevronLeft onPress={() => navigation.goBack()} size={30} color="#5A5660" />
+          ),
+        })}
+      />
     </Stack>
   );
 };
