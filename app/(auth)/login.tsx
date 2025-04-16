@@ -1,8 +1,11 @@
 import CustomButton from "@/components/ui/CustomButton";
 import InputField from "@/components/ui/InputField";
+import Loader from "@/components/ui/Loader";
 import images from "@/constants/images";
+import { loginUser } from "@/services";
+import { useAppDispatch, useTypedSelector } from "@/srore";
 import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 
 export interface LoginFormDataType {
@@ -33,8 +36,16 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
+  const { loading } = useTypedSelector(state => state.User);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const onSubmit = (data: LoginFormDataType) => {
-    console.log("433>>>>>>", data);
+    dispatch(
+      loginUser({
+        data: data,
+        navigate: () => router.navigate("/(main)/(tabs)/home"),
+      })
+    );
   };
 
   return (
@@ -69,7 +80,7 @@ const Login = () => {
                 placeholder="Email"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
+                editable={!loading}
                 error={errors.email?.message}
               />
             )}
@@ -83,7 +94,7 @@ const Login = () => {
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
-                editable={true}
+                editable={!loading}
                 error={errors.password?.message}
               />
             )}
@@ -93,6 +104,7 @@ const Login = () => {
             title="Login"
             className={`${Platform.OS === "ios" ? "py-4" : "py-3"}`}
             onPress={handleSubmit(onSubmit)}
+            disabled={loading}
           />
 
           <View className="w-full flex flex-row items-center justify-center">
@@ -107,6 +119,8 @@ const Login = () => {
           </View>
         </View>
       </View>
+
+      <Loader open={loading} />
     </ScrollView>
   );
 };

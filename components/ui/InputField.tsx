@@ -39,7 +39,7 @@ const InputField = ({
         >
           {icon && <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />}
           <TextInput
-            className={`rounded-md font-normal text-lg text-text-300 flex-1 ${inputStyle} text-left`}
+            className={`rounded-md font-normal text-[18px] text-text-300 flex-1 ${inputStyle} text-left`}
             secureTextEntry={type === "password" && secure} //allow only for type password
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
