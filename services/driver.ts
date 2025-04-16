@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchUser, fetchUsers, updateUser } from "@/api/axios";
+import { fetchDriver, fetchDrivers, updateDriver } from "@/api/axios";
 import { RoutesName } from "@/constants/routes-name";
 import { Toast } from "@/utils/toast";
 import { firebaseApi, formatFirebaseError } from "@/api/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const registerUser = createAsyncThunk<any, any>(
-  "UserSlice/registerUser",
+export const registerDriver = createAsyncThunk<any, any>(
+  "DriverSlice/registerDriver",
   async (params, thunkApi) => {
     try {
       const data = await firebaseApi.registerUserWithEmailAndPassword({
@@ -17,25 +17,25 @@ export const registerUser = createAsyncThunk<any, any>(
       //set accesstoken to localStorage
       await AsyncStorage.setItem("accessToken", data.accessToken);
 
-      //call this api neccessary to register the user in our system database
-      await fetchUser();
+      //call this api neccessary to register the Driver in our system database
+      await fetchDriver();
 
-      // update user details in our system database
-      await updateUser(params?.data);
+      // update Driver details in our system database
+      await updateDriver(params?.data);
 
-      const { data: userUpdatedDataRes } = await fetchUser();
+      const { data: driverUpdatedDataRes } = await fetchDriver();
 
       Toast.show({
         type: "success",
-        text1: "User Resgistered successfully",
+        text1: "Driver Resgistered successfully",
       });
 
       // params?.navigate()// call navigate function
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
-        userDetails: userUpdatedDataRes.data,
+        DriverDetails: driverUpdatedDataRes.data,
         navigate: params?.navigate,
-      }); // save user data;
+      }); // save Driver data;
     } catch (err) {
       const error: any = err;
       Toast.show({
@@ -47,8 +47,8 @@ export const registerUser = createAsyncThunk<any, any>(
   }
 );
 
-export const loginUser = createAsyncThunk<any, any>(
-  "UserSlice/loginUser",
+export const loginDriver = createAsyncThunk<any, any>(
+  "DriverSlice/loginDriver",
   async (params, thunkApi) => {
     try {
       const data = await firebaseApi.loginWithEmailAndPassword({
@@ -59,19 +59,19 @@ export const loginUser = createAsyncThunk<any, any>(
       //set accesstoken to localStorage
       await AsyncStorage.setItem("accessToken", data.accessToken);
 
-      //call this api to register this user if somehow this user entry not exist in our system database
-      const { data: userDataRes } = await fetchUser();
-      if (userDataRes.data.user_type != "driver") {
+      //call this api to register this Driver if somehow this Driver entry not exist in our system database
+      const { data: driverDataRes } = await fetchDriver();
+      if (driverDataRes.data.user_type != "driver") {
         throw formatFirebaseError('"auth/invalid-credential"');
       }
 
       Toast.show({
         type: "success",
-        text1: "User Login successfully",
+        text1: "Driver Login successfully",
       });
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
-        userDetails: userDataRes.data,
+        DriverDetails: driverDataRes.data,
         navigate: params?.navigate,
       });
     } catch (err) {
@@ -85,8 +85,8 @@ export const loginUser = createAsyncThunk<any, any>(
   }
 );
 
-export const logoutUser = createAsyncThunk<any, any>(
-  "UserSlice/logoutUser",
+export const logoutDriver = createAsyncThunk<any, any>(
+  "DriverSlice/logoutDriver",
   async (params, thunkApi) => {
     try {
       const data = await AsyncStorage.clear();
@@ -94,7 +94,7 @@ export const logoutUser = createAsyncThunk<any, any>(
 
       Toast.show({
         type: "success",
-        text1: "User Logout successfully",
+        text1: "Driver Logout successfully",
       });
       return thunkApi.fulfillWithValue({});
     } catch (err) {
@@ -108,16 +108,16 @@ export const logoutUser = createAsyncThunk<any, any>(
   }
 );
 
-export const editUser = createAsyncThunk<any, any>(
-  "UserSlice/editUser",
+export const editDriver = createAsyncThunk<any, any>(
+  "DriverSlice/editDriver",
   async (params, thunkApi) => {
     try {
-      const { data } = await updateUser(params?.data);
-      params?.navigate(RoutesName.Users);
+      const { data } = await updateDriver(params?.data);
+      params?.navigate(RoutesName.PageEdit);
 
       Toast.show({
         type: "Success ",
-        text1: "User edit successfully",
+        text1: "Driver edit successfully",
       });
 
       return thunkApi.fulfillWithValue(data.data);
@@ -132,9 +132,9 @@ export const editUser = createAsyncThunk<any, any>(
   }
 );
 
-export const getUsers = createAsyncThunk("UserSlice/getUsers", async (_, thunkApi) => {
+export const getDrivers = createAsyncThunk("DriverSlice/getDrivers", async (_, thunkApi) => {
   try {
-    const { data } = await fetchUsers({});
+    const { data } = await fetchDrivers({});
     return thunkApi.fulfillWithValue(data.data);
   } catch (err) {
     const error: any = err;
@@ -146,16 +146,19 @@ export const getUsers = createAsyncThunk("UserSlice/getUsers", async (_, thunkAp
   }
 });
 
-export const getUser = createAsyncThunk<any, any>("UserSlice/getUser", async (params, thunkApi) => {
-  try {
-    const { data } = await fetchUser();
-    return thunkApi.fulfillWithValue(data.data);
-  } catch (err) {
-    const error: any = err;
-    Toast.show({
-      type: "Error ",
-      text1: error?.message || "Oop's something went wrong!",
-    });
-    return thunkApi.rejectWithValue(error.response?.status);
+export const getDriver = createAsyncThunk<any, any>(
+  "DriverSlice/getDriver",
+  async (params, thunkApi) => {
+    try {
+      const { data } = await fetchDriver();
+      return thunkApi.fulfillWithValue(data.data);
+    } catch (err) {
+      const error: any = err;
+      Toast.show({
+        type: "Error ",
+        text1: error?.message || "Oop's something went wrong!",
+      });
+      return thunkApi.rejectWithValue(error.response?.status);
+    }
   }
-});
+);

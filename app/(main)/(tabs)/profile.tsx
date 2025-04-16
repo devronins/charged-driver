@@ -1,5 +1,5 @@
 import { logoutUser } from "@/services";
-import { useAppDispatch } from "@/srore";
+import { useAppDispatch } from "@/store";
 import { useRouter } from "expo-router";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

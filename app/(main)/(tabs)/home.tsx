@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Icons from "@/constants/icons";
-import { useTypedSelector } from "@/srore";
+import { useTypedSelector } from "@/store";
 
 const coordinatesObj = {
   latitude: 37.7749,

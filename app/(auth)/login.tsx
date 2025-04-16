@@ -2,8 +2,8 @@ import CustomButton from "@/components/ui/CustomButton";
 import InputField from "@/components/ui/InputField";
 import Loader from "@/components/ui/Loader";
 import images from "@/constants/images";
-import { loginUser } from "@/services";
-import { useAppDispatch, useTypedSelector } from "@/srore";
+import { loginDriver } from "@/services";
+import { useAppDispatch, useTypedSelector } from "@/store";
 import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
 import { Link, useRouter } from "expo-router";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
@@ -36,12 +36,12 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const { loading } = useTypedSelector(state => state.User);
+  const { loading } = useTypedSelector(state => state.Driver);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = (data: LoginFormDataType) => {
     dispatch(
-      loginUser({
+      loginDriver({
         data: data,
         navigate: () => router.navigate("/(main)/(tabs)/home"),
       })
