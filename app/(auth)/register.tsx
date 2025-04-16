@@ -7,6 +7,7 @@ import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useAppDispatch, useTypedSelector } from "@/srore";
 import { registerUser } from "@/services";
+import Loader from "@/components/ui/Loader";
 
 export interface RegisterFormDataType {
   name: string;
@@ -54,7 +55,7 @@ const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const { loading } = useTypedSelector((state)=>state.User);
+  const { loading } = useTypedSelector(state => state.User);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -180,6 +181,8 @@ const Register = () => {
           </View>
         </View>
       </View>
+
+      <Loader open={loading} />
     </ScrollView>
   );
 };
