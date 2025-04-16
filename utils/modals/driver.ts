@@ -1,4 +1,4 @@
-export interface UserModal {
+export interface DriverModal {
   uuid: string;
   email: string;
   password: string;
@@ -40,22 +40,22 @@ interface ImageModal {
   size: number;
 }
 
-export const UserType = {
+export const DriverType = {
   Admin: 1,
-  User: 2,
+  Driver: 2,
 };
 
-export const AvailableUserTypes = [
+export const AvailableDriverTypes = [
   { title: "Admin", value: "1" },
-  { title: "User", value: "2" },
+  { title: "Driver", value: "2" },
 ];
 
-export const UserStatus = {
+export const DriverStatus = {
   ACTIVE: "active",
   HIDDEN: "hidden",
 };
 
-export const AvailableUserStatus = [
+export const AvailableDriverStatus = [
   { title: "Active", value: "active" },
   { title: "Hidden", value: "hidden" },
 ];

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Linking, Platform, AppState } from "react
 import { CheckCircle, XCircle } from "lucide-react-native";
 import { Model } from "@/components/ui/model";
 import { PermissionTypeEnum } from "@/reducers";
-import { useTypedSelector } from "@/srore";
+import { useTypedSelector } from "@/store";
 import CustomButton from "../ui/CustomButton";
 
 export default function PermissionModal() {

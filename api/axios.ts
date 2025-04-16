@@ -68,12 +68,12 @@ const api = {
 
 export default api;
 
-//----------------------------------------------------------------------user
-export const createUser = (data: any) => axiosInstance.post("/driver/details", data);
-export const updateUser = (data: any) => axiosInstance.put(`/driver`, data);
-export const fetchUser = () => axiosInstance.get(`/driver`);
-export const fetchUsers = (data: any) => axiosInstance.get("/v1/user/getall", { data });
-export const deleteUser = (id: string) => axiosInstance.delete(`/v1/user/delete/${id}`);
+//----------------------------------------------------------------------Driver
+export const createDriver = (data: any) => axiosInstance.post("/driver/details", data);
+export const updateDriver = (data: any) => axiosInstance.put(`/driver`, data);
+export const fetchDriver = () => axiosInstance.get(`/driver`);
+export const fetchDrivers = (data: any) => axiosInstance.get("/v1/driver/getall", { data });
+export const deleteDriver = (id: string) => axiosInstance.delete(`/v1/driver/delete/${id}`);
 
 //---------------------------------------------------------------------upload image
 export const fileUpload = (data: any) =>

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 // Redux & Persist
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "@/srore";
+import { store, persistor } from "@/store";
 import { ToastComponent } from "@/components/toast";
 import { KeyboardAvoidingView, Platform, StatusBar } from "react-native";
 
