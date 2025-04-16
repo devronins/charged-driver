@@ -8,6 +8,12 @@ import {
   Flag,
   CarFront,
   Locate,
+  Camera,
+  ChevronRight,
+  LogOut,
+  FileText,
+  Clock,
+  HelpCircle,
 } from "lucide-react-native";
 
 export default {
@@ -19,4 +25,10 @@ export default {
   Flag,
   CarFront,
   Locate,
+  Camera,
+  ChevronRight,
+  LogOut,
+  FileText,
+  Clock,
+  HelpCircle,
 };

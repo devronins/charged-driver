@@ -33,7 +33,7 @@ export const registerDriver = createAsyncThunk<any, any>(
       // params?.navigate()// call navigate function
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
-        DriverDetails: driverUpdatedDataRes.data,
+        driverDetails: driverUpdatedDataRes.data,
         navigate: params?.navigate,
       }); // save Driver data;
     } catch (err) {
@@ -71,7 +71,7 @@ export const loginDriver = createAsyncThunk<any, any>(
       });
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
-        DriverDetails: driverDataRes.data,
+        driverDetails: driverDataRes.data,
         navigate: params?.navigate,
       });
     } catch (err) {

@@ -1,27 +1,17 @@
-import { logoutUser } from "@/services";
-import { useAppDispatch } from "@/store";
-import { useRouter } from "expo-router";
-import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import ProfileLogout from "@/components/profile/profile-logout-section";
+import ProfilePageNavigation from "@/components/profile/profile-page-navigation";
+import ProfileSection from "@/components/profile/profile-section";
+import { ScrollView, Text, View } from "react-native";
 
 const Profile = () => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const handleLogout = () => {
-    dispatch(
-      logoutUser({
-        navigate: () => router.navigate("/(auth)/login"),
-      })
-    );
-  };
   return (
-    <SafeAreaView className=" bg-secondary-300">
-      <View className="min-h-screen w-full flex flex-col items-center justify-center">
-        <Text onPress={() => handleLogout()} className="text-4xl text-black">
-          Profile
-        </Text>
+    <ScrollView className="flex-1 bg-secondary-300">
+      <View className=" flex-1 flex flex-col items-center p-6 gap-5">
+        <ProfileSection />
+        <ProfilePageNavigation />
+        <ProfileLogout />
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
