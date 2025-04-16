@@ -1,5 +1,6 @@
 import CustomButton from "@/components/ui/CustomButton";
 import InputField from "@/components/ui/InputField";
+import Loader from "@/components/ui/Loader";
 import images from "@/constants/images";
 import { loginUser } from "@/services";
 import { useAppDispatch, useTypedSelector } from "@/srore";
@@ -35,14 +36,16 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const { loading } = useTypedSelector((state)=>state.User);
+  const { loading } = useTypedSelector(state => state.User);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = (data: LoginFormDataType) => {
-    dispatch(loginUser({
-      data: data,
-      navigate: () => router.navigate("/(main)/(tabs)/home"),
-    }))
+    dispatch(
+      loginUser({
+        data: data,
+        navigate: () => router.navigate("/(main)/(tabs)/home"),
+      })
+    );
   };
 
   return (
@@ -116,6 +119,8 @@ const Login = () => {
           </View>
         </View>
       </View>
+
+      <Loader open={loading} />
     </ScrollView>
   );
 };
