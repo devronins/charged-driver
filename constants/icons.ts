@@ -15,6 +15,8 @@ import {
   Clock,
   HelpCircle,
   ChevronLeft,
+  Info,
+  RefreshCcw
 } from "lucide-react-native";
 
 export default {
@@ -33,4 +35,6 @@ export default {
   Clock,
   HelpCircle,
   ChevronLeft,
+  Info,
+  RefreshCcw
 };

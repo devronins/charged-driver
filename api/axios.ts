@@ -75,6 +75,9 @@ export const fetchDriver = () => axiosInstance.get(`/driver`);
 export const fetchDrivers = (data: any) => axiosInstance.get("/v1/driver/getall", { data });
 export const deleteDriver = (id: string) => axiosInstance.delete(`/v1/driver/delete/${id}`);
 
+//----------------------------------------------------------------------Driver vehicles
+export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/details`, data);
+export const updateVehicleDetails = (data: any) => axiosInstance.put(`/driver/details`, data);
 //---------------------------------------------------------------------upload image
 export const fileUpload = (data: any) =>
   axiosInstance.post("/v1/fileUpload", data, {

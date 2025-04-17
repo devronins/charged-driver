@@ -33,11 +33,11 @@ const InputField = ({
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="w-full">
-        {label && <Text className={`text-lg font-[500] mb-3 ${labelStyle}`}>{label}</Text>}
+        {label && <Text className={`text-lg font-[500] mb-2 ${labelStyle}`}>{label}</Text>}
         <View
           className={`flex flex-row justify-start items-center relative rounded-md ${Platform.OS === "ios" ? "px-3 py-4" : "px-2"} font-normal text-sm text-text-300 border ${error ? "border-red-500" : isFocused ? "border-primary-300" : "border-border-300"} ${containerStyle}`}
         >
-          {icon && <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />}
+          {icon && <Image source={icon} className={`text-text-300 w-6 h-6 ml-4 ${iconStyle}`} />}
           <TextInput
             className={`rounded-md font-normal text-[18px] text-text-300 flex-1 ${inputStyle} text-left`}
             secureTextEntry={type === "password" && secure} //allow only for type password

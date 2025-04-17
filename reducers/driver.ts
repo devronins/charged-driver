@@ -29,9 +29,12 @@ const initialState: DriverInitialStateType = {
 const DriverSlice = createSlice({
   name: "DriverSlice", //must be unique for every slice. convention is to put the same as file name
   initialState, //the initial state of the slice
-  reducers: {}, // action methods
+  reducers: {
+    setIntialState: (state, action) => {
+      state = initialState
+    }
+  }, // action methods
   extraReducers: builder => {
-    builder.addCase("RESET_STATE", () => initialState);
 
     builder.addCase(registerDriver.pending, state => {
       state.loading = true;

@@ -1,9 +1,13 @@
 import Icons from "@/constants/icons";
-import { useTypedSelector } from "@/store";
+import { VehicleActions } from "@/reducers";
+import { useAppDispatch, useTypedSelector } from "@/store";
 import { Redirect, Stack } from "expo-router";
+import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 
 const Layout = () => {
+  const dispatch = useAppDispatch();
   const { isLogin } = useTypedSelector(state => state.Driver);
+  const { isEditMode } = useTypedSelector(state => state.Vehicle);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
@@ -19,12 +23,21 @@ const Layout = () => {
         //@ts-ignore
         options={({ navigation }) => ({
           headerTitle: "Vehicle Information",
+          headerTitleAlign: "center", // for android
           headerTitleStyle: {
             color: "#007FFF",
             paddingLeft: 0,
+            text: 'center'
           },
           headerLeft: () => (
-            <Icons.ChevronLeft onPress={() => navigation.goBack()} size={30} color="#5A5660" />
+            <TouchableOpacity className="w-[90px] h-10 flex items-start justify-center px-1" onPress={() => navigation.goBack()}>
+              <Icons.ChevronLeft size={30} color="#5A5660" />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity className="w-[90px] h-10 flex items-end justify-center px-2" onPress={() => { dispatch(VehicleActions.setIsEditMode({ status: !isEditMode })) }}>
+              <Text className="text-primary-300">{isEditMode ? "Cancel" : 'Edit'}</Text>
+            </TouchableOpacity>
           ),
         })}
       />
