@@ -70,8 +70,6 @@ const VehicleInfromationForm = () => {
     }
   };
 
-  console.log("62>>>>>>>>>>>>", vehicleDetails);
-
   return (
     <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center gap-5 p-5">
       <Controller

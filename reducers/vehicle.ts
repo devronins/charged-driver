@@ -23,9 +23,7 @@ const VehicleSlice = createSlice({
     setIsEditMode: (state, action) => {
       state.isEditMode = action.payload.status;
     },
-    setIntialState: (state, action) => {
-      state = initialState;
-    },
+    setIntialState: (state, action) => initialState,
   }, // action methods
   extraReducers: builder => {
     builder.addCase(addVehicleDetails.pending, state => {
@@ -33,8 +31,9 @@ const VehicleSlice = createSlice({
       state.error = false;
     });
     builder.addCase(addVehicleDetails.fulfilled, (state, action) => {
-      state.vehicleDetailsLoading = false;
       state.vehicleDetails = action.payload?.vehicleDetails || null;
+      state.isEditMode = false;
+      state.vehicleDetailsLoading = false;
     });
     builder.addCase(addVehicleDetails.rejected, (state, action) => {
       state.error = true;
@@ -46,6 +45,8 @@ const VehicleSlice = createSlice({
       state.error = false;
     });
     builder.addCase(editVehicleDetails.fulfilled, (state, action) => {
+      state.vehicleDetails = action.payload?.vehicleDetails || null;
+      state.isEditMode = false;
       state.vehicleDetailsLoading = false;
     });
     builder.addCase(editVehicleDetails.rejected, (state, action) => {
@@ -58,8 +59,8 @@ const VehicleSlice = createSlice({
       state.error = false;
     });
     builder.addCase(getVehicleDetails.fulfilled, (state, action) => {
-      state.vehicleDetailsLoading = false;
       state.vehicleDetails = action.payload?.vehicleDetails || null;
+      state.vehicleDetailsLoading = false;
     });
     builder.addCase(getVehicleDetails.rejected, (state, action) => {
       state.error = true;
