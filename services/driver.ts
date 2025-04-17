@@ -26,11 +26,6 @@ export const registerDriver = createAsyncThunk<any, any>(
 
       const { data: driverUpdatedDataRes } = await fetchDriver();
 
-      Toast.show({
-        type: "success",
-        text1: "Driver Resgistered successfully",
-      });
-
       // params?.navigate()// call navigate function
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
@@ -44,6 +39,11 @@ export const registerDriver = createAsyncThunk<any, any>(
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
+    } finally {
+      Toast.show({
+        type: "success",
+        text1: "Driver Resgistered successfully",
+      });
     }
   }
 );
@@ -65,11 +65,6 @@ export const loginDriver = createAsyncThunk<any, any>(
       if (driverDataRes.data.user_type != "driver") {
         throw formatFirebaseError('"auth/invalid-credential"');
       }
-
-      Toast.show({
-        type: "success",
-        text1: "Driver Login successfully",
-      });
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
         driverDetails: driverDataRes.data,
@@ -82,6 +77,11 @@ export const loginDriver = createAsyncThunk<any, any>(
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
+    } finally {
+      Toast.show({
+        type: "success",
+        text1: "Driver Login successfully",
+      });
     }
   }
 );
@@ -96,11 +96,6 @@ export const logoutDriver = createAsyncThunk<any, any>(
       thunkApi.dispatch(DriverActions.setIntialState({}));
       thunkApi.dispatch(VehicleActions.setIntialState({}));
 
-      Toast.show({
-        type: "success",
-        text1: "Driver Logout successfully",
-      });
-
       return thunkApi.fulfillWithValue({});
     } catch (err) {
       const error: any = err;
@@ -109,6 +104,11 @@ export const logoutDriver = createAsyncThunk<any, any>(
         text1: error?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
+    } finally {
+      Toast.show({
+        type: "success",
+        text1: "Driver Logout successfully",
+      });
     }
   }
 );

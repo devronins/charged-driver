@@ -48,7 +48,6 @@ const Login = () => {
     );
   };
 
-  console.log("52>>>>>>>>>", vehicleDetails);
   return (
     <ScrollView className="flex-1 bg-secondary-300">
       <View className="min-h-screen w-full flex flex-col items-center justify-center px-7 pb-12">

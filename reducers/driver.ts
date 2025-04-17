@@ -30,9 +30,7 @@ const DriverSlice = createSlice({
   name: "DriverSlice", //must be unique for every slice. convention is to put the same as file name
   initialState, //the initial state of the slice
   reducers: {
-    setIntialState: (state, action) => {
-      state = initialState;
-    },
+    setIntialState: (state, action) => initialState,
   }, // action methods
   extraReducers: builder => {
     builder.addCase(registerDriver.pending, state => {
