@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text } from "react-native";
+import { twMerge } from 'tailwind-merge';
 
 import { ButtonProps } from "@/types/type";
 
@@ -40,17 +41,18 @@ const CustomButton = ({
   IconLeft,
   IconRight,
   className,
+  titleStyle,
   ...props
 }: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`w-full rounded-md p-3 flex flex-row justify-center items-center ${getBgVariantStyle(bgVariant)} ${className}`}
+      className={twMerge("w-full rounded-lg p-3 flex flex-row justify-center items-center", getBgVariantStyle(bgVariant), className)}
       {...props}
     >
-      {IconLeft && <IconLeft />}
-      <Text className={`text-lg font-normal ${getTextVariantStyle(textVariant)}`}>{title}</Text>
-      {IconRight && <IconRight />}
+      {IconLeft ? IconLeft : null}
+      <Text className={twMerge("text-lg font-normal", getTextVariantStyle(textVariant), titleStyle)}>{title}</Text>
+      {IconRight ? IconRight : null}
     </TouchableOpacity>
   );
 };

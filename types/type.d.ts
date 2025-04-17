@@ -1,12 +1,14 @@
+import React from "react";
 import { TextInputProps, TouchableOpacityProps } from "react-native";
 
 declare interface ButtonProps extends TouchableOpacityProps {
   title: string;
   bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
   textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
-  IconLeft?: React.ComponentType<any>;
-  IconRight?: React.ComponentType<any>;
+  IconLeft?:  React.ReactNode;
+  IconRight?:  React.ReactNode;
   className?: string;
+  titleStyle?: strng
 }
 
 declare interface InputFieldProps extends TextInputProps {

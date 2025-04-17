@@ -38,8 +38,6 @@ const navigationContants = [
 
 const ProfilePageNavigation = () => {
   const { driverDetails, accessToken } = useTypedSelector(state => state.Driver);
-  const dispatch = useAppDispatch();
-  const router = useRouter();
 
   console.log("profile screen>>>>>>>", driverDetails, accessToken);
 

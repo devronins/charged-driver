@@ -3,19 +3,20 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DriverReducer, PermissionReducer } from "@/reducers";
+import { DriverReducer, PermissionReducer, VehicleReducer } from "@/reducers";
 
 // Combine all reducers
 const rootReducer = combineReducers({
   Driver: DriverReducer,
   Permission: PermissionReducer,
+  Vehicle: VehicleReducer
 });
 
 // Configure redux-persist for React Native
 const persistConfig = {
   key: "root",
   storage: AsyncStorage, // ✅ Use AsyncStorage instead of localStorage
-  whitelist: ["Driver"], // Only persist the Driver reducer
+  whitelist: ["Driver", "Vehicle"],
 };
 
 // Apply persist reducer

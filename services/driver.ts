@@ -4,6 +4,7 @@ import { RoutesName } from "@/constants/routes-name";
 import { Toast } from "@/utils/toast";
 import { firebaseApi, formatFirebaseError } from "@/api/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DriverActions, VehicleActions } from "@/reducers";
 
 export const registerDriver = createAsyncThunk<any, any>(
   "DriverSlice/registerDriver",
@@ -89,13 +90,17 @@ export const logoutDriver = createAsyncThunk<any, any>(
   "DriverSlice/logoutDriver",
   async (params, thunkApi) => {
     try {
-      const data = await AsyncStorage.clear();
-      params?.navigate();
+      await AsyncStorage.clear();
 
+      params?.navigate();
+      thunkApi.dispatch(DriverActions.setIntialState({}))
+      thunkApi.dispatch(VehicleActions.setIntialState({}));
+    
       Toast.show({
         type: "success",
         text1: "Driver Logout successfully",
       });
+      
       return thunkApi.fulfillWithValue({});
     } catch (err) {
       const error: any = err;

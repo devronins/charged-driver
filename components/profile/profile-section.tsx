@@ -9,8 +9,6 @@ const ProfileSection = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  console.log("profile screen>>>>>>>", driverDetails, accessToken);
-
   return (
     <View className="w-full h-auto p-7 bg-white rounded-lg flex flex-col items-center">
       <View className="flex flex-col items-center gap-0">

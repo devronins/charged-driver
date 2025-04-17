@@ -36,7 +36,7 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const { loading } = useTypedSelector(state => state.Driver);
+  const {loading} = useTypedSelector(state => state.Driver);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = (data: LoginFormDataType) => {
