@@ -36,7 +36,7 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const {loading} = useTypedSelector(state => state.Driver);
+  const { loading } = useTypedSelector(state => state.Driver);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = (data: LoginFormDataType) => {
@@ -48,6 +48,7 @@ const Login = () => {
     );
   };
 
+  console.log("52>>>>>>>>>", vehicleDetails);
   return (
     <ScrollView className="flex-1 bg-secondary-300">
       <View className="min-h-screen w-full flex flex-col items-center justify-center px-7 pb-12">

@@ -31,11 +31,10 @@ const DriverSlice = createSlice({
   initialState, //the initial state of the slice
   reducers: {
     setIntialState: (state, action) => {
-      state = initialState
-    }
+      state = initialState;
+    },
   }, // action methods
   extraReducers: builder => {
-
     builder.addCase(registerDriver.pending, state => {
       state.loading = true;
       state.error = false;

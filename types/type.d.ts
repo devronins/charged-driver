@@ -5,10 +5,10 @@ declare interface ButtonProps extends TouchableOpacityProps {
   title: string;
   bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
   textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
-  IconLeft?:  React.ReactNode;
-  IconRight?:  React.ReactNode;
+  IconLeft?: React.ReactNode;
+  IconRight?: React.ReactNode;
   className?: string;
-  titleStyle?: strng
+  titleStyle?: strng;
 }
 
 declare interface InputFieldProps extends TextInputProps {

@@ -93,14 +93,14 @@ export const logoutDriver = createAsyncThunk<any, any>(
       await AsyncStorage.clear();
 
       params?.navigate();
-      thunkApi.dispatch(DriverActions.setIntialState({}))
+      thunkApi.dispatch(DriverActions.setIntialState({}));
       thunkApi.dispatch(VehicleActions.setIntialState({}));
-    
+
       Toast.show({
         type: "success",
         text1: "Driver Logout successfully",
       });
-      
+
       return thunkApi.fulfillWithValue({});
     } catch (err) {
       const error: any = err;

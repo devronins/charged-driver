@@ -27,16 +27,24 @@ const Layout = () => {
           headerTitleStyle: {
             color: "#007FFF",
             paddingLeft: 0,
-            text: 'center'
+            text: "center",
           },
           headerLeft: () => (
-            <TouchableOpacity className="w-[90px] h-10 flex items-start justify-center px-1" onPress={() => navigation.goBack()}>
+            <TouchableOpacity
+              className="w-[90px] h-10 flex items-start justify-center px-1"
+              onPress={() => navigation.goBack()}
+            >
               <Icons.ChevronLeft size={30} color="#5A5660" />
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity className="w-[90px] h-10 flex items-end justify-center px-2" onPress={() => { dispatch(VehicleActions.setIsEditMode({ status: !isEditMode })) }}>
-              <Text className="text-primary-300">{isEditMode ? "Cancel" : 'Edit'}</Text>
+            <TouchableOpacity
+              className="w-[90px] h-10 flex items-end justify-center px-2"
+              onPress={() => {
+                dispatch(VehicleActions.setIsEditMode({ status: !isEditMode }));
+              }}
+            >
+              <Text className="text-primary-300">{isEditMode ? "Cancel" : "Edit"}</Text>
             </TouchableOpacity>
           ),
         })}
