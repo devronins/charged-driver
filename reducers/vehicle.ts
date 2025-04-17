@@ -1,9 +1,5 @@
 import { VehicleModal } from "@/utils/modals/vehicle";
-import {
-  addVehicleDetails,
-  editVehicleDetails,
-  getVehicleDetails,
-} from "@/services/vehicle";
+import { addVehicleDetails, editVehicleDetails, getVehicleDetails } from "@/services/vehicle";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface VehicleInitialStateType {
@@ -17,7 +13,7 @@ const initialState: VehicleInitialStateType = {
   vehicleDetails: null,
   vehicleDetailsLoading: false,
   error: false,
-  isEditMode: false
+  isEditMode: false,
 };
 
 const VehicleSlice = createSlice({
@@ -25,14 +21,13 @@ const VehicleSlice = createSlice({
   initialState, //the initial state of the slice
   reducers: {
     setIsEditMode: (state, action) => {
-      state.isEditMode = action.payload.status
+      state.isEditMode = action.payload.status;
     },
     setIntialState: (state, action) => {
-      state = initialState
-    }
+      state = initialState;
+    },
   }, // action methods
   extraReducers: builder => {
-
     builder.addCase(addVehicleDetails.pending, state => {
       state.vehicleDetailsLoading = true;
       state.error = false;

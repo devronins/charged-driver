@@ -25,7 +25,7 @@ module.exports = {
           300: "#F5F7FA",
         },
         tertiary: {
-          300: "#34C759"
+          300: "#34C759",
         },
         input: {
           100: "#FCFCFC", // input background
@@ -43,14 +43,14 @@ module.exports = {
           300: "#5A5660",
         },
         card: {
-          100: "#E3F2FD"
-        }
+          100: "#E3F2FD",
+        },
       },
       boxShadow: {
         "custom-card": "0px 6px 12px rgba(0, 0, 0, 0.35)",
       },
       borderRadius: {
-        lg: '10px',
+        lg: "10px",
       },
     },
   },

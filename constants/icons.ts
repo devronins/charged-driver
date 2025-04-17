@@ -16,7 +16,7 @@ import {
   HelpCircle,
   ChevronLeft,
   Info,
-  RefreshCcw
+  RefreshCcw,
 } from "lucide-react-native";
 
 export default {
@@ -36,5 +36,5 @@ export default {
   HelpCircle,
   ChevronLeft,
   Info,
-  RefreshCcw
+  RefreshCcw,
 };

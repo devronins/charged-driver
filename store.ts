@@ -9,7 +9,7 @@ import { DriverReducer, PermissionReducer, VehicleReducer } from "@/reducers";
 const rootReducer = combineReducers({
   Driver: DriverReducer,
   Permission: PermissionReducer,
-  Vehicle: VehicleReducer
+  Vehicle: VehicleReducer,
 });
 
 // Configure redux-persist for React Native
