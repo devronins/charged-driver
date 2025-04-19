@@ -10,7 +10,6 @@ const VehicleInfromation = () => {
   const { vehicleDetailsLoading, isEditMode } = useTypedSelector(state => state.Vehicle);
   const { driverDetails, accessToken } = useTypedSelector(state => state.Driver);
   const dispatch = useAppDispatch();
-  console.log("13>>>>>>", vehicleDetailsLoading, driverDetails, accessToken);
 
   useEffect(() => {
     dispatch(getVehicleDetails({}));

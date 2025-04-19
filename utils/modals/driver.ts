@@ -33,11 +33,35 @@ export interface DriverModal {
   car_year?: string;
 }
 
-interface ImageModal {
+export interface DriverUploadedDocumentModal {
+  id: number;
+  user_id: number;
+  document_type_id: number;
+  file_url: string;
+  file_name: string;
+  file_type: string;
+  status: "verified" | "in-progress" | "rejected";
+  expiry_date?: Date;
+  rejection_reason?: string;
+  notes?: string;
+  uploaded_by: "driver";
+  reviewed_by?: number;
+  uploaded_at: Date;
+  verified_at?: Date;
+  rejected_at?: Date;
+  created_at: Date;
+  updated_at: Date;
+  user_notified: boolean;
+}
+
+export interface DriverDocumentTypesModal {
+  id: number;
   name: string;
-  imageUrl: string;
-  type: string;
-  size: number;
+  display_name: string;
+  description: string;
+  is_required: true;
+  user_type: string;
+  created_at: Date;
 }
 
 export const DriverType = {

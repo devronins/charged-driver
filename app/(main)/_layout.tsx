@@ -49,6 +49,27 @@ const Layout = () => {
           ),
         })}
       />
+      <Stack.Screen
+        name="profile/driver-document"
+        //@ts-ignore
+        options={({ navigation }) => ({
+          headerTitle: "Documents",
+          headerTitleAlign: "center", // for android
+          headerTitleStyle: {
+            color: "#007FFF",
+            paddingLeft: 0,
+            text: "center",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              className="w-[90px] h-10 flex items-start justify-center px-1"
+              onPress={() => navigation.goBack()}
+            >
+              <Icons.ChevronLeft size={30} color="#5A5660" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
     </Stack>
   );
 };
