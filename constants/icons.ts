@@ -17,6 +17,7 @@ import {
   ChevronLeft,
   Info,
   RefreshCcw,
+  Upload,
 } from "lucide-react-native";
 
 export default {
@@ -37,4 +38,5 @@ export default {
   ChevronLeft,
   Info,
   RefreshCcw,
+  Upload,
 };

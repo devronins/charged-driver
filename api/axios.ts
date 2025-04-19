@@ -78,6 +78,13 @@ export const deleteDriver = (id: string) => axiosInstance.delete(`/v1/driver/del
 //----------------------------------------------------------------------Driver vehicles
 export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/details`, data);
 export const updateVehicleDetails = (data: any) => axiosInstance.put(`/driver/details`, data);
+
+//----------------------------------------------------------------------Driver documents
+export const uploadFileDocument = (type: string) =>
+  axiosInstance.post(`/driver/uploaddocument/${type}`);
+export const fetchDocumentTypes = () => axiosInstance.get(`/driver/documenttypes`);
+export const fetchUploadedDocuments = () => axiosInstance.get(`/driver/documents`);
+
 //---------------------------------------------------------------------upload image
 export const fileUpload = (data: any) =>
   axiosInstance.post("/v1/fileUpload", data, {

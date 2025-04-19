@@ -1,10 +1,16 @@
-import { DriverModal } from "@/utils/modals/driver";
+import {
+  DriverDocumentTypesModal,
+  DriverModal,
+  DriverUploadedDocumentModal,
+} from "@/utils/modals/driver";
 import {
   registerDriver,
-  editDriver,
   getDriver,
   loginDriver,
   logoutDriver,
+  uploadDriverDocument,
+  getDriverUploadedDocuments,
+  getDriverDocumentTypes,
 } from "@/services/driver";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -14,6 +20,9 @@ interface DriverInitialStateType {
   loading: boolean;
   driverDetails: null | DriverModal;
   driverDetailsLoading: boolean;
+  driverUploadedDocuments: DriverUploadedDocumentModal[];
+  driverDocumentTypes: DriverDocumentTypesModal[];
+  driverDocumentLoading: boolean;
   error: boolean;
 }
 
@@ -23,6 +32,9 @@ const initialState: DriverInitialStateType = {
   loading: false,
   driverDetails: null,
   driverDetailsLoading: false,
+  driverUploadedDocuments: [],
+  driverDocumentTypes: [],
+  driverDocumentLoading: false,
   error: false,
 };
 
@@ -62,18 +74,6 @@ const DriverSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(editDriver.pending, state => {
-      state.driverDetailsLoading = true;
-    });
-    builder.addCase(editDriver.fulfilled, (state, action) => {
-      state.driverDetails = action.payload;
-      state.driverDetailsLoading = false;
-    });
-    builder.addCase(editDriver.rejected, (state, action) => {
-      state.error = true;
-      state.driverDetailsLoading = false;
-    });
-
     builder.addCase(getDriver.pending, state => {
       state.driverDetailsLoading = true;
     });
@@ -104,6 +104,46 @@ const DriverSlice = createSlice({
     builder.addCase(loginDriver.rejected, (state, action) => {
       state.error = true;
       state.loading = false;
+    });
+
+    //----------------------------------------------------------  driver documets
+    builder.addCase(uploadDriverDocument.pending, state => {
+      state.driverDocumentLoading = true;
+      state.error = false;
+    });
+    builder.addCase(uploadDriverDocument.fulfilled, (state, action) => {
+      state.driverDocumentLoading = false;
+      state.driverUploadedDocuments = action.payload.driverUploadedDocuments;
+    });
+    builder.addCase(uploadDriverDocument.rejected, (state, action) => {
+      state.error = true;
+      state.driverDocumentLoading = false;
+    });
+
+    builder.addCase(getDriverUploadedDocuments.pending, state => {
+      state.driverDocumentLoading = true;
+      state.error = false;
+    });
+    builder.addCase(getDriverUploadedDocuments.fulfilled, (state, action) => {
+      state.driverDocumentLoading = false;
+      state.driverUploadedDocuments = action.payload.driverUploadedDocuments;
+    });
+    builder.addCase(getDriverUploadedDocuments.rejected, (state, action) => {
+      state.error = true;
+      state.driverDocumentLoading = false;
+    });
+
+    builder.addCase(getDriverDocumentTypes.pending, state => {
+      state.driverDocumentLoading = true;
+      state.error = false;
+    });
+    builder.addCase(getDriverDocumentTypes.fulfilled, (state, action) => {
+      state.driverDocumentLoading = false;
+      state.driverDocumentTypes = action.payload.driverDocumentTypes;
+    });
+    builder.addCase(getDriverDocumentTypes.rejected, (state, action) => {
+      state.error = true;
+      state.driverDocumentLoading = false;
     });
   },
 });

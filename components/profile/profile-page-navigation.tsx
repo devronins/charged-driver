@@ -14,7 +14,7 @@ const navigationContants = [
     id: 2,
     labelIcon: Icons.FileText,
     title: "Documents",
-    href: "profile/vehicle-infromation",
+    href: "profile/driver-document",
   },
   {
     id: 3,
@@ -38,8 +38,6 @@ const navigationContants = [
 
 const ProfilePageNavigation = () => {
   const { driverDetails, accessToken } = useTypedSelector(state => state.Driver);
-
-  console.log("profile screen>>>>>>>", driverDetails, accessToken);
 
   return (
     <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center">
