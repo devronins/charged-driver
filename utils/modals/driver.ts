@@ -5,7 +5,7 @@ export interface DriverModal {
   name?: string;
   phone?: string;
   photo?: string;
-  user_type: "driver";
+  user_type: 'driver';
   rating?: string;
   is_online: boolean;
   is_verified: boolean;
@@ -40,11 +40,11 @@ export interface DriverUploadedDocumentModal {
   file_url: string;
   file_name: string;
   file_type: string;
-  status: "verified" | "in-progress" | "rejected";
+  status: 'verified' | 'pending' | 'rejected';
   expiry_date?: Date;
   rejection_reason?: string;
   notes?: string;
-  uploaded_by: "driver";
+  uploaded_by: 'driver';
   reviewed_by?: number;
   uploaded_at: Date;
   verified_at?: Date;
@@ -70,16 +70,16 @@ export const DriverType = {
 };
 
 export const AvailableDriverTypes = [
-  { title: "Admin", value: "1" },
-  { title: "Driver", value: "2" },
+  { title: 'Admin', value: '1' },
+  { title: 'Driver', value: '2' },
 ];
 
 export const DriverStatus = {
-  ACTIVE: "active",
-  HIDDEN: "hidden",
+  ACTIVE: 'active',
+  HIDDEN: 'hidden',
 };
 
 export const AvailableDriverStatus = [
-  { title: "Active", value: "active" },
-  { title: "Hidden", value: "hidden" },
+  { title: 'Active', value: 'active' },
+  { title: 'Hidden', value: 'hidden' },
 ];

@@ -1,9 +1,9 @@
 // stateStore.ts
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
-import { persistStore, persistReducer } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DriverReducer, PermissionReducer, VehicleReducer } from "@/reducers";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DriverReducer, PermissionReducer, VehicleReducer } from '@/reducers';
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -14,9 +14,9 @@ const rootReducer = combineReducers({
 
 // Configure redux-persist for React Native
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage: AsyncStorage, // ✅ Use AsyncStorage instead of localStorage
-  whitelist: ["Driver", "Vehicle"],
+  whitelist: ['Driver', 'Vehicle'],
 };
 
 // Apply persist reducer
@@ -25,7 +25,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // Create the Redux store
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // ✅ disable to avoid warnings with non-serializable values
     }),

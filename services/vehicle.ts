@@ -1,11 +1,9 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createVehicleDetails, fetchDriver, updateDriver, updateVehicleDetails } from "@/api/axios";
-import { RoutesName } from "@/constants/routes-name";
-import { Toast } from "@/utils/toast";
-import { VehicleActions } from "@/reducers";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createVehicleDetails, fetchDriver, updateDriver, updateVehicleDetails } from '@/api/axios';
+import { Toast } from '@/utils/toast';
 
 export const addVehicleDetails = createAsyncThunk<any, any>(
-  "VehicleSlice/addVehicleDetails",
+  'VehicleSlice/addVehicleDetails',
   async (params, thunkApi) => {
     try {
       await createVehicleDetails(params?.data);
@@ -19,26 +17,26 @@ export const addVehicleDetails = createAsyncThunk<any, any>(
             car_type: data.data.car_type,
           }
         : null;
+
+      Toast.show({
+        type: 'success',
+        text1: 'Vehicle Details Saved successfully',
+      });
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
       const error: any = err;
-      console.log("save vehicle details error:", error);
+      console.log('save vehicle details error:', error);
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
-    } finally {
-      Toast.show({
-        type: "success",
-        text1: "Vehicle Details Saved successfully",
-      });
     }
   }
 );
 
 export const getVehicleDetails = createAsyncThunk<any, any>(
-  "VehicleSlice/getVehicleDetails",
+  'VehicleSlice/getVehicleDetails',
   async (params, thunkApi) => {
     try {
       const { data } = await fetchDriver();
@@ -56,7 +54,7 @@ export const getVehicleDetails = createAsyncThunk<any, any>(
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
@@ -65,7 +63,7 @@ export const getVehicleDetails = createAsyncThunk<any, any>(
 );
 
 export const editVehicleDetails = createAsyncThunk<any, any>(
-  "VehicleSlice/editVehicleDetails",
+  'VehicleSlice/editVehicleDetails',
   async (params, thunkApi) => {
     try {
       await updateVehicleDetails(params?.data);
@@ -80,20 +78,20 @@ export const editVehicleDetails = createAsyncThunk<any, any>(
           }
         : null;
 
+      Toast.show({
+        type: 'success',
+        text1: 'Vehicle Details Edit successfully',
+      });
+
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
       const error: any = err;
-      console.log("72>>>>>>>>>.", err);
+      console.log('72>>>>>>>>>.', err);
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
-    } finally {
-      Toast.show({
-        type: "success",
-        text1: "Vehicle Details Edit successfully",
-      });
     }
   }
 );

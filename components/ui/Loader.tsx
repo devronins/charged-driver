@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
-import { LottieView } from "@/utils/lottie";
-import { LoaderJson } from "@/constants/animation";
+import { View, Text } from 'react-native';
+import { LottieView } from '@/utils/lottie';
+import { LoaderJson } from '@/constants/animation';
 
 const Loader = ({ className, open = false }: { className?: string; open?: boolean }) => {
   return open ? (

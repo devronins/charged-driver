@@ -1,14 +1,14 @@
-import { ScrollView, View } from "react-native";
-import VehicleInfromationForm from "@/components/vehicle-infromation/vehicle-infromation-form";
-import VehicleInfromationInfo from "@/components/vehicle-infromation/vehicle-infromation-info";
-import { useAppDispatch, useTypedSelector } from "@/store";
-import { useEffect } from "react";
-import { getVehicleDetails } from "@/services/vehicle";
-import Loader from "@/components/ui/Loader";
+import { ScrollView, View } from 'react-native';
+import VehicleInfromationForm from '@/components/vehicle-infromation/vehicle-infromation-form';
+import VehicleInfromationInfo from '@/components/vehicle-infromation/vehicle-infromation-info';
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { useEffect } from 'react';
+import { getVehicleDetails } from '@/services/vehicle';
+import Loader from '@/components/ui/Loader';
 
 const VehicleInfromation = () => {
-  const { vehicleDetailsLoading, isEditMode } = useTypedSelector(state => state.Vehicle);
-  const { driverDetails, accessToken } = useTypedSelector(state => state.Driver);
+  const { vehicleDetailsLoading, isEditMode } = useTypedSelector((state) => state.Vehicle);
+  const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

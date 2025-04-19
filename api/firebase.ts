@@ -1,6 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+import { initializeApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -19,15 +19,15 @@ const auth = getAuth(app);
 
 //firebase error object
 const firebaseErrorMap: Record<string, string> = {
-  "auth/email-already-in-use": "This email is already registered.",
-  "auth/invalid-email": "The email address is not valid.",
-  "auth/weak-password": "Password should be at least 6 characters.",
-  "auth/missing-password": "Password is required.",
-  "auth/invalid-credential": "Invalid Credentials",
+  'auth/email-already-in-use': 'This email is already registered.',
+  'auth/invalid-email': 'The email address is not valid.',
+  'auth/weak-password': 'Password should be at least 6 characters.',
+  'auth/missing-password': 'Password is required.',
+  'auth/invalid-credential': 'Invalid Credentials',
 };
 
 export const formatFirebaseError = (code: any) => {
-  const errorMessage = firebaseErrorMap[code] || "An unexpected error occurred.";
+  const errorMessage = firebaseErrorMap[code] || 'An unexpected error occurred.';
 
   return {
     response: {
@@ -75,10 +75,10 @@ export const firebaseApi = {
     try {
       const dataCol = collection(db, collectionName);
       const dataSnapshot = await getDocs(dataCol);
-      const dataList = dataSnapshot.docs.map(doc => doc.data());
+      const dataList = dataSnapshot.docs.map((doc) => doc.data());
       return dataList;
     } catch (error: any) {
-      const errorMessage = firebaseErrorMap[error.code] || "An unexpected error occurred.";
+      const errorMessage = firebaseErrorMap[error.code] || 'An unexpected error occurred.';
       throw formatFirebaseError(error.code);
     }
   },
@@ -92,9 +92,9 @@ export const firebaseApi = {
     try {
       const dataCol = collection(db, collectionName);
       const dataSnapshot = await getDocs(dataCol);
-      const dataList = dataSnapshot.docs.map(doc => doc.data());
-      const data = dataList?.find(ele => ele?.id === docId);
-      if (!data) throw { status: 401, message: "document not found" };
+      const dataList = dataSnapshot.docs.map((doc) => doc.data());
+      const data = dataList?.find((ele) => ele?.id === docId);
+      if (!data) throw { status: 401, message: 'document not found' };
       return data;
     } catch (error: any) {
       throw formatFirebaseError(error.code);
@@ -110,14 +110,14 @@ export const firebaseApi = {
     try {
       const dataCol = collection(db, collectionName);
       const dataSnapshot = await getDocs(dataCol);
-      const dataList = dataSnapshot.docs.map(doc => doc.data());
+      const dataList = dataSnapshot.docs.map((doc) => doc.data());
 
       let data: any = [];
-      docIds?.forEach(id => {
-        const res = dataList?.find(doc => doc?.id === id);
+      docIds?.forEach((id) => {
+        const res = dataList?.find((doc) => doc?.id === id);
         data.push(res);
       });
-      if (!data) throw { status: 401, message: "document not found" };
+      if (!data) throw { status: 401, message: 'document not found' };
       return data;
     } catch (error) {
       throw error;

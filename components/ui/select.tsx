@@ -1,6 +1,6 @@
 // components/FullScreenSelect.tsx
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
   FlatList,
   TextInput,
   SafeAreaView,
-} from "react-native";
-import { Search, Check } from "lucide-react-native";
+} from 'react-native';
+import { Search, Check } from 'lucide-react-native';
 
 interface FullScreenSelectProps {
   options: string[];
@@ -27,18 +27,18 @@ const Select: React.FC<FullScreenSelectProps> = ({
   onChange,
   label,
   error,
-  placeholder = "Select an option",
+  placeholder = 'Select an option',
 }) => {
   const [open, setOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [filtered, setFiltered] = useState<string[]>(options);
 
   useEffect(() => {
-    if (searchText.trim() === "") {
+    if (searchText.trim() === '') {
       setFiltered(options);
     } else {
       const lower = searchText.toLowerCase();
-      setFiltered(options.filter(opt => opt.toLowerCase().includes(lower)));
+      setFiltered(options.filter((opt) => opt.toLowerCase().includes(lower)));
     }
   }, [searchText, options]);
 
@@ -49,10 +49,10 @@ const Select: React.FC<FullScreenSelectProps> = ({
       <TouchableOpacity
         onPress={() => setOpen(true)}
         className={`h-[50] px-5 py-2 border rounded-md flex-row items-center justify-between bg-white ${
-          error ? "border-red-500" : "border-gray-300"
+          error ? 'border-red-500' : 'border-gray-300'
         }`}
       >
-        <Text className={`text-[15px] ${value ? "text-gray-900" : "text-gray-400"}`}>
+        <Text className={`text-[15px] ${value ? 'text-gray-900' : 'text-gray-400'}`}>
           {value || placeholder}
         </Text>
       </TouchableOpacity>
@@ -85,7 +85,7 @@ const Select: React.FC<FullScreenSelectProps> = ({
           {/* Options */}
           <FlatList
             data={filtered}
-            keyExtractor={item => item}
+            keyExtractor={(item) => item}
             contentContainerStyle={{ paddingVertical: 16 }}
             renderItem={({ item }) => {
               const selected = value === item;
@@ -94,10 +94,10 @@ const Select: React.FC<FullScreenSelectProps> = ({
                   onPress={() => {
                     onChange(item);
                     setOpen(false);
-                    setSearchText("");
+                    setSearchText('');
                   }}
                   className={`flex-row items-center gap-2 px-6 py-4 ${
-                    selected ? "bg-gray-100" : ""
+                    selected ? 'bg-gray-100' : ''
                   }`}
                 >
                   {selected && <Check size={18} color="#4b5563" />}

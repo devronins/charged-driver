@@ -1,11 +1,11 @@
-import { useAppDispatch, useTypedSelector } from "@/store";
-import { useRouter } from "expo-router";
-import { Image, Text, View } from "react-native";
-import Icons from "@/constants/icons";
-import images from "@/constants/images";
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { useRouter } from 'expo-router';
+import { Image, Text, View } from 'react-native';
+import Icons from '@/constants/icons';
+import images from '@/constants/images';
 
 const ProfileSection = () => {
-  const { driverDetails, accessToken } = useTypedSelector(state => state.Driver);
+  const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -19,7 +19,7 @@ const ProfileSection = () => {
             resizeMode="contain"
           />
           <View className="absolute bottom-1 right-1 rounded-full border-white border-[2px] p-1 bg-primary-300">
-            <Icons.Camera color="#007FFF" className="w-5 h-5" fill={"#FFFFFF"} />
+            <Icons.Camera color="#007FFF" className="w-5 h-5" fill={'#FFFFFF'} />
           </View>
         </View>
         <View className="flex items-center justify-center">
@@ -29,7 +29,7 @@ const ProfileSection = () => {
 
       <View className="flex flex-col items-center gap-1 mt-4">
         <View className="flex items-center justify-center">
-          <Text className="text-3xl font-bold">{driverDetails?.name || "Your Name"}</Text>
+          <Text className="text-3xl font-bold">{driverDetails?.name || 'Your Name'}</Text>
         </View>
         <View className="flex items-center justify-center">
           <Text className="text-text-300 text-[16px]">{driverDetails?.email}</Text>

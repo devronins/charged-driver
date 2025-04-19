@@ -1,4 +1,4 @@
-import icon from "@/assets/icons/icon.png";
+import icon from '@/assets/icons/icon.png';
 import {
   Eye,
   EyeOff,
@@ -18,7 +18,8 @@ import {
   Info,
   RefreshCcw,
   Upload,
-} from "lucide-react-native";
+  X,
+} from 'lucide-react-native';
 
 export default {
   Eye,
@@ -39,4 +40,5 @@ export default {
   Info,
   RefreshCcw,
   Upload,
+  Close: X,
 };
