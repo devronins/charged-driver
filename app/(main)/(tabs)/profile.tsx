@@ -1,7 +1,7 @@
-import ProfileLogout from "@/components/profile/profile-logout-section";
-import ProfilePageNavigation from "@/components/profile/profile-page-navigation";
-import ProfileSection from "@/components/profile/profile-section";
-import { ScrollView, Text, View } from "react-native";
+import ProfileLogout from '@/components/profile/profile-logout-section';
+import ProfilePageNavigation from '@/components/profile/profile-page-navigation';
+import ProfileSection from '@/components/profile/profile-section';
+import { ScrollView, Text, View } from 'react-native';
 
 const Profile = () => {
   return (

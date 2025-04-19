@@ -1,20 +1,20 @@
-import Icons from "@/constants/icons";
-import { VehicleActions } from "@/reducers";
-import { useAppDispatch, useTypedSelector } from "@/store";
-import { Redirect, Stack } from "expo-router";
-import { Platform, Text, TouchableOpacity } from "react-native";
+import Icons from '@/constants/icons';
+import { VehicleActions } from '@/reducers';
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { Redirect, Stack } from 'expo-router';
+import { Platform, Text, TouchableOpacity } from 'react-native';
 
 const Layout = () => {
   const dispatch = useAppDispatch();
-  const { isLogin } = useTypedSelector(state => state.Driver);
-  const { isEditMode } = useTypedSelector(state => state.Vehicle);
+  const { isLogin } = useTypedSelector((state) => state.Driver);
+  const { isEditMode } = useTypedSelector((state) => state.Vehicle);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
   return (
     <Stack
       screenOptions={{
-        animation: Platform.OS === "ios" ? "slide_from_right" : "none",
+        animation: Platform.OS === 'ios' ? 'slide_from_right' : 'none',
         headerBackVisible: false, // for hide default android arrow back button
       }}
     >
@@ -23,12 +23,12 @@ const Layout = () => {
         name="profile/vehicle-infromation"
         //@ts-ignore
         options={({ navigation }) => ({
-          headerTitle: "Vehicle Information",
-          headerTitleAlign: "center", // for android
+          headerTitle: 'Vehicle Information',
+          headerTitleAlign: 'center', // for android
           headerTitleStyle: {
-            color: "#007FFF",
+            color: '#007FFF',
             paddingLeft: 0,
-            text: "center",
+            text: 'center',
           },
           headerLeft: () => (
             <TouchableOpacity
@@ -45,7 +45,7 @@ const Layout = () => {
                 dispatch(VehicleActions.setIsEditMode({ status: !isEditMode }));
               }}
             >
-              <Text className="text-primary-300">{isEditMode ? "Cancel" : "Edit"}</Text>
+              <Text className="text-primary-300">{isEditMode ? 'Cancel' : 'Edit'}</Text>
             </TouchableOpacity>
           ),
         })}
@@ -54,12 +54,12 @@ const Layout = () => {
         name="profile/driver-document"
         //@ts-ignore
         options={({ navigation }) => ({
-          headerTitle: "Documents",
-          headerTitleAlign: "center", // for android
+          headerTitle: 'Documents',
+          headerTitleAlign: 'center', // for android
           headerTitleStyle: {
-            color: "#007FFF",
+            color: '#007FFF',
             paddingLeft: 0,
-            text: "center",
+            text: 'center',
           },
           headerLeft: () => (
             <TouchableOpacity

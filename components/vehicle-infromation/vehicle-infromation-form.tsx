@@ -1,12 +1,12 @@
-import { useAppDispatch, useTypedSelector } from "@/store";
-import { useRouter } from "expo-router";
-import { Platform, View } from "react-native";
-import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
-import InputField from "@/components/ui/InputField";
-import CustomButton from "../ui/CustomButton";
-import Icons from "@/constants/icons";
-import { VehicleModal } from "@/utils/modals/vehicle";
-import { addVehicleDetails, editVehicleDetails } from "@/services/vehicle";
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { useRouter } from 'expo-router';
+import { Platform, View } from 'react-native';
+import { Controller, useForm, yup, yupResolver } from '@/utils/react-hook-form';
+import InputField from '@/components/ui/InputField';
+import CustomButton from '../ui/CustomButton';
+import Icons from '@/constants/icons';
+import { VehicleModal } from '@/utils/modals/vehicle';
+import { addVehicleDetails, editVehicleDetails } from '@/services/vehicle';
 
 export interface VehicleInfromationFormDataType {
   car_model: string | undefined;
@@ -27,26 +27,26 @@ const getVehicleInfromationFormData = (data: VehicleModal | null) => {
 };
 
 const schema = yup.object().shape({
-  car_model: yup.string().required("Vehicle Model is required"),
-  license_plate: yup.string().required("License Plate is required"),
-  car_color: yup.string().required("Vehicle Color is required"),
+  car_model: yup.string().required('Vehicle Model is required'),
+  license_plate: yup.string().required('License Plate is required'),
+  car_color: yup.string().required('Vehicle Color is required'),
   car_year: yup
     .number()
-    .required("Vehicle Year is required")
-    .min(1900, "Vehicle Year must be 1900 or later")
+    .required('Vehicle Year is required')
+    .min(1900, 'Vehicle Year must be 1900 or later')
     .max(new Date().getFullYear(), `Vehicle Year cannot be in the future`),
   car_type: yup
     .string()
-    .required("Vehicle Type is required")
+    .required('Vehicle Type is required')
     .oneOf(
-      ["suv", "regular", "electric"],
-      "Vehicle Type should be one of the following: suv, regular, or electric."
+      ['suv', 'regular', 'electric'],
+      'Vehicle Type should be one of the following: suv, regular, or electric.'
     ),
 });
 
 const VehicleInfromationForm = () => {
   const { vehicleDetails, vehicleDetailsLoading, isEditMode } = useTypedSelector(
-    state => state.Vehicle
+    (state) => state.Vehicle
   );
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -77,15 +77,15 @@ const VehicleInfromationForm = () => {
         name="car_model"
         render={({ field: { onChange } }) => (
           <InputField
-            containerStyle={`bg-secondary-300 ${!isEditMode && "border-0"}`}
+            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'}`}
             label="Vehicle Model"
             placeholder="eg. Tesla"
             value={
               isEditMode
-                ? watch("car_model")
+                ? watch('car_model')
                 : vehicleDetails?.car_model
                   ? vehicleDetails?.car_model
-                  : "Not Provided"
+                  : 'Not Provided'
             }
             onChangeText={onChange}
             editable={!isEditMode ? false : vehicleDetailsLoading ? false : true}
@@ -98,15 +98,15 @@ const VehicleInfromationForm = () => {
         name="license_plate"
         render={({ field: { onChange } }) => (
           <InputField
-            containerStyle={`bg-secondary-300 ${!isEditMode && "border-0"}`}
+            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'}`}
             label="License Plate"
             placeholder="eg. EV-1234"
             value={
               isEditMode
-                ? watch("license_plate")
+                ? watch('license_plate')
                 : vehicleDetails?.license_plate
                   ? vehicleDetails.license_plate
-                  : "Not Provided"
+                  : 'Not Provided'
             }
             onChangeText={onChange}
             editable={!isEditMode ? false : vehicleDetailsLoading ? false : true}
@@ -119,15 +119,15 @@ const VehicleInfromationForm = () => {
         name="car_color"
         render={({ field: { onChange } }) => (
           <InputField
-            containerStyle={`bg-secondary-300 ${!isEditMode && "border-0"}`}
+            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'}`}
             label="Vehicle Color"
             placeholder="eg. Red"
             value={
               isEditMode
-                ? watch("car_color")
+                ? watch('car_color')
                 : vehicleDetails?.car_color
                   ? vehicleDetails.car_color
-                  : "Not Provided"
+                  : 'Not Provided'
             }
             onChangeText={onChange}
             editable={!isEditMode ? false : vehicleDetailsLoading ? false : true}
@@ -141,15 +141,15 @@ const VehicleInfromationForm = () => {
         render={({ field: { onChange } }) => (
           <InputField
             keyboardType="numeric"
-            containerStyle={`bg-secondary-300 ${!isEditMode && "border-0"}`}
+            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'}`}
             label="Vehicle Year"
             placeholder="eg. 2024"
             value={
               isEditMode
-                ? watch("car_year")?.toString()
+                ? watch('car_year')?.toString()
                 : vehicleDetails?.car_year?.toString()
                   ? vehicleDetails?.car_year?.toString()
-                  : "Not Provided"
+                  : 'Not Provided'
             }
             onChangeText={onChange}
             editable={!isEditMode ? false : vehicleDetailsLoading ? false : true}
@@ -162,15 +162,15 @@ const VehicleInfromationForm = () => {
         name="car_type"
         render={({ field: { onChange } }) => (
           <InputField
-            containerStyle={`bg-secondary-300 ${!isEditMode && "border-0"}`}
+            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'}`}
             label="Vehicle Type"
             placeholder="eg. Suv"
             value={
               isEditMode
-                ? watch("car_type")
+                ? watch('car_type')
                 : vehicleDetails?.car_type
                   ? vehicleDetails.car_type
-                  : "Not Provided"
+                  : 'Not Provided'
             }
             onChangeText={onChange}
             editable={!isEditMode ? false : vehicleDetailsLoading ? false : true}
@@ -180,12 +180,12 @@ const VehicleInfromationForm = () => {
       />
 
       <CustomButton
-        title={isEditMode ? "Save Vehicle Infromation" : "Sync with Admin Panel"}
-        titleStyle={"font-bold"}
-        className={`${Platform.OS === "ios" ? "py-4" : "py-3"} gap-2 ${isEditMode ? "bg-tertiary-300" : ""}`}
+        title={isEditMode ? 'Save Vehicle Infromation' : 'Sync with Admin Panel'}
+        titleStyle={'font-bold'}
+        className={`${Platform.OS === 'ios' ? 'py-4' : 'py-3'} gap-2 ${isEditMode ? 'bg-tertiary-300' : ''}`}
         onPress={handleSubmit(handleSaveVehicleDetailsInfo)}
         disabled={!isEditMode ? true : vehicleDetailsLoading ? true : false} // TODO: currently for sync with admin panel button is disable
-        IconLeft={isEditMode ? undefined : <Icons.RefreshCcw color={"#FFFFFF"} size={20} />}
+        IconLeft={isEditMode ? undefined : <Icons.RefreshCcw color={'#FFFFFF'} size={20} />}
       />
     </View>
   );

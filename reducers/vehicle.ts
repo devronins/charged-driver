@@ -1,6 +1,6 @@
-import { VehicleModal } from "@/utils/modals/vehicle";
-import { addVehicleDetails, editVehicleDetails, getVehicleDetails } from "@/services/vehicle";
-import { createSlice } from "@reduxjs/toolkit";
+import { VehicleModal } from '@/utils/modals/vehicle';
+import { addVehicleDetails, editVehicleDetails, getVehicleDetails } from '@/services/vehicle';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface VehicleInitialStateType {
   vehicleDetails: null | VehicleModal;
@@ -17,7 +17,7 @@ const initialState: VehicleInitialStateType = {
 };
 
 const VehicleSlice = createSlice({
-  name: "VehicleSlice", //must be unique for every slice. convention is to put the same as file name
+  name: 'VehicleSlice', //must be unique for every slice. convention is to put the same as file name
   initialState, //the initial state of the slice
   reducers: {
     setIsEditMode: (state, action) => {
@@ -25,8 +25,8 @@ const VehicleSlice = createSlice({
     },
     setIntialState: (state, action) => initialState,
   }, // action methods
-  extraReducers: builder => {
-    builder.addCase(addVehicleDetails.pending, state => {
+  extraReducers: (builder) => {
+    builder.addCase(addVehicleDetails.pending, (state) => {
       state.vehicleDetailsLoading = true;
       state.error = false;
     });
@@ -40,7 +40,7 @@ const VehicleSlice = createSlice({
       state.vehicleDetailsLoading = false;
     });
 
-    builder.addCase(editVehicleDetails.pending, state => {
+    builder.addCase(editVehicleDetails.pending, (state) => {
       state.vehicleDetailsLoading = true;
       state.error = false;
     });
@@ -54,7 +54,7 @@ const VehicleSlice = createSlice({
       state.vehicleDetailsLoading = false;
     });
 
-    builder.addCase(getVehicleDetails.pending, state => {
+    builder.addCase(getVehicleDetails.pending, (state) => {
       state.vehicleDetailsLoading = true;
       state.error = false;
     });

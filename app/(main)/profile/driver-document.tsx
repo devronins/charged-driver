@@ -1,17 +1,18 @@
-import { ScrollView, View } from "react-native";
-import DriverDocumentTypes from "@/components/driver-document/driver-document-types";
-import DriverDocumentInfo from "@/components/driver-document/driver-document-info";
-import { useAppDispatch, useTypedSelector } from "@/store";
-import { useEffect } from "react";
-import { getDriverDocumentTypes } from "@/services";
-import Loader from "@/components/ui/Loader";
+import { ScrollView, View } from 'react-native';
+import DriverDocumentTypes from '@/components/driver-document/driver-document-types';
+import DriverDocumentInfo from '@/components/driver-document/driver-document-info';
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { useEffect } from 'react';
+import { getDriverDocumentTypes, getDriverUploadedDocuments } from '@/services';
+import Loader from '@/components/ui/Loader';
 
 const DriverDocument = () => {
-  const { driverDocumentLoading } = useTypedSelector(state => state.Driver);
+  const { driverDocumentLoading } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getDriverDocumentTypes({}));
+    dispatch(getDriverUploadedDocuments({}));
   }, []);
 
   if (driverDocumentLoading) return <Loader open={driverDocumentLoading} />;

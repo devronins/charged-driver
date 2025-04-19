@@ -1,12 +1,12 @@
-import { View, Text, TouchableOpacity, Linking, Platform, AppState } from "react-native";
-import { CheckCircle, XCircle } from "lucide-react-native";
-import { Model } from "@/components/ui/model";
-import { PermissionTypeEnum } from "@/reducers";
-import { useTypedSelector } from "@/store";
-import CustomButton from "../ui/CustomButton";
+import { View, Text, TouchableOpacity, Linking, Platform, AppState } from 'react-native';
+import { CheckCircle, XCircle } from 'lucide-react-native';
+import { Model } from '@/components/ui/model';
+import { PermissionTypeEnum } from '@/reducers';
+import { useTypedSelector } from '@/store';
+import CustomButton from '../ui/CustomButton';
 
 export default function PermissionModal() {
-  const { location } = useTypedSelector(state => state.Permission);
+  const { location } = useTypedSelector((state) => state.Permission);
 
   const openSettings = () => {
     Linking.openSettings();

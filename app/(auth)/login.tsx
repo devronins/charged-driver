@@ -1,12 +1,12 @@
-import CustomButton from "@/components/ui/CustomButton";
-import InputField from "@/components/ui/InputField";
-import Loader from "@/components/ui/Loader";
-import images from "@/constants/images";
-import { loginDriver } from "@/services";
-import { useAppDispatch, useTypedSelector } from "@/store";
-import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
-import { Link, useRouter } from "expo-router";
-import { Image, Platform, ScrollView, Text, View } from "react-native";
+import CustomButton from '@/components/ui/CustomButton';
+import InputField from '@/components/ui/InputField';
+import Loader from '@/components/ui/Loader';
+import images from '@/constants/images';
+import { loginDriver } from '@/services';
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { Controller, useForm, yup, yupResolver } from '@/utils/react-hook-form';
+import { Link, useRouter } from 'expo-router';
+import { Image, Platform, ScrollView, Text, View } from 'react-native';
 
 export interface LoginFormDataType {
   email: string;
@@ -14,13 +14,13 @@ export interface LoginFormDataType {
 }
 
 const loginFormData: LoginFormDataType = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 };
 
 const schema = yup.object().shape({
-  email: yup.string().email("Invalid email address").required("Email is required"),
-  password: yup.string().min(6, "Password length should be min 6").required("Password is required"),
+  email: yup.string().email('Invalid email address').required('Email is required'),
+  password: yup.string().min(6, 'Password length should be min 6').required('Password is required'),
 });
 
 const Login = () => {
@@ -30,20 +30,20 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormDataType>({
     defaultValues: {
-      email: loginFormData?.email || "",
-      password: loginFormData?.password || "",
+      email: loginFormData?.email || '',
+      password: loginFormData?.password || '',
     },
     resolver: yupResolver(schema),
   });
 
-  const { loading } = useTypedSelector(state => state.Driver);
+  const { loading } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const onSubmit = (data: LoginFormDataType) => {
     dispatch(
       loginDriver({
         data: data,
-        navigate: () => router.navigate("/(main)/(tabs)/home"),
+        navigate: () => router.navigate('/(main)/(tabs)/home'),
       })
     );
   };
@@ -102,7 +102,7 @@ const Login = () => {
 
           <CustomButton
             title="Login"
-            className={`${Platform.OS === "ios" ? "py-4" : "py-3"}`}
+            className={`${Platform.OS === 'ios' ? 'py-4' : 'py-3'}`}
             onPress={handleSubmit(onSubmit)}
             disabled={loading}
           />

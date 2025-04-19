@@ -2,7 +2,7 @@ import {
   DriverDocumentTypesModal,
   DriverModal,
   DriverUploadedDocumentModal,
-} from "@/utils/modals/driver";
+} from '@/utils/modals/driver';
 import {
   registerDriver,
   getDriver,
@@ -11,8 +11,8 @@ import {
   uploadDriverDocument,
   getDriverUploadedDocuments,
   getDriverDocumentTypes,
-} from "@/services/driver";
-import { createSlice } from "@reduxjs/toolkit";
+} from '@/services/driver';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface DriverInitialStateType {
   isLogin: boolean;
@@ -39,13 +39,13 @@ const initialState: DriverInitialStateType = {
 };
 
 const DriverSlice = createSlice({
-  name: "DriverSlice", //must be unique for every slice. convention is to put the same as file name
+  name: 'DriverSlice', //must be unique for every slice. convention is to put the same as file name
   initialState, //the initial state of the slice
   reducers: {
     setIntialState: (state, action) => initialState,
   }, // action methods
-  extraReducers: builder => {
-    builder.addCase(registerDriver.pending, state => {
+  extraReducers: (builder) => {
+    builder.addCase(registerDriver.pending, (state) => {
       state.loading = true;
       state.error = false;
     });
@@ -64,7 +64,7 @@ const DriverSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(logoutDriver.pending, state => {
+    builder.addCase(logoutDriver.pending, (state) => {
       state.loading = true;
       state.error = false;
     });
@@ -74,7 +74,7 @@ const DriverSlice = createSlice({
       state.loading = false;
     });
 
-    builder.addCase(getDriver.pending, state => {
+    builder.addCase(getDriver.pending, (state) => {
       state.driverDetailsLoading = true;
     });
     builder.addCase(getDriver.fulfilled, (state, action) => {
@@ -86,7 +86,7 @@ const DriverSlice = createSlice({
       state.driverDetailsLoading = false;
     });
 
-    builder.addCase(loginDriver.pending, state => {
+    builder.addCase(loginDriver.pending, (state) => {
       state.loading = true;
       state.error = false;
     });
@@ -107,20 +107,22 @@ const DriverSlice = createSlice({
     });
 
     //----------------------------------------------------------  driver documets
-    builder.addCase(uploadDriverDocument.pending, state => {
+    builder.addCase(uploadDriverDocument.pending, (state) => {
       state.driverDocumentLoading = true;
       state.error = false;
     });
     builder.addCase(uploadDriverDocument.fulfilled, (state, action) => {
       state.driverDocumentLoading = false;
-      state.driverUploadedDocuments = action.payload.driverUploadedDocuments;
+      if (action.payload.driverUploadedDocuments) {
+        state.driverUploadedDocuments = action.payload.driverUploadedDocuments;
+      }
     });
     builder.addCase(uploadDriverDocument.rejected, (state, action) => {
       state.error = true;
       state.driverDocumentLoading = false;
     });
 
-    builder.addCase(getDriverUploadedDocuments.pending, state => {
+    builder.addCase(getDriverUploadedDocuments.pending, (state) => {
       state.driverDocumentLoading = true;
       state.error = false;
     });
@@ -133,13 +135,15 @@ const DriverSlice = createSlice({
       state.driverDocumentLoading = false;
     });
 
-    builder.addCase(getDriverDocumentTypes.pending, state => {
+    builder.addCase(getDriverDocumentTypes.pending, (state) => {
       state.driverDocumentLoading = true;
       state.error = false;
     });
     builder.addCase(getDriverDocumentTypes.fulfilled, (state, action) => {
       state.driverDocumentLoading = false;
-      state.driverDocumentTypes = action.payload.driverDocumentTypes;
+      if (action.payload.driverDocumentTypes) {
+        state.driverDocumentTypes = action.payload.driverDocumentTypes;
+      }
     });
     builder.addCase(getDriverDocumentTypes.rejected, (state, action) => {
       state.error = true;

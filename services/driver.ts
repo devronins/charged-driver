@@ -1,19 +1,20 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   fetchDocumentTypes,
   fetchDriver,
-  fetchDrivers,
   fetchUploadedDocuments,
   updateDriver,
   uploadFileDocument,
-} from "@/api/axios";
-import { Toast } from "@/utils/toast";
-import { firebaseApi, formatFirebaseError } from "@/api/firebase";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DriverActions, VehicleActions } from "@/reducers";
+} from '@/api/axios';
+import { Toast } from '@/utils/toast';
+import { firebaseApi, formatFirebaseError } from '@/api/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DriverActions, VehicleActions } from '@/reducers';
+import { PickerSourceEnumType, pickImageFromCamera, pickImageFromGallery } from '@/services/common';
+const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
-  "DriverSlice/registerDriver",
+  'DriverSlice/registerDriver',
   async (params, thunkApi) => {
     try {
       const data = await firebaseApi.registerUserWithEmailAndPassword({
@@ -22,7 +23,7 @@ export const registerDriver = createAsyncThunk<any, any>(
       });
 
       //set accesstoken to localStorage
-      await AsyncStorage.setItem("accessToken", data.accessToken);
+      await AsyncStorage.setItem('accessToken', data.accessToken);
 
       //call this api neccessary to register the Driver in our system database
       await fetchDriver();
@@ -31,6 +32,11 @@ export const registerDriver = createAsyncThunk<any, any>(
       await updateDriver(params?.data);
 
       const { data: driverUpdatedDataRes } = await fetchDriver();
+
+      Toast.show({
+        type: 'success',
+        text1: 'Driver Resgistered successfully',
+      });
 
       // params?.navigate()// call navigate function
       return thunkApi.fulfillWithValue({
@@ -41,21 +47,16 @@ export const registerDriver = createAsyncThunk<any, any>(
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
-    } finally {
-      Toast.show({
-        type: "success",
-        text1: "Driver Resgistered successfully",
-      });
     }
   }
 );
 
 export const loginDriver = createAsyncThunk<any, any>(
-  "DriverSlice/loginDriver",
+  'DriverSlice/loginDriver',
   async (params, thunkApi) => {
     try {
       const data = await firebaseApi.loginWithEmailAndPassword({
@@ -64,13 +65,19 @@ export const loginDriver = createAsyncThunk<any, any>(
       });
 
       //set accesstoken to localStorage
-      await AsyncStorage.setItem("accessToken", data.accessToken);
+      await AsyncStorage.setItem('accessToken', data.accessToken);
 
       //call this api to register this Driver if somehow this Driver entry not exist in our system database
       const { data: driverDataRes } = await fetchDriver();
-      if (driverDataRes.data.user_type != "driver") {
+      if (driverDataRes.data.user_type != 'driver') {
         throw formatFirebaseError('"auth/invalid-credential"');
       }
+
+      Toast.show({
+        type: 'success',
+        text1: 'Driver Login successfully',
+      });
+
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
         driverDetails: driverDataRes.data,
@@ -79,21 +86,16 @@ export const loginDriver = createAsyncThunk<any, any>(
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
-    } finally {
-      Toast.show({
-        type: "success",
-        text1: "Driver Login successfully",
-      });
     }
   }
 );
 
 export const logoutDriver = createAsyncThunk<any, any>(
-  "DriverSlice/logoutDriver",
+  'DriverSlice/logoutDriver',
   async (params, thunkApi) => {
     try {
       await AsyncStorage.clear();
@@ -102,25 +104,25 @@ export const logoutDriver = createAsyncThunk<any, any>(
       thunkApi.dispatch(DriverActions.setIntialState({}));
       thunkApi.dispatch(VehicleActions.setIntialState({}));
 
+      Toast.show({
+        type: 'success',
+        text1: 'Driver Logout successfully',
+      });
+
       return thunkApi.fulfillWithValue({});
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
-    } finally {
-      Toast.show({
-        type: "success",
-        text1: "Driver Logout successfully",
-      });
     }
   }
 );
 
 export const getDriver = createAsyncThunk<any, any>(
-  "DriverSlice/getDriver",
+  'DriverSlice/getDriver',
   async (params, thunkApi) => {
     try {
       const { data } = await fetchDriver();
@@ -128,7 +130,7 @@ export const getDriver = createAsyncThunk<any, any>(
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "Error ",
+        type: 'Error ',
         text1: error?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
@@ -137,34 +139,56 @@ export const getDriver = createAsyncThunk<any, any>(
 );
 
 export const uploadDriverDocument = createAsyncThunk<any, any>(
-  "DriverSlice/uploadDriverDocument",
+  'DriverSlice/uploadDriverDocument',
   async (params, thunkApi) => {
     try {
-      await uploadFileDocument(params?.data?.documentType);
+      const imageData =
+        params?.data?.modeType === PickerSourceEnumType.Camera
+          ? await pickImageFromCamera()
+          : await pickImageFromGallery();
 
-      const { data } = await fetchUploadedDocuments();
+      if (imageData === null) {
+        Toast.show({
+          type: 'info',
+          text1: "you have'nt selected any image",
+        });
+        return thunkApi.fulfillWithValue({
+          driverUploadedDocuments: null,
+        });
+      } else {
+        const formData = new FormData();
+        formData.append('file', {
+          uri: imageData.uri,
+          name: imageData.fileName,
+          type: imageData.type,
+        } as any);
 
-      return thunkApi.fulfillWithValue({
-        driverUploadedDocuments: data.data,
-      });
+        await uploadFileDocument(params?.data?.documentTypeId, formData);
+        const { data } = await fetchUploadedDocuments();
+
+        Toast.show({
+          type: 'success',
+          text1: 'Driver Document uploaded successfully',
+        });
+
+        return thunkApi.fulfillWithValue({
+          driverUploadedDocuments: data.data,
+        });
+      }
     } catch (err) {
       const error: any = err;
+      console.log('171>>>>>>>', error);
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
-    } finally {
-      Toast.show({
-        type: "success",
-        text1: "Driver Document uploaded successfully",
-      });
     }
   }
 );
 
 export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
-  "DriverSlice/getDriverUploadedDocuments",
+  'DriverSlice/getDriverUploadedDocuments',
   async (params, thunkApi) => {
     try {
       const { data } = await fetchUploadedDocuments();
@@ -175,7 +199,7 @@ export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
@@ -184,7 +208,7 @@ export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
 );
 
 export const getDriverDocumentTypes = createAsyncThunk<any, any>(
-  "DriverSlice/getDriverDocumentTypes",
+  'DriverSlice/getDriverDocumentTypes',
   async (params, thunkApi) => {
     try {
       const { data } = await fetchDocumentTypes();
@@ -195,7 +219,7 @@ export const getDriverDocumentTypes = createAsyncThunk<any, any>(
     } catch (err) {
       const error: any = err;
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
