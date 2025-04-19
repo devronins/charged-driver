@@ -2,7 +2,7 @@ import Icons from "@/constants/icons";
 import { VehicleActions } from "@/reducers";
 import { useAppDispatch, useTypedSelector } from "@/store";
 import { Redirect, Stack } from "expo-router";
-import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { Platform, Text, TouchableOpacity } from "react-native";
 
 const Layout = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +14,8 @@ const Layout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: "slide_from_right",
+        animation: Platform.OS === "ios" ? "slide_from_right" : "none",
+        headerBackVisible: false, // for hide default android arrow back button
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
