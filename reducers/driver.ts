@@ -11,6 +11,7 @@ import {
   uploadDriverDocument,
   getDriverUploadedDocuments,
   getDriverDocumentTypes,
+  uploadDriverProfileImage,
 } from '@/services/driver';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -106,6 +107,19 @@ const DriverSlice = createSlice({
       state.loading = false;
     });
 
+    builder.addCase(uploadDriverProfileImage.pending, (state) => {
+      state.driverDetailsLoading = true;
+      state.error = false;
+    });
+    builder.addCase(uploadDriverProfileImage.fulfilled, (state, action) => {
+      state.driverDetailsLoading = false;
+      state.driverDetails = action.payload.driverDetails;
+    });
+    builder.addCase(uploadDriverProfileImage.rejected, (state, action) => {
+      state.error = true;
+      state.driverDetailsLoading = false;
+    });
+
     //----------------------------------------------------------  driver documets
     builder.addCase(uploadDriverDocument.pending, (state) => {
       state.driverDocumentLoading = true;
@@ -113,9 +127,7 @@ const DriverSlice = createSlice({
     });
     builder.addCase(uploadDriverDocument.fulfilled, (state, action) => {
       state.driverDocumentLoading = false;
-      if (action.payload.driverUploadedDocuments) {
-        state.driverUploadedDocuments = action.payload.driverUploadedDocuments;
-      }
+      state.driverUploadedDocuments = action.payload.driverUploadedDocuments;
     });
     builder.addCase(uploadDriverDocument.rejected, (state, action) => {
       state.error = true;
@@ -141,9 +153,7 @@ const DriverSlice = createSlice({
     });
     builder.addCase(getDriverDocumentTypes.fulfilled, (state, action) => {
       state.driverDocumentLoading = false;
-      if (action.payload.driverDocumentTypes) {
-        state.driverDocumentTypes = action.payload.driverDocumentTypes;
-      }
+      state.driverDocumentTypes = action.payload.driverDocumentTypes;
     });
     builder.addCase(getDriverDocumentTypes.rejected, (state, action) => {
       state.error = true;

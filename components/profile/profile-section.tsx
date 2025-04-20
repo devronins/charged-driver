@@ -1,13 +1,41 @@
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { useRouter } from 'expo-router';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Icons from '@/constants/icons';
+import { LottieView } from '@/utils/lottie';
+import { CameraJson, GalleryJson } from '@/constants/animation';
 import images from '@/constants/images';
+import {
+  PickerSourceEnumType,
+  pickImageFromCamera,
+  pickImageFromGallery,
+  uploadDriverProfileImage,
+} from '@/services';
+import { Model } from '../ui/model';
+import { useState } from 'react';
+import { Toast } from '@/utils/toast';
 
 const ProfileSection = () => {
+  const [isModelVisible, setIsModelVisible] = useState(false);
   const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
-  const router = useRouter();
+
+  const handleUploadImage = async (modeType: PickerSourceEnumType) => {
+    setIsModelVisible(false);
+    const imageData =
+      modeType === PickerSourceEnumType.Camera
+        ? await pickImageFromCamera()
+        : await pickImageFromGallery();
+
+    if (imageData === null) {
+      Toast.show({
+        type: 'info',
+        text1: "you have'nt selected any image",
+      });
+    } else {
+      dispatch(uploadDriverProfileImage({ data: imageData }));
+    }
+  };
 
   return (
     <View className="w-full h-auto p-7 bg-white rounded-lg flex flex-col items-center">
@@ -22,9 +50,12 @@ const ProfileSection = () => {
             <Icons.Camera color="#007FFF" className="w-5 h-5" fill={'#FFFFFF'} />
           </View>
         </View>
-        <View className="flex items-center justify-center">
+        <TouchableOpacity
+          className="flex items-center justify-center"
+          onPress={() => setIsModelVisible(true)}
+        >
           <Text className="text-primary-300 text-[16px]">Change Photo</Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View className="flex flex-col items-center gap-1 mt-4">
@@ -62,6 +93,38 @@ const ProfileSection = () => {
           </View>
         </View>
       </View>
+
+      <Model
+        animationType="slide"
+        open={isModelVisible}
+        setValue={() => setIsModelVisible(false)}
+        className={`flex-1 flex items-center justify-end bg-black/30`}
+      >
+        <View className="w-full bg-white rounded-t-lg flex flex-row items-center justify-between h-40 px-10">
+          <TouchableOpacity
+            className="flex items-center justify-center w-[100px] h-[100px] mt-7"
+            onPress={() => handleUploadImage(PickerSourceEnumType.Camera)}
+          >
+            <LottieView
+              source={CameraJson}
+              style={{ width: '100%', height: '100%' }}
+              loop
+              autoPlay
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex items-center justify-center w-[90px] h-[90px]"
+            onPress={() => handleUploadImage(PickerSourceEnumType.Gallery)}
+          >
+            <LottieView
+              source={GalleryJson}
+              style={{ width: '100%', height: '100%' }}
+              loop
+              autoPlay
+            />
+          </TouchableOpacity>
+        </View>
+      </Model>
     </View>
   );
 };

@@ -33,7 +33,7 @@ const Layout = () => {
           headerLeft: () => (
             <TouchableOpacity
               className="w-[90px] h-10 flex items-start justify-center px-1"
-              onPress={() => navigation.goBack()}
+              onPressIn={() => navigation.goBack()}
             >
               <Icons.ChevronLeft size={30} color="#5A5660" />
             </TouchableOpacity>
@@ -41,7 +41,7 @@ const Layout = () => {
           headerRight: () => (
             <TouchableOpacity
               className="w-[90px] h-10 flex items-end justify-center px-2"
-              onPress={() => {
+              onPressIn={() => {
                 dispatch(VehicleActions.setIsEditMode({ status: !isEditMode }));
               }}
             >
@@ -64,7 +64,7 @@ const Layout = () => {
           headerLeft: () => (
             <TouchableOpacity
               className="w-[90px] h-10 flex items-start justify-center px-1"
-              onPress={() => navigation.goBack()}
+              onPressIn={() => navigation.goBack()}
             >
               <Icons.ChevronLeft size={30} color="#5A5660" />
             </TouchableOpacity>
