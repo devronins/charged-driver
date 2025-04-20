@@ -8,7 +8,13 @@ import { CameraJson, GalleryJson, LoaderJson } from '@/constants/animation';
 import { DriverDocumentTypesModal, DriverUploadedDocumentModal } from '@/utils/modals/driver';
 import { Model } from '../ui/model';
 import { useState } from 'react';
-import { PickerSourceEnumType, uploadDriverDocument } from '@/services';
+import {
+  PickerSourceEnumType,
+  pickImageFromCamera,
+  pickImageFromGallery,
+  uploadDriverDocument,
+} from '@/services';
+import { Toast } from '@/utils/toast';
 
 const DriverDocumentFormCard = ({
   data,
@@ -21,8 +27,21 @@ const DriverDocumentFormCard = ({
   const [isPreviewModelVisible, setIsPreviewModelVisible] = useState(false);
   const dispatch = useAppDispatch();
 
-  const handlePickImage = async (modeType: PickerSourceEnumType) => {
-    dispatch(uploadDriverDocument({ data: { documentTypeId: data.id, modeType: modeType } }));
+  const handleUploadImage = async (modeType: PickerSourceEnumType) => {
+    setIsModelVisible(false);
+    const imageData =
+      modeType === PickerSourceEnumType.Camera
+        ? await pickImageFromCamera()
+        : await pickImageFromGallery();
+
+    if (imageData === null) {
+      Toast.show({
+        type: 'info',
+        text1: "you have'nt selected any image",
+      });
+    } else {
+      dispatch(uploadDriverDocument({ data: imageData }));
+    }
   };
 
   return (
@@ -90,7 +109,7 @@ const DriverDocumentFormCard = ({
         <View className="w-full bg-white rounded-t-lg flex flex-row items-center justify-between h-40 px-10">
           <TouchableOpacity
             className="flex items-center justify-center w-[100px] h-[100px] mt-7"
-            onPress={() => handlePickImage(PickerSourceEnumType.Camera)}
+            onPress={() => handleUploadImage(PickerSourceEnumType.Camera)}
           >
             <LottieView
               source={CameraJson}
@@ -101,7 +120,7 @@ const DriverDocumentFormCard = ({
           </TouchableOpacity>
           <TouchableOpacity
             className="flex items-center justify-center w-[90px] h-[90px]"
-            onPress={() => handlePickImage(PickerSourceEnumType.Gallery)}
+            onPress={() => handleUploadImage(PickerSourceEnumType.Gallery)}
           >
             <LottieView
               source={GalleryJson}

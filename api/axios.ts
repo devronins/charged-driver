@@ -11,7 +11,7 @@ interface ApiConfig {
 
 const apiConfig: ApiConfig = {
   baseURL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000',
-  timeout: 10000,
+  timeout: 100000,
 };
 
 const axiosInstance: AxiosInstance = axios.create(apiConfig);
@@ -80,25 +80,26 @@ export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/d
 export const updateVehicleDetails = (data: any) => axiosInstance.put(`/driver/details`, data);
 
 //----------------------------------------------------------------------Driver documents
-export const uploadFileDocument = (type: string, data: any) =>
-  axiosInstance.post(`/driver/uploaddocument/${type}`, data, {
+export const uploadFileDocument = (type: string, formData: any) =>
+  axiosInstance.post(`/driver/uploaddocument/${type}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     transformRequest: () => {
-      return data;
+      return formData;
     },
   });
 export const fetchDocumentTypes = () => axiosInstance.get(`/driver/documenttypes`);
 export const fetchUploadedDocuments = () => axiosInstance.get(`/driver/documents`);
 
 //---------------------------------------------------------------------upload image
-export const fileUpload = (data: any) =>
-  axiosInstance.post('/v1/fileUpload', data, {
-    onUploadProgress: (progressEvent) => {
-      if (progressEvent && progressEvent.total) {
-        const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-      }
+export const fileUpload = (formData: any) =>
+  axiosInstance.post(`/driver/uploadfiles`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    transformRequest: () => {
+      return formData;
     },
   });
 
