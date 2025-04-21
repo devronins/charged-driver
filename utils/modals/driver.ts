@@ -49,8 +49,8 @@ export interface DriverUploadedDocumentModal {
   uploaded_at: Date;
   verified_at?: Date;
   rejected_at?: Date;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   user_notified: boolean;
 }
 

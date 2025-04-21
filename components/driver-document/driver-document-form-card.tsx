@@ -61,7 +61,7 @@ const DriverDocumentFormCard = ({
               <Text className=" text-sm text-white px-2 rounded-md bg-primary-300">Required</Text>
             </View>
           ) : null}
-          {uploadedDocumentData?.rejection_reason ? (
+          {uploadedDocumentData?.rejection_reason && uploadedDocumentData.status === 'rejected' ? (
             <View className="flex flex-row items-center justify-start mt-2">
               <Text className="text-sm text-red-500">{uploadedDocumentData?.rejection_reason}</Text>
             </View>
@@ -69,27 +69,23 @@ const DriverDocumentFormCard = ({
         </View>
 
         <View className="flex flex-row items-center justify-center">
-          <Text className="text-sm text-white px-2 py-1 rounded-lg bg-gray-400">
+          <Text
+            className={`text-sm text-white px-2 py-1 rounded-lg bg-gray-400 ${uploadedDocumentData && uploadedDocumentData.status === 'verified' ? 'bg-tertiary-300' : uploadedDocumentData && uploadedDocumentData.status === 'pending' ? 'bg-yellow-500' : uploadedDocumentData && uploadedDocumentData.status === 'rejected' ? 'bg-red-500' : ''}`}
+          >
             {uploadedDocumentData ? uploadedDocumentData.status.toUpperCase() : 'Not Submitted'}
           </Text>
         </View>
       </View>
 
-      <CustomButton
-        title={
-          uploadedDocumentData
-            ? uploadedDocumentData.status === 'rejected'
-              ? 'ReUpload'
-              : uploadedDocumentData.status.toUpperCase()
-            : 'Upload'
-        }
-        className={`${Platform.OS === 'ios' ? 'py-4' : 'py-[8px]'} gap-2 ${uploadedDocumentData?.status === 'pending' ? 'opacity-50' : ''}`}
-        onPress={() => setIsModelVisible(true)}
-        disabled={
-          !uploadedDocumentData || uploadedDocumentData.status === 'rejected' ? false : true
-        }
-        IconLeft={<Icons.Upload color={'#FFFFFF'} size={20} />}
-      />
+      {!uploadedDocumentData || uploadedDocumentData.status === 'rejected' ? (
+        <CustomButton
+          title={uploadedDocumentData?.status === 'rejected' ? 'ReUpload' : 'Upload'}
+          className={`${Platform.OS === 'ios' ? 'py-4' : 'py-[8px]'} gap-2`}
+          onPress={() => setIsModelVisible(true)}
+          disabled={false}
+          IconLeft={<Icons.Upload color={'#FFFFFF'} size={20} />}
+        />
+      ) : null}
 
       {uploadedDocumentData ? (
         <CustomButton
