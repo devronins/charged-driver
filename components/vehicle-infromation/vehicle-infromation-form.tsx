@@ -7,6 +7,7 @@ import CustomButton from '../ui/CustomButton';
 import Icons from '@/constants/icons';
 import { VehicleModal } from '@/utils/modals/vehicle';
 import { addVehicleDetails, editVehicleDetails } from '@/services/vehicle';
+import { Select } from '../ui/select';
 
 export interface VehicleInfromationFormDataType {
   car_model: string | undefined;
@@ -56,6 +57,7 @@ const VehicleInfromationForm = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm<VehicleInfromationFormDataType>({
     defaultValues: getVehicleInfromationFormData(vehicleDetails),
     //@ts-ignore
@@ -161,10 +163,11 @@ const VehicleInfromationForm = () => {
         control={control}
         name="car_type"
         render={({ field: { onChange } }) => (
-          <InputField
-            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'}`}
+          <Select
+            containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'} ${Platform.OS === 'ios' ? 'px-3 py-8' : 'px-2'}`}
             label="Vehicle Type"
             placeholder="eg. Suv"
+            options={['suv', 'regular', 'electric']}
             value={
               isEditMode
                 ? watch('car_type')
@@ -172,9 +175,9 @@ const VehicleInfromationForm = () => {
                   ? vehicleDetails.car_type
                   : 'Not Provided'
             }
-            onChangeText={onChange}
-            editable={!isEditMode ? false : vehicleDetailsLoading ? false : true}
+            onChange={onChange}
             error={isEditMode ? errors.car_type?.message : undefined}
+            disabled={!isEditMode ? true : vehicleDetailsLoading ? true : false}
           />
         )}
       />

@@ -9,16 +9,21 @@ import {
   FlatList,
   TextInput,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import { Search, Check } from 'lucide-react-native';
+import { Model } from './model';
 
 interface FullScreenSelectProps {
   options: string[];
-  value: string | null;
+  value: string | null | undefined;
   onChange: (value: string) => void;
   label?: string;
   error?: string | null;
   placeholder?: string;
+  containerStyle?: string;
+  inputStyle?: string;
+  disabled?: boolean;
 }
 
 const Select: React.FC<FullScreenSelectProps> = ({
@@ -28,10 +33,14 @@ const Select: React.FC<FullScreenSelectProps> = ({
   label,
   error,
   placeholder = 'Select an option',
+  containerStyle,
+  inputStyle,
+  disabled,
 }) => {
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filtered, setFiltered] = useState<string[]>(options);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (searchText.trim() === '') {
@@ -44,25 +53,33 @@ const Select: React.FC<FullScreenSelectProps> = ({
 
   return (
     <View className="w-full">
-      {label && <Text className="mb-1 text-sm font-medium text-gray-700">{label}</Text>}
+      {label && <Text className="text-lg font-[500] mb-2">{label}</Text>}
 
       <TouchableOpacity
-        onPress={() => setOpen(true)}
-        className={`h-[50] px-5 py-2 border rounded-md flex-row items-center justify-between bg-white ${
-          error ? 'border-red-500' : 'border-gray-300'
-        }`}
+        onPress={() => (disabled ? {} : setOpen(true))}
+        className={`flex flex-row justify-start items-center relative rounded-md ${Platform.OS === 'ios' ? 'px-3 py-4' : 'px-3 py-3'} font-normal text-sm text-text-300 border ${error ? 'border-red-500' : isFocused ? 'border-primary-300' : 'border-border-300'} ${containerStyle}`}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       >
-        <Text className={`text-[15px] ${value ? 'text-gray-900' : 'text-gray-400'}`}>
-          {value || placeholder}
+        <Text
+          className={`rounded-md font-normal text-[18px] text-text-300 flex-1 ${inputStyle} text-left`}
+        >
+          {value?.toUpperCase() || placeholder}
         </Text>
       </TouchableOpacity>
 
       {error && <Text className="text-xs text-red-500 mt-1">{error}</Text>}
 
-      <Modal visible={open} animationType="slide" onRequestClose={() => setOpen(false)}>
-        <SafeAreaView className="flex-1 bg-white">
+      <Model
+        open={open}
+        animationType="slide"
+        transparent={true}
+        setValue={() => setOpen(false)}
+        className="flex-1 justify-end items-center bg-black/30"
+      >
+        <View className="bg-white rounded-lg w-full max-h-[80%] px-4 py-3">
           {/* Search bar + Close */}
-          <View className="flex-row items-center justify-center px-4 py-3 border-b border-gray-200 gap-3">
+          <View className="flex-row items-center justify-center border-b border-gray-200 gap-3 pb-3">
             <View className="relative flex-1">
               <TextInput
                 placeholder="Search..."
@@ -78,7 +95,7 @@ const Select: React.FC<FullScreenSelectProps> = ({
               onPress={() => setOpen(false)}
               className="h-11 justify-center items-center"
             >
-              <Text className="text-base text-blue-600 font-medium">Close</Text>
+              <Text className="text-base text-primary-300 font-medium">Close</Text>
             </TouchableOpacity>
           </View>
 
@@ -96,12 +113,12 @@ const Select: React.FC<FullScreenSelectProps> = ({
                     setOpen(false);
                     setSearchText('');
                   }}
-                  className={`flex-row items-center gap-2 px-6 py-4 ${
+                  className={`flex-row items-center gap-2 px-4 py-4 rounded-md ${
                     selected ? 'bg-gray-100' : ''
                   }`}
                 >
                   {selected && <Check size={18} color="#4b5563" />}
-                  <Text className="text-base text-gray-800">{item}</Text>
+                  <Text className="text-base text-gray-800">{item?.toUpperCase() || ''}</Text>
                 </TouchableOpacity>
               );
             }}
@@ -111,8 +128,8 @@ const Select: React.FC<FullScreenSelectProps> = ({
               </View>
             }
           />
-        </SafeAreaView>
-      </Modal>
+        </View>
+      </Model>
     </View>
   );
 };
