@@ -14,6 +14,8 @@ import {
 import { Model } from '../ui/model';
 import { useState } from 'react';
 import { Toast } from '@/utils/toast';
+import FilePicker from '../ui/file-picker';
+// import FilePickerModel from '../ui/file-picker-model';
 
 const ProfileSection = () => {
   const [isModelVisible, setIsModelVisible] = useState(false);
@@ -21,11 +23,11 @@ const ProfileSection = () => {
   const dispatch = useAppDispatch();
 
   const handleUploadImage = async (modeType: PickerSourceEnumType) => {
-    setIsModelVisible(false);
     const imageData =
       modeType === PickerSourceEnumType.Camera
         ? await pickImageFromCamera()
         : await pickImageFromGallery();
+    setIsModelVisible(false);
 
     if (imageData === null) {
       Toast.show({
@@ -33,7 +35,7 @@ const ProfileSection = () => {
         text1: "you have'nt selected any image",
       });
     } else {
-      dispatch(uploadDriverProfileImage({ data: imageData }));
+      dispatch(uploadDriverProfileImage({ imageData: imageData, driverDetails }));
     }
   };
 
@@ -100,30 +102,7 @@ const ProfileSection = () => {
         setValue={() => setIsModelVisible(false)}
         className={`flex-1 flex items-center justify-end bg-black/30`}
       >
-        <View className="w-full bg-white rounded-t-lg flex flex-row items-center justify-between h-40 px-10">
-          <TouchableOpacity
-            className="flex items-center justify-center w-[100px] h-[100px] mt-7"
-            onPress={() => handleUploadImage(PickerSourceEnumType.Camera)}
-          >
-            <LottieView
-              source={CameraJson}
-              style={{ width: '100%', height: '100%' }}
-              loop
-              autoPlay
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="flex items-center justify-center w-[90px] h-[90px]"
-            onPress={() => handleUploadImage(PickerSourceEnumType.Gallery)}
-          >
-            <LottieView
-              source={GalleryJson}
-              style={{ width: '100%', height: '100%' }}
-              loop
-              autoPlay
-            />
-          </TouchableOpacity>
-        </View>
+        <FilePicker handleUploadImage={handleUploadImage} />
       </Model>
     </View>
   );

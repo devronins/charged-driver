@@ -80,7 +80,7 @@ export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/d
 export const updateVehicleDetails = (data: any) => axiosInstance.put(`/driver/details`, data);
 
 //----------------------------------------------------------------------Driver documents
-export const uploadFileDocument = (type: string, formData: any) =>
+export const uploadFileDocument = (type: number, formData: any) =>
   axiosInstance.post(`/driver/uploaddocument/${type}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
