@@ -20,19 +20,19 @@ const navigationContants = [
     id: 3,
     labelIcon: Icons.Clock,
     title: 'Ride History',
-    href: 'profile/vehicle-infromation',
+    href: '#',
   },
   {
     id: 4,
     labelIcon: Icons.Wallet,
     title: 'Earnings',
-    href: 'profile/vehicle-infromation',
+    href: '#',
   },
   {
     id: 5,
     labelIcon: Icons.HelpCircle,
     title: 'Help & Support',
-    href: 'profile/vehicle-infromation',
+    href: '#',
   },
 ];
 
