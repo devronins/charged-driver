@@ -9,9 +9,14 @@ const DriverDocumentTypes = () => {
   const uploadedDocumentsMap = new Map<number, DriverUploadedDocumentModal>();
 
   if (driverUploadedDocuments?.length) {
-    driverUploadedDocuments.forEach((item) =>
-      uploadedDocumentsMap.set(item.document_type_id, item)
-    );
+    const driverUploadedDocumentsCopy = driverUploadedDocuments
+      ?.map((item) => item)
+      ?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    driverUploadedDocumentsCopy.forEach((item) => {
+      if (!uploadedDocumentsMap.get(item.document_type_id)) {
+        uploadedDocumentsMap.set(item.document_type_id, item);
+      }
+    });
   }
 
   return (
