@@ -13,7 +13,7 @@ const initialState: VehicleInitialStateType = {
   vehicleDetails: null,
   vehicleDetailsLoading: false,
   error: false,
-  isEditMode: false,
+  isEditMode: true,
 };
 
 const VehicleSlice = createSlice({
@@ -60,6 +60,7 @@ const VehicleSlice = createSlice({
     });
     builder.addCase(getVehicleDetails.fulfilled, (state, action) => {
       state.vehicleDetails = action.payload?.vehicleDetails || null;
+      state.isEditMode = action.payload?.vehicleDetails ? false : true;
       state.vehicleDetailsLoading = false;
     });
     builder.addCase(getVehicleDetails.rejected, (state, action) => {

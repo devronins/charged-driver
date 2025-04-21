@@ -1,13 +1,10 @@
-import { useAppDispatch, useTypedSelector } from '@/store';
+import { useAppDispatch } from '@/store';
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
-import { Controller, useForm, yup, yupResolver } from '@/utils/react-hook-form';
+import { useState } from 'react';
 import CustomButton from '../ui/CustomButton';
 import Icons from '@/constants/icons';
-import { LottieView } from '@/utils/lottie';
-import { CameraJson, GalleryJson, LoaderJson } from '@/constants/animation';
 import { DriverDocumentTypesModal, DriverUploadedDocumentModal } from '@/utils/modals/driver';
 import { Model } from '../ui/model';
-import { useState } from 'react';
 import {
   PickerSourceEnumType,
   pickImageFromCamera,
@@ -15,6 +12,8 @@ import {
   uploadDriverDocument,
 } from '@/services';
 import { Toast } from '@/utils/toast';
+import FilePicker from '../ui/file-picker';
+import { useAutoImageSize } from '@/hooks/use-auto-image-size';
 
 const DriverDocumentFormCard = ({
   data,
@@ -25,14 +24,15 @@ const DriverDocumentFormCard = ({
 }) => {
   const [isModelVisible, setIsModelVisible] = useState(false);
   const [isPreviewModelVisible, setIsPreviewModelVisible] = useState(false);
+  const { height: imageHeight } = useAutoImageSize(uploadedDocumentData?.file_url, 75);
   const dispatch = useAppDispatch();
 
   const handleUploadImage = async (modeType: PickerSourceEnumType) => {
-    setIsModelVisible(false);
     const imageData =
       modeType === PickerSourceEnumType.Camera
         ? await pickImageFromCamera()
         : await pickImageFromGallery();
+    setIsModelVisible(false);
 
     if (imageData === null) {
       Toast.show({
@@ -40,7 +40,7 @@ const DriverDocumentFormCard = ({
         text1: "you have'nt selected any image",
       });
     } else {
-      dispatch(uploadDriverDocument({ data: imageData }));
+      dispatch(uploadDriverDocument({ imageData: imageData, documentTypeId: data.id }));
     }
   };
 
@@ -106,30 +106,7 @@ const DriverDocumentFormCard = ({
         setValue={() => setIsModelVisible(false)}
         className={`flex-1 flex items-center justify-end bg-black/30`}
       >
-        <View className="w-full bg-white rounded-t-lg flex flex-row items-center justify-between h-40 px-10">
-          <TouchableOpacity
-            className="flex items-center justify-center w-[100px] h-[100px] mt-7"
-            onPress={() => handleUploadImage(PickerSourceEnumType.Camera)}
-          >
-            <LottieView
-              source={CameraJson}
-              style={{ width: '100%', height: '100%' }}
-              loop
-              autoPlay
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="flex items-center justify-center w-[90px] h-[90px]"
-            onPress={() => handleUploadImage(PickerSourceEnumType.Gallery)}
-          >
-            <LottieView
-              source={GalleryJson}
-              style={{ width: '100%', height: '100%' }}
-              loop
-              autoPlay
-            />
-          </TouchableOpacity>
-        </View>
+        <FilePicker handleUploadImage={handleUploadImage} />
       </Model>
 
       <Model
@@ -138,14 +115,14 @@ const DriverDocumentFormCard = ({
         setValue={() => setIsPreviewModelVisible(false)}
         className={`flex-1 flex items-center justify-center bg-black/70 p-6`}
       >
-        <View className="relative w-full bg-white p-5 border-primary-300 border-2 rounded-lg flex flex-row items-center justify-center h-[50%]">
+        <View className="relative w-full bg-white p-6 border-primary-300 border-2 rounded-lg flex flex-row items-center justify-center">
           <Image
             source={{ uri: uploadedDocumentData?.file_url }}
-            className="w-full h-full"
+            style={{ width: '100%', height: imageHeight }}
             resizeMode="contain"
           />
           <TouchableOpacity
-            className="absolute top-2 right-2"
+            className="absolute top-1 right-1"
             onPress={() => setIsPreviewModelVisible(false)}
           >
             <Icons.Close size={23} color={'black'} />

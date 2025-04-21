@@ -11,6 +11,8 @@ import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DriverActions, VehicleActions } from '@/reducers';
+import { PickedImageModal } from './common';
+import { DriverModal } from '@/utils/modals/driver';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
@@ -38,7 +40,6 @@ export const registerDriver = createAsyncThunk<any, any>(
         text1: 'Driver Resgistered successfully',
       });
 
-      // params?.navigate()// call navigate function
       return thunkApi.fulfillWithValue({
         accessToken: data.accessToken,
         driverDetails: driverUpdatedDataRes.data,
@@ -138,39 +139,39 @@ export const getDriver = createAsyncThunk<any, any>(
   }
 );
 
-export const uploadDriverDocument = createAsyncThunk<any, any>(
-  'DriverSlice/uploadDriverDocument',
-  async (params, thunkApi) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: params?.data.uri,
-        name: params?.data.fileName,
-        type: params?.data.type,
-      } as any);
+export const uploadDriverDocument = createAsyncThunk<
+  any,
+  { imageData: PickedImageModal; documentTypeId: number }
+>('DriverSlice/uploadDriverDocument', async (params, thunkApi) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', {
+      uri: params.imageData.uri,
+      name: params.imageData.fileName,
+      type: params.imageData.type,
+    } as any);
 
-      await uploadFileDocument(params?.data?.documentTypeId, formData);
-      const { data } = await fetchUploadedDocuments();
+    await uploadFileDocument(params.documentTypeId, formData);
+    const { data } = await fetchUploadedDocuments();
 
-      Toast.show({
-        type: 'success',
-        text1: 'Driver Document uploaded successfully',
-      });
+    Toast.show({
+      type: 'success',
+      text1: 'Driver Document uploaded successfully',
+    });
 
-      return thunkApi.fulfillWithValue({
-        driverUploadedDocuments: data.data,
-      });
-    } catch (err) {
-      const error: any = err;
-      console.log('171>>>>>>>', error);
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
-    }
+    return thunkApi.fulfillWithValue({
+      driverUploadedDocuments: data.data,
+    });
+  } catch (err) {
+    const error: any = err;
+    console.log('171>>>>>>>', error);
+    Toast.show({
+      type: 'error',
+      text1: error?.data?.message || "Oop's something went wrong!",
+    });
+    return thunkApi.rejectWithValue(error.response?.status);
   }
-);
+});
 
 export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
   'DriverSlice/getDriverUploadedDocuments',
@@ -212,37 +213,37 @@ export const getDriverDocumentTypes = createAsyncThunk<any, any>(
   }
 );
 
-export const uploadDriverProfileImage = createAsyncThunk<any, any>(
-  'DriverSlice/uploadDriverProfileImage',
-  async (params, thunkApi) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: params?.data.uri,
-        name: params?.data.fileName,
-        type: params?.data.type,
-      } as any);
+export const uploadDriverProfileImage = createAsyncThunk<
+  any,
+  { imageData: PickedImageModal; driverDetails: DriverModal | null }
+>('DriverSlice/uploadDriverProfileImage', async (params, thunkApi) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', {
+      uri: params.imageData.uri,
+      name: params.imageData.fileName,
+      type: params.imageData.type,
+    } as any);
 
-      const { data: fileData } = await fileUpload(formData);
-      await updateDriver({ photo: fileData.data });
-      const { data: driverDataRes } = await fetchDriver();
+    const { data: fileData } = await fileUpload(formData);
+    await updateDriver({ ...params?.driverDetails, photo: fileData.data });
+    const { data: driverDataRes } = await fetchDriver();
 
-      Toast.show({
-        type: 'success',
-        text1: 'Driver Profile Image uploaded successfully',
-      });
+    Toast.show({
+      type: 'success',
+      text1: 'Driver Profile Image uploaded successfully',
+    });
 
-      return thunkApi.fulfillWithValue({
-        driverDetails: driverDataRes.data,
-      });
-    } catch (err) {
-      const error: any = err;
-      console.log('171>>>>>>>', error);
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
-    }
+    return thunkApi.fulfillWithValue({
+      driverDetails: driverDataRes.data,
+    });
+  } catch (err) {
+    const error: any = err;
+    console.log('171>>>>>>>', error);
+    Toast.show({
+      type: 'error',
+      text1: error?.data?.message || "Oop's something went wrong!",
+    });
+    return thunkApi.rejectWithValue(error.response?.status);
   }
-);
+});

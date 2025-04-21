@@ -62,7 +62,7 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
         },
         data: {
           code: 400,
-          message: 'Permission to use camera is required!',
+          message: 'Permission to use Media Library is required!',
         },
       };
     }
