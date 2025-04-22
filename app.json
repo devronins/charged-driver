@@ -4,7 +4,7 @@
     "slug": "CHARGED",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/driver-charged.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/driver-charged.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -29,7 +29,13 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.damanjot.CHARGED"
+      "package": "com.damanjot.CHARGED",
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+        },
+        "usesCleartextTraffic": true
+      }
     },
     "web": {
       "bundler": "metro",
@@ -41,7 +47,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/driver-charged.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -79,6 +85,14 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
     "experiments": {
@@ -89,7 +103,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e04e2feb-13f4-4f0a-82bd-9cff8c0b6383"
+        "projectId": "cc09d0a1-e180-4d70-84bc-ad7dbabf3ad2"
       }
     }
   }

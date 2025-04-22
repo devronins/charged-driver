@@ -35,7 +35,7 @@ const InputField = ({
       <View className="w-full">
         {label && <Text className={`text-lg font-[500] mb-2 ${labelStyle}`}>{label}</Text>}
         <View
-          className={`flex flex-row justify-start items-center relative rounded-md ${Platform.OS === 'ios' ? 'px-3 py-4' : 'px-2'} font-normal text-sm text-text-300 border ${error ? 'border-red-500' : isFocused ? 'border-primary-300' : 'border-border-300'} ${containerStyle}`}
+          className={`flex flex-row justify-start items-center relative rounded-md ${Platform.OS === 'ios' ? 'px-3 py-4' : 'px-3 py-3'} font-normal text-sm text-text-300 border ${error ? 'border-red-500' : isFocused ? 'border-primary-300' : 'border-border-300'} ${containerStyle}`}
         >
           {icon && <Image source={icon} className={`text-text-300 w-6 h-6 ml-4 ${iconStyle}`} />}
           <TextInput

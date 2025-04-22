@@ -1,5 +1,8 @@
 // utils/imagePicker.ts
 import * as ImagePicker from 'expo-image-picker';
+import { logoutDriver } from './driver';
+import { GetThunkAPI } from '@reduxjs/toolkit';
+import { Toast } from '@/utils/toast';
 
 export type PickedImageModal = {
   uri: string;
@@ -89,3 +92,16 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
     throw error;
   }
 }
+
+export const handleUnauthorizedError = (error: any, thunkApi: GetThunkAPI<any>) => {
+  if (error.response?.code === 401 || error?.status === 401) {
+    thunkApi.dispatch(logoutDriver({}));
+    return thunkApi.rejectWithValue(error.response?.status);
+  } else {
+    Toast.show({
+      type: 'error',
+      text1: error?.data?.message || "Oop's something went wrong!",
+    });
+    return thunkApi.rejectWithValue(error.response?.status || error?.status || 500);
+  }
+};

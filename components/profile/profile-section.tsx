@@ -1,6 +1,6 @@
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { useRouter } from 'expo-router';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import Icons from '@/constants/icons';
 import { LottieView } from '@/utils/lottie';
 import { CameraJson, GalleryJson } from '@/constants/animation';
@@ -38,20 +38,23 @@ const ProfileSection = () => {
       dispatch(uploadDriverProfileImage({ imageData: imageData, driverDetails }));
     }
   };
-
   return (
     <View className="w-full h-auto p-7 bg-white rounded-lg flex flex-col items-center">
       <View className="flex flex-col items-center gap-0">
-        <View className="flex items-center justify-center relayive">
+        <ImageBackground
+          source={images.AvatarImage}
+          className="flex items-center justify-center relative "
+          imageStyle={{ borderRadius: 9999 }}
+        >
           <Image
             source={driverDetails?.photo ? { uri: driverDetails?.photo } : images.AvatarImage}
-            className="h-[130px] w-[130px] rounded-full"
+            className="h-[130px] w-[130px] rounded-full border-border-300 border-[1px]"
             resizeMode="contain"
           />
           <View className="absolute bottom-1 right-1 rounded-full border-white border-[2px] p-1 bg-primary-300">
             <Icons.Camera color="#007FFF" className="w-5 h-5" fill={'#FFFFFF'} />
           </View>
-        </View>
+        </ImageBackground>
         <TouchableOpacity
           className="flex items-center justify-center"
           onPress={() => setIsModelVisible(true)}
