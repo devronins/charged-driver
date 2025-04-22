@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { createVehicleDetails, fetchDriver, updateDriver, updateVehicleDetails } from '@/api/axios';
 import { Toast } from '@/utils/toast';
+import { handleUnauthorizedError } from './common';
 
 export const addVehicleDetails = createAsyncThunk<any, any>(
   'VehicleSlice/addVehicleDetails',
@@ -24,13 +25,7 @@ export const addVehicleDetails = createAsyncThunk<any, any>(
       });
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
-      const error: any = err;
-      console.log('save vehicle details error:', error);
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -52,12 +47,7 @@ export const getVehicleDetails = createAsyncThunk<any, any>(
 
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: 'error',
-        text1: error?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -85,13 +75,7 @@ export const editVehicleDetails = createAsyncThunk<any, any>(
 
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
-      const error: any = err;
-      console.log('72>>>>>>>>>.', err);
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );

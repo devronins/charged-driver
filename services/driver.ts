@@ -11,7 +11,7 @@ import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DriverActions, VehicleActions } from '@/reducers';
-import { PickedImageModal } from './common';
+import { handleUnauthorizedError, PickedImageModal } from './common';
 import { DriverModal } from '@/utils/modals/driver';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
@@ -46,12 +46,7 @@ export const registerDriver = createAsyncThunk<any, any>(
         navigate: params?.navigate,
       }); // save Driver data;
     } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -84,13 +79,8 @@ export const loginDriver = createAsyncThunk<any, any>(
         driverDetails: driverDataRes.data,
         navigate: params?.navigate,
       });
-    } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+    } catch (err: any) {
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -115,7 +105,7 @@ export const logoutDriver = createAsyncThunk<any, any>(
       const error: any = err;
       Toast.show({
         type: 'error',
-        text1: error?.message || "Oop's something went wrong!",
+        text1: 'Session Expired!',
       });
       return thunkApi.rejectWithValue(error.response?.status);
     }
@@ -129,12 +119,7 @@ export const getDriver = createAsyncThunk<any, any>(
       const { data } = await fetchDriver();
       return thunkApi.fulfillWithValue(data.data);
     } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: 'Error ',
-        text1: error?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -163,13 +148,7 @@ export const uploadDriverDocument = createAsyncThunk<
       driverUploadedDocuments: data.data,
     });
   } catch (err) {
-    const error: any = err;
-    console.log('171>>>>>>>', error);
-    Toast.show({
-      type: 'error',
-      text1: error?.data?.message || "Oop's something went wrong!",
-    });
-    return thunkApi.rejectWithValue(error.response?.status);
+    handleUnauthorizedError(err, thunkApi);
   }
 });
 
@@ -183,12 +162,7 @@ export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
         driverUploadedDocuments: data.data,
       });
     } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -203,12 +177,7 @@ export const getDriverDocumentTypes = createAsyncThunk<any, any>(
         driverDocumentTypes: data.data,
       });
     } catch (err) {
-      const error: any = err;
-      Toast.show({
-        type: 'error',
-        text1: error?.data?.message || "Oop's something went wrong!",
-      });
-      return thunkApi.rejectWithValue(error.response?.status);
+      handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -238,12 +207,6 @@ export const uploadDriverProfileImage = createAsyncThunk<
       driverDetails: driverDataRes.data,
     });
   } catch (err) {
-    const error: any = err;
-    console.log('171>>>>>>>', error);
-    Toast.show({
-      type: 'error',
-      text1: error?.data?.message || "Oop's something went wrong!",
-    });
-    return thunkApi.rejectWithValue(error.response?.status);
+    handleUnauthorizedError(err, thunkApi);
   }
 });

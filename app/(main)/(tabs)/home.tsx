@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import Icons from '@/constants/icons';
 import { useTypedSelector } from '@/store';
 
@@ -16,12 +16,14 @@ const Home = () => {
   return (
     <View className="flex-1">
       <MapView
+        provider={PROVIDER_DEFAULT}
         style={{ width: '100%', height: '100%' }}
         className="w-full h-full"
         initialRegion={coordinatesObj}
         region={coordinatesObj}
         showsUserLocation
         followsUserLocation
+        onMapReady={() => console.log('loaded map')}
       >
         <Marker
           coordinate={{

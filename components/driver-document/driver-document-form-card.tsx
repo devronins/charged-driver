@@ -14,6 +14,9 @@ import {
 import { Toast } from '@/utils/toast';
 import FilePicker from '../ui/file-picker';
 import { useAutoImageSize } from '@/hooks/use-auto-image-size';
+import LottieView from 'lottie-react-native';
+import { ImageLoaderJson } from '@/constants/animation';
+import useImageLoader from '@/hooks/use-image-loader';
 
 const DriverDocumentFormCard = ({
   data,
@@ -25,6 +28,8 @@ const DriverDocumentFormCard = ({
   const [isModelVisible, setIsModelVisible] = useState(false);
   const [isPreviewModelVisible, setIsPreviewModelVisible] = useState(false);
   const { height: imageHeight } = useAutoImageSize(uploadedDocumentData?.file_url, 75);
+  const { handleImageLoad, isImageLoaded } = useImageLoader();
+
   const dispatch = useAppDispatch();
 
   const handleUploadImage = async (modeType: PickerSourceEnumType) => {
@@ -112,10 +117,21 @@ const DriverDocumentFormCard = ({
         className={`flex-1 flex items-center justify-center bg-black/70 p-6`}
       >
         <View className="relative w-full bg-white p-6 border-primary-300 border-2 rounded-lg flex flex-row items-center justify-center">
+          {!isImageLoaded && (
+            <LottieView
+              source={ImageLoaderJson}
+              style={{ width: 200, height: 200, position: 'absolute' }}
+              loop
+              autoPlay
+            />
+          )}
+
+          {/* Image that triggers image load handler */}
           <Image
             source={{ uri: uploadedDocumentData?.file_url }}
             style={{ width: '100%', height: imageHeight }}
             resizeMode="contain"
+            onLoad={handleImageLoad} // This will trigger once the image is fully loaded
           />
           <TouchableOpacity
             className="absolute top-1 right-1"
