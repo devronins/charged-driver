@@ -68,7 +68,7 @@ export async function pickImageFromCamera(): Promise<PickedImageModal | null> {
     return {
       uri: asset.uri,
       type: asset.mimeType,
-      fileName: asset.fileName,
+      fileName: asset.fileName || asset.uri.split('/').pop() || `photo_${Date.now()}.jpg`, // in ios we dont get fileName from image picker library
       fileSize: fileSize,
     };
   } catch (error: any) {
@@ -109,7 +109,7 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
     return {
       uri: asset.uri,
       type: asset.mimeType,
-      fileName: asset.fileName,
+      fileName: asset.fileName || asset.uri.split('/').pop() || `photo_${Date.now()}.jpg`, // in ios we dont get fileName from image picker library
       fileSize: fileSize,
     };
   } catch (error: any) {
@@ -120,7 +120,7 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
 export const handleUnauthorizedError = (error: any, thunkApi: GetThunkAPI<any>) => {
   console.log('!39>>>>>>>>>>>>>>>>>', error);
   if (error.response?.code === 401 || error?.status === 401) {
-    thunkApi.dispatch(logoutDriver({ isSessionExpired: true }));
+    thunkApi.dispatch(logoutDriver({ data: { isSessionExpired: true } }));
     return thunkApi.rejectWithValue(error.response?.status);
   } else {
     Toast.show({

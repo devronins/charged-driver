@@ -33,30 +33,38 @@ const DriverDocumentFormCard = ({
   const dispatch = useAppDispatch();
 
   const handleUploadImage = async (modeType: PickerSourceEnumType) => {
-    const imageData =
-      modeType === PickerSourceEnumType.Camera
-        ? await pickImageFromCamera()
-        : await pickImageFromGallery();
+    try {
+      const imageData =
+        modeType === PickerSourceEnumType.Camera
+          ? await pickImageFromCamera()
+          : await pickImageFromGallery();
 
-    setIsModelVisible(false);
+      setIsModelVisible(false);
 
-    if (imageData === null) {
+      if (imageData === null) {
+        Toast.show({
+          type: 'info',
+          text1: "you have'nt selected any image",
+        });
+      } else if (imageData?.fileSize === null) {
+        Toast.show({
+          type: 'info',
+          text1: 'Could not retrieve file info.',
+        });
+      } else if (imageData?.fileSize > 5) {
+        Toast.show({
+          type: 'info',
+          text1: 'Please select an image smaller than 5MB',
+        });
+      } else {
+        dispatch(uploadDriverDocument({ imageData: imageData, documentTypeId: data.id }));
+      }
+    } catch (error: any) {
+      setIsModelVisible(false);
       Toast.show({
-        type: 'info',
-        text1: "you have'nt selected any image",
+        type: 'error',
+        text1: error?.data?.message || "Oop's something went wrong!",
       });
-    } else if (imageData?.fileSize === null) {
-      Toast.show({
-        type: 'info',
-        text1: 'Could not retrieve file info.',
-      });
-    } else if (imageData?.fileSize > 5) {
-      Toast.show({
-        type: 'info',
-        text1: 'Please select an image smaller than 5MB',
-      });
-    } else {
-      dispatch(uploadDriverDocument({ imageData: imageData, documentTypeId: data.id }));
     }
   };
 
