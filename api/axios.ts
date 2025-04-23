@@ -11,7 +11,7 @@ interface ApiConfig {
 
 const apiConfig: ApiConfig = {
   baseURL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000',
-  timeout: 100000,
+  timeout: 10000000000,
 };
 
 const axiosInstance: AxiosInstance = axios.create(apiConfig);
