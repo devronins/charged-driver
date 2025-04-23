@@ -34,6 +34,16 @@ const ProfileSection = () => {
         type: 'info',
         text1: "you have'nt selected any image",
       });
+    } else if (imageData?.fileSize === null) {
+      Toast.show({
+        type: 'info',
+        text1: 'Could not retrieve file info.',
+      });
+    } else if (imageData?.fileSize > 5) {
+      Toast.show({
+        type: 'info',
+        text1: 'Please select an image smaller than 5MB',
+      });
     } else {
       dispatch(uploadDriverProfileImage({ imageData: imageData, driverDetails }));
     }
