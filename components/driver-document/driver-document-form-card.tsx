@@ -37,12 +37,23 @@ const DriverDocumentFormCard = ({
       modeType === PickerSourceEnumType.Camera
         ? await pickImageFromCamera()
         : await pickImageFromGallery();
+
     setIsModelVisible(false);
 
     if (imageData === null) {
       Toast.show({
         type: 'info',
         text1: "you have'nt selected any image",
+      });
+    } else if (imageData?.fileSize === null) {
+      Toast.show({
+        type: 'info',
+        text1: 'Could not retrieve file info.',
+      });
+    } else if (imageData?.fileSize > 5) {
+      Toast.show({
+        type: 'info',
+        text1: 'Please select an image smaller than 5MB',
       });
     } else {
       dispatch(uploadDriverDocument({ imageData: imageData, documentTypeId: data.id }));
@@ -116,11 +127,11 @@ const DriverDocumentFormCard = ({
         setValue={() => setIsPreviewModelVisible(false)}
         className={`flex-1 flex items-center justify-center bg-black/70 p-6`}
       >
-        <View className="relative w-full bg-white p-6 border-primary-300 border-2 rounded-lg flex flex-row items-center justify-center">
+        <View className="relative w-full bg-white p-6 border-primary-300 border-2 rounded-lg flex flex-row items-center justify-center min-h-[30%]">
           {!isImageLoaded && (
             <LottieView
               source={ImageLoaderJson}
-              style={{ width: 200, height: 200, position: 'absolute' }}
+              style={{ width: 150, height: 150, position: 'absolute' }}
               loop
               autoPlay
             />

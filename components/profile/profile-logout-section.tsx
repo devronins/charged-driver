@@ -16,7 +16,7 @@ const ProfileLogout = () => {
         text: 'Logout',
         style: 'destructive',
         onPress: () => {
-          dispatch(logoutDriver({ navigate: () => router.navigate('/(auth)/login') }));
+          dispatch(logoutDriver({ isSessionExpired: true }));
         },
       },
     ]);

@@ -91,13 +91,13 @@ export const logoutDriver = createAsyncThunk<any, any>(
     try {
       await AsyncStorage.clear();
 
-      params?.navigate();
+      // params?.navigate();
       thunkApi.dispatch(DriverActions.setIntialState({}));
       thunkApi.dispatch(VehicleActions.setIntialState({}));
 
       Toast.show({
-        type: 'success',
-        text1: 'Driver Logout successfully',
+        type: params?.data?.isSessionExpired ? 'info' : 'success',
+        text1: params?.data?.isSessionExpired ? 'Session Expired!' : 'Driver Logout successfully',
       });
 
       return thunkApi.fulfillWithValue({});
@@ -105,7 +105,7 @@ export const logoutDriver = createAsyncThunk<any, any>(
       const error: any = err;
       Toast.show({
         type: 'error',
-        text1: 'Session Expired!',
+        text1: error?.data?.message || "Oop's something went wrong!",
       });
       return thunkApi.rejectWithValue(error.response?.status);
     }

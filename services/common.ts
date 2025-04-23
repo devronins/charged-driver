@@ -1,5 +1,6 @@
 // utils/imagePicker.ts
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { logoutDriver } from './driver';
 import { GetThunkAPI } from '@reduxjs/toolkit';
 import { Toast } from '@/utils/toast';
@@ -8,12 +9,31 @@ export type PickedImageModal = {
   uri: string;
   fileName?: string | null;
   type?: string;
+  fileSize: number | null;
 };
 
 export enum PickerSourceEnumType {
   Camera = 'camera',
   Gallery = 'gallery',
 }
+
+export const fileSizeValidation = async (uri: string): Promise<number | null> => {
+  try {
+    const fileInfo = await FileSystem.getInfoAsync(uri);
+
+    if (!fileInfo.exists || fileInfo.size === undefined) {
+      return null;
+    }
+
+    const fileSizeInMB = fileInfo.size / (1024 * 1024);
+
+    return fileSizeInMB;
+  } catch (error) {
+    // You can handle it or rethrow it to be caught by calling function
+    console.error('Error calculating file size:', error);
+    throw error;
+  }
+};
 
 export async function pickImageFromCamera(): Promise<PickedImageModal | null> {
   try {
@@ -44,10 +64,12 @@ export async function pickImageFromCamera(): Promise<PickedImageModal | null> {
 
     const asset = result.assets[0];
 
+    const fileSize = await fileSizeValidation(asset.uri);
     return {
       uri: asset.uri,
       type: asset.mimeType,
       fileName: asset.fileName,
+      fileSize: fileSize,
     };
   } catch (error: any) {
     throw error;
@@ -82,11 +104,13 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
     }
 
     const asset = result.assets[0];
+    const fileSize = await fileSizeValidation(asset.uri);
 
     return {
       uri: asset.uri,
       type: asset.mimeType,
       fileName: asset.fileName,
+      fileSize: fileSize,
     };
   } catch (error: any) {
     throw error;
@@ -94,8 +118,9 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
 }
 
 export const handleUnauthorizedError = (error: any, thunkApi: GetThunkAPI<any>) => {
+  console.log('!39>>>>>>>>>>>>>>>>>', error);
   if (error.response?.code === 401 || error?.status === 401) {
-    thunkApi.dispatch(logoutDriver({}));
+    thunkApi.dispatch(logoutDriver({ isSessionExpired: true }));
     return thunkApi.rejectWithValue(error.response?.status);
   } else {
     Toast.show({
