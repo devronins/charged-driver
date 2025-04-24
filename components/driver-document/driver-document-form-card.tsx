@@ -139,7 +139,7 @@ const DriverDocumentFormCard = ({
           {!isImageLoaded && (
             <LottieView
               source={ImageLoaderJson}
-              style={{ width: 150, height: 150, position: 'absolute' }}
+              style={{ width: 50, height: 50, position: 'absolute' }}
               loop
               autoPlay
             />
