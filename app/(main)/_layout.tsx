@@ -7,7 +7,7 @@ import { Platform, Text, TouchableOpacity } from 'react-native';
 const Layout = () => {
   const dispatch = useAppDispatch();
   const { isLogin } = useTypedSelector((state) => state.Driver);
-  const { isEditMode } = useTypedSelector((state) => state.Vehicle);
+  const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
@@ -32,22 +32,24 @@ const Layout = () => {
           },
           headerLeft: () => (
             <TouchableOpacity
-              className="w-[90px] h-10 flex items-start justify-center px-1"
+              className="h-auto flex items-start justify-center"
               onPressIn={() => navigation.goBack()}
             >
               <Icons.ChevronLeft size={30} color="#5A5660" />
             </TouchableOpacity>
           ),
-          headerRight: () => (
-            <TouchableOpacity
-              className="w-[90px] h-10 flex items-end justify-center px-2"
-              onPressIn={() => {
-                dispatch(VehicleActions.setIsEditMode({ status: !isEditMode }));
-              }}
-            >
-              <Text className="text-primary-300">{isEditMode ? 'Cancel' : 'Edit'}</Text>
-            </TouchableOpacity>
-          ),
+          headerRight: () => {
+            return vehicleDetails ?
+              <TouchableOpacity
+                className="h-auto flex items-end justify-center px-2"
+                onPressIn={() => {
+                  dispatch(VehicleActions.setIsEditMode({ status: !isEditMode }));
+                }}
+              >
+                <Text className="text-primary-300">{isEditMode ? 'Cancel' : 'Edit'}</Text>
+              </TouchableOpacity> :
+              null
+          },
         })}
       />
       <Stack.Screen

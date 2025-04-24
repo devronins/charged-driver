@@ -1,9 +1,6 @@
 import { useAppDispatch, useTypedSelector } from '@/store';
-import { useRouter } from 'expo-router';
 import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import Icons from '@/constants/icons';
-import { LottieView } from '@/utils/lottie';
-import { CameraJson, GalleryJson } from '@/constants/animation';
 import images from '@/constants/images';
 import {
   PickerSourceEnumType,
@@ -15,10 +12,14 @@ import { Model } from '../ui/model';
 import { useState } from 'react';
 import { Toast } from '@/utils/toast';
 import FilePicker from '../ui/file-picker';
+import LottieView from 'lottie-react-native';
+import { ImageLoaderJson } from '@/constants/animation';
+import useImageLoader from '@/hooks/use-image-loader';
 // import FilePickerModel from '../ui/file-picker-model';
 
 const ProfileSection = () => {
   const [isModelVisible, setIsModelVisible] = useState(false);
+  const { handleImageLoad, isImageLoaded } = useImageLoader();
   const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
 
@@ -61,13 +62,24 @@ const ProfileSection = () => {
       <View className="flex flex-col items-center gap-0">
         <ImageBackground
           source={images.AvatarImage}
-          className="flex items-center justify-center relative "
+          className=" flex items-center justify-center relative "
           imageStyle={{ borderRadius: 9999 }}
         >
+          {!isImageLoaded && (
+            <View className='absolute h-[130px] w-[130px] rounded-full bg-white items-center justify-center'>
+              <LottieView
+                source={ImageLoaderJson}
+                style={{ width: 30, height: 30}}
+                loop
+                autoPlay
+              />
+            </View>
+          )}
+
           <Image
             source={driverDetails?.photo ? { uri: driverDetails?.photo } : images.AvatarImage}
             className="h-[130px] w-[130px] rounded-full border-border-300 border-[1px]"
-            resizeMode="contain"
+            resizeMode="cover"
           />
           <View className="absolute bottom-1 right-1 rounded-full border-white border-[2px] p-1 bg-primary-300">
             <Icons.Camera color="#007FFF" className="w-5 h-5" fill={'#FFFFFF'} />

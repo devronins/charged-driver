@@ -6,7 +6,7 @@ const useImageLoader = () => {
 
   // Function to be called when image is loaded
   const handleImageLoad = () => {
-    setIsImageLoaded(true); // Update state to hide Lottie and show image
+      setIsImageLoaded(true);
   };
 
   return {
