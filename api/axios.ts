@@ -1,7 +1,7 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
-import { ErrorResponse } from "@/utils/error-response";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Constants from "expo-constants";
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import { ErrorResponse } from '@/utils/error-response';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
 interface ApiConfig {
   baseURL: string;
@@ -10,21 +10,21 @@ interface ApiConfig {
 }
 
 const apiConfig: ApiConfig = {
-  baseURL: process.env.EXPO_PUBLIC_API_BASE_URL || "http://localhost:3000",
-  timeout: 10000,
+  baseURL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000',
+  timeout: 10000000000,
 };
 
 const axiosInstance: AxiosInstance = axios.create(apiConfig);
 
 axiosInstance.interceptors.request.use(async (req: any) => {
   try {
-    const accessToken = await AsyncStorage.getItem("accessToken");
+    const accessToken = await AsyncStorage.getItem('accessToken');
     if (accessToken) {
       req.headers.Authorization = `Bearer ${accessToken}`;
     }
     return req;
   } catch (error) {
-    console.error("error", error);
+    console.error('error', error);
   }
 });
 
@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
       errorResponse.data = error.response.data as any;
     } else if (error.request) {
       // The request was made but no response was received
-      errorResponse.message = "Request Error";
+      errorResponse.message = 'Request Error';
     } else {
       // Something happened in setting up the request
       errorResponse.message = error.message;
@@ -68,20 +68,38 @@ const api = {
 
 export default api;
 
-//----------------------------------------------------------------------user
-export const createUser = (data: any) => axiosInstance.post("/driver/details", data);
-export const updateUser = (data: any) => axiosInstance.put(`/driver`, data);
-export const fetchUser = () => axiosInstance.get(`/driver`);
-export const fetchUsers = (data: any) => axiosInstance.get("/v1/user/getall", { data });
-export const deleteUser = (id: string) => axiosInstance.delete(`/v1/user/delete/${id}`);
+//----------------------------------------------------------------------Driver
+export const createDriver = (data: any) => axiosInstance.post('/driver/details', data);
+export const updateDriver = (data: any) => axiosInstance.put(`/driver`, data);
+export const fetchDriver = () => axiosInstance.get(`/driver`);
+export const fetchDrivers = (data: any) => axiosInstance.get('/v1/driver/getall', { data });
+export const deleteDriver = (id: string) => axiosInstance.delete(`/v1/driver/delete/${id}`);
+
+//----------------------------------------------------------------------Driver vehicles
+export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/details`, data);
+export const updateVehicleDetails = (data: any) => axiosInstance.put(`/driver/details`, data);
+
+//----------------------------------------------------------------------Driver documents
+export const uploadFileDocument = (type: number, formData: any) =>
+  axiosInstance.post(`/driver/uploaddocument/${type}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    transformRequest: () => {
+      return formData;
+    },
+  });
+export const fetchDocumentTypes = () => axiosInstance.get(`/driver/documenttypes`);
+export const fetchUploadedDocuments = () => axiosInstance.get(`/driver/documents`);
 
 //---------------------------------------------------------------------upload image
-export const fileUpload = (data: any) =>
-  axiosInstance.post("/v1/fileUpload", data, {
-    onUploadProgress: progressEvent => {
-      if (progressEvent && progressEvent.total) {
-        const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-      }
+export const fileUpload = (formData: any) =>
+  axiosInstance.post(`/driver/uploadfiles`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    transformRequest: () => {
+      return formData;
     },
   });
 

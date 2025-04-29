@@ -1,5 +1,5 @@
-import { Toast } from "@/utils/toast";
-import { BaseToast } from "react-native-toast-message";
+import { Toast } from '@/utils/toast';
+import { BaseToast } from 'react-native-toast-message';
 
 const ToastComponent = () => {
   const toastConfig = {
@@ -8,7 +8,7 @@ const ToastComponent = () => {
         {...props}
         style={{
           borderRadius: 10,
-          width: "95%",
+          width: '95%',
         }}
       />
     ),
