@@ -1,13 +1,13 @@
-import CustomButton from "@/components/ui/CustomButton";
-import InputField from "@/components/ui/InputField";
-import images from "@/constants/images";
-import { Controller, useForm, yup, yupResolver } from "@/utils/react-hook-form";
-import { Link } from "expo-router";
-import { Image, Platform, ScrollView, Text, View } from "react-native";
-import { useRouter } from "expo-router";
-import { useAppDispatch, useTypedSelector } from "@/srore";
-import { registerUser } from "@/services";
-import Loader from "@/components/ui/Loader";
+import CustomButton from '@/components/ui/CustomButton';
+import InputField from '@/components/ui/InputField';
+import images from '@/constants/images';
+import { Controller, useForm, yup, yupResolver } from '@/utils/react-hook-form';
+import { Link } from 'expo-router';
+import { Image, Platform, ScrollView, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAppDispatch, useTypedSelector } from '@/store';
+import { registerDriver } from '@/services';
+import Loader from '@/components/ui/Loader';
 
 export interface RegisterFormDataType {
   name: string;
@@ -18,25 +18,25 @@ export interface RegisterFormDataType {
 }
 
 const registerFormData: RegisterFormDataType = {
-  name: "",
-  email: "",
-  phone: "",
-  password: "",
-  confirmPassword: "",
+  name: '',
+  email: '',
+  phone: '',
+  password: '',
+  confirmPassword: '',
 };
 
 const schema = yup.object().shape({
   name: yup.string().required(),
-  email: yup.string().email("Invalid email address").required("Email is required"),
+  email: yup.string().email('Invalid email address').required('Email is required'),
   phone: yup
     .string()
     .required()
-    .matches(/^[6-9]\d{9}$/, "Phone number must be a valid 10-digit Indian number"),
-  password: yup.string().min(6, "Password length should be min 6").required("Password is required"),
+    .matches(/^[6-9]\d{9}$/, 'Phone number must be a valid 10-digit Indian number'),
+  password: yup.string().min(6, 'Password length should be min 6').required('Password is required'),
   confirmPassword: yup
     .string()
-    .min(6, "Password length should be min 6")
-    .required("Confirm password is required"),
+    .oneOf([yup.ref('password')], 'Passwords must match')
+    .required('Confirm password is required'),
 });
 
 const Register = () => {
@@ -46,24 +46,24 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormDataType>({
     defaultValues: {
-      name: registerFormData?.email || "",
-      email: registerFormData?.email || "",
-      phone: registerFormData?.phone || "",
-      password: registerFormData?.password || "",
-      confirmPassword: registerFormData?.confirmPassword || "",
+      name: registerFormData?.email || '',
+      email: registerFormData?.email || '',
+      phone: registerFormData?.phone || '',
+      password: registerFormData?.password || '',
+      confirmPassword: registerFormData?.confirmPassword || '',
     },
     resolver: yupResolver(schema),
   });
 
-  const { loading } = useTypedSelector(state => state.User);
+  const { loading } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const onSubmit = (data: RegisterFormDataType) => {
     dispatch(
-      registerUser({
+      registerDriver({
         data: data,
-        navigate: () => router.navigate("/(main)/(tabs)/home"),
+        navigate: () => router.navigate('/(main)/(tabs)/home'),
       })
     );
   };
@@ -164,7 +164,7 @@ const Register = () => {
 
           <CustomButton
             title="Register"
-            className={`${Platform.OS === "ios" ? "py-4" : "py-3"}`}
+            className={`${Platform.OS === 'ios' ? 'py-4' : 'py-3'}`}
             onPress={handleSubmit(onSubmit)}
             disabled={loading}
           />

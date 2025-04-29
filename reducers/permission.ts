@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { requestBackgroundLocationAccess } from "@/services/permission";
+import { createSlice } from '@reduxjs/toolkit';
+import { requestBackgroundLocationAccess } from '@/services/permission';
 
 export enum PermissionTypeEnum {
-  GRANTED = "granted",
-  UNDETERMINED = "undetermined",
-  DENIED = "denied",
+  GRANTED = 'granted',
+  UNDETERMINED = 'undetermined',
+  DENIED = 'denied',
 }
 
 interface PermissionInitialStateType {
@@ -36,11 +36,11 @@ const initialState: PermissionInitialStateType = {
 };
 
 const PermissionSlice = createSlice({
-  name: "PermissionSlice", //must be unique for every slice. convention is to put the same as file name
+  name: 'PermissionSlice', //must be unique for every slice. convention is to put the same as file name
   initialState, //the initial state of the slice
   reducers: {}, // action methods
-  extraReducers: builder => {
-    builder.addCase("RESET_STATE", () => initialState);
+  extraReducers: (builder) => {
+    builder.addCase('RESET_STATE', () => initialState);
 
     // builder.addCase(requestForegroundLocationAccess.pending, (state, action) => {
     //   state.location.loading = true;

@@ -4,17 +4,37 @@
     "slug": "CHARGED",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/driver-charged.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.damanjot.CHARGED",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/driver-charged.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.damanjot.CHARGED",
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+        },
+        "usesCleartextTraffic": true
       }
     },
     "web": {
@@ -27,7 +47,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/driver-charged.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -37,10 +57,10 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonsts/Roboto-Regular.ttf",
-            "./assets/fonsts/Roboto-Medium.ttf",
-            "./assets/fonsts/Roboto-Bold.ttf",
-            "./assets/fonsts/Roboto-Italic.ttf"
+            "./assets/fonts/Roboto-Regular.ttf",
+            "./assets/fonts/Roboto-Medium.ttf",
+            "./assets/fonts/Roboto-Bold.ttf",
+            "./assets/fonts/Roboto-Italic.ttf"
           ]
         }
       ],
@@ -59,10 +79,32 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "cc09d0a1-e180-4d70-84bc-ad7dbabf3ad2"
+      }
     }
   }
 }

@@ -1,10 +1,10 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router';
 
 const Layout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: "slide_from_right",
+        animation: 'slide_from_right',
       }}
     >
       <Stack.Screen name="login" options={{ headerShown: false }} />

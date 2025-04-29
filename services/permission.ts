@@ -1,5 +1,5 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import * as Location from "expo-location";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import * as Location from 'expo-location';
 
 // export const requestForegroundLocationAccess = createAsyncThunk(
 //   "PermissionSlice/requestForegroundLocationAccess",
@@ -21,12 +21,12 @@ import * as Location from "expo-location";
 // );
 
 export const requestBackgroundLocationAccess = createAsyncThunk(
-  "PermissionSlice/requestBackgroundLocationAccess",
+  'PermissionSlice/requestBackgroundLocationAccess',
   async (_, thunkAPI) => {
     try {
       //Background Permission
       let { status } = await Location.getBackgroundPermissionsAsync();
-      if (status !== "granted") {
+      if (status !== 'granted') {
         const fgRequest = await Location.requestBackgroundPermissionsAsync();
         status = fgRequest.status;
       }
@@ -35,7 +35,7 @@ export const requestBackgroundLocationAccess = createAsyncThunk(
         grantedBackground: status,
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue("Background location permission error");
+      return thunkAPI.rejectWithValue('Background location permission error');
     }
   }
 );

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Modal, ModalProps, TouchableWithoutFeedback, View } from "react-native";
+import React, { useEffect } from 'react';
+import { Modal, ModalProps, TouchableWithoutFeedback, View } from 'react-native';
 
 type ModelProps = ModalProps & {
   open: boolean;

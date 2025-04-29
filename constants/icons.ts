@@ -1,4 +1,4 @@
-import icon from "@/assets/icons/icon.png";
+import icon from '@/assets/icons/icon.png';
 import {
   Eye,
   EyeOff,
@@ -8,7 +8,18 @@ import {
   Flag,
   CarFront,
   Locate,
-} from "lucide-react-native";
+  Camera,
+  ChevronRight,
+  LogOut,
+  FileText,
+  Clock,
+  HelpCircle,
+  ChevronLeft,
+  Info,
+  RefreshCcw,
+  Upload,
+  X,
+} from 'lucide-react-native';
 
 export default {
   Eye,
@@ -19,4 +30,15 @@ export default {
   Flag,
   CarFront,
   Locate,
+  Camera,
+  ChevronRight,
+  LogOut,
+  FileText,
+  Clock,
+  HelpCircle,
+  ChevronLeft,
+  Info,
+  RefreshCcw,
+  Upload,
+  Close: X,
 };
