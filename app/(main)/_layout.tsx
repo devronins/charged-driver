@@ -39,7 +39,7 @@ const Layout = () => {
             </TouchableOpacity>
           ),
           headerRight: () => {
-            return vehicleDetails ?
+            return vehicleDetails ? (
               <TouchableOpacity
                 className="h-auto flex items-end justify-center px-2"
                 onPressIn={() => {
@@ -47,8 +47,8 @@ const Layout = () => {
                 }}
               >
                 <Text className="text-primary-300">{isEditMode ? 'Cancel' : 'Edit'}</Text>
-              </TouchableOpacity> :
-              null
+              </TouchableOpacity>
+            ) : null;
           },
         })}
       />

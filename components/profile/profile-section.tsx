@@ -66,10 +66,10 @@ const ProfileSection = () => {
           imageStyle={{ borderRadius: 9999 }}
         >
           {!isImageLoaded && (
-            <View className='absolute h-[130px] w-[130px] rounded-full bg-white items-center justify-center'>
+            <View className="absolute h-[130px] w-[130px] rounded-full bg-white items-center justify-center">
               <LottieView
                 source={ImageLoaderJson}
-                style={{ width: 30, height: 30}}
+                style={{ width: 30, height: 30 }}
                 loop
                 autoPlay
               />

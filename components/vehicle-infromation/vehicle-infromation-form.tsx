@@ -8,6 +8,7 @@ import Icons from '@/constants/icons';
 import { VehicleModal } from '@/utils/modals/vehicle';
 import { addVehicleDetails, editVehicleDetails } from '@/services/vehicle';
 import { Select } from '../ui/select';
+import { useEffect } from 'react';
 
 export interface VehicleInfromationFormDataType {
   car_model: string | undefined;
@@ -58,6 +59,7 @@ const VehicleInfromationForm = () => {
     formState: { errors },
     watch,
     setValue,
+    reset,
   } = useForm<VehicleInfromationFormDataType>({
     defaultValues: getVehicleInfromationFormData(vehicleDetails),
     //@ts-ignore
@@ -71,6 +73,13 @@ const VehicleInfromationForm = () => {
       dispatch(addVehicleDetails({ data: data }));
     }
   };
+
+  // Reset form when vehicleDetails loads
+  useEffect(() => {
+    if (vehicleDetails) {
+      reset(getVehicleInfromationFormData(vehicleDetails));
+    }
+  }, [vehicleDetails]);
 
   return (
     <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center gap-5 p-5">
