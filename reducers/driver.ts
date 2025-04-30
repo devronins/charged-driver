@@ -12,6 +12,7 @@ import {
   getDriverUploadedDocuments,
   getDriverDocumentTypes,
   uploadDriverProfileImage,
+  editDriver,
 } from '@/services/driver';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -83,6 +84,18 @@ const DriverSlice = createSlice({
       state.driverDetailsLoading = false;
     });
     builder.addCase(getDriver.rejected, (state, action) => {
+      state.error = true;
+      state.driverDetailsLoading = false;
+    });
+
+    builder.addCase(editDriver.pending, (state) => {
+      state.driverDetailsLoading = true;
+    });
+    builder.addCase(editDriver.fulfilled, (state, action) => {
+      state.driverDetails = action.payload.driverDetails;
+      state.driverDetailsLoading = false;
+    });
+    builder.addCase(editDriver.rejected, (state, action) => {
       state.error = true;
       state.driverDetailsLoading = false;
     });
