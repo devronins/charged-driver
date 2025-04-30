@@ -24,7 +24,6 @@ const Home = () => {
         initialRegion={coordinatesObj}
         region={coordinatesObj}
         showsUserLocation
-        followsUserLocation
         onMapReady={() => console.log('loaded map')}
       >
         <Marker
@@ -45,9 +44,9 @@ const Home = () => {
         <Icons.Locate size={20} color={'#FFFFFF'} />
       </TouchableOpacity>
 
-      <OnlineOffline/>
+      <OnlineOffline />
 
-      <Loader open={driverDetailsLoading} className='bg-black/80'/>
+      <Loader open={driverDetailsLoading} className="bg-black/80" />
     </View>
   );
 };
