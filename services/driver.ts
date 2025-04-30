@@ -11,7 +11,11 @@ import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DriverActions, VehicleActions } from '@/reducers';
-import { handleUnauthorizedError, PickedImageModal } from './common';
+import {
+  handleUnauthorizedError,
+  PickedImageModal,
+  startBackgroundLocationUpdates,
+} from './common';
 import { DriverModal } from '@/utils/modals/driver';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
@@ -46,7 +50,7 @@ export const registerDriver = createAsyncThunk<any, any>(
         navigate: params?.navigate,
       }); // save Driver data;
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -80,7 +84,7 @@ export const loginDriver = createAsyncThunk<any, any>(
         navigate: params?.navigate,
       });
     } catch (err: any) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -119,7 +123,7 @@ export const getDriver = createAsyncThunk<any, any>(
       const { data } = await fetchDriver();
       return thunkApi.fulfillWithValue(data.data);
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -128,17 +132,21 @@ export const editDriver = createAsyncThunk<any, any>(
   'DriverSlice/editDriver',
   async (params, thunkApi) => {
     try {
-      console.log('131>>>>>>>>>>>>>', params?.driverDetails?.is_online)
-      await updateDriver({ ...params?.driverDetails});
+      if (params?.driverDetails?.is_online) {
+        await startBackgroundLocationUpdates();
+      }
+      await updateDriver({ ...params?.driverDetails });
       const { data: driverDataRes } = await fetchDriver();
-      console.log('134>>>>>>>>>>>>>', driverDataRes.data)
+
       Toast.show({
         type: 'success',
-        text1: driverDataRes.data?.is_online ? 'You’re now available for rides!' : 'You’re now offline. See you soon!',
+        text1: driverDataRes.data?.is_online
+          ? 'You’re now available for rides!'
+          : 'You’re now offline. See you soon!',
       });
       return thunkApi.fulfillWithValue({ driverDetails: driverDataRes.data });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -167,7 +175,7 @@ export const uploadDriverDocument = createAsyncThunk<
       driverUploadedDocuments: data.data,
     });
   } catch (err) {
-    handleUnauthorizedError(err, thunkApi);
+    return handleUnauthorizedError(err, thunkApi);
   }
 });
 
@@ -181,7 +189,7 @@ export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
         driverUploadedDocuments: data.data,
       });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -196,7 +204,7 @@ export const getDriverDocumentTypes = createAsyncThunk<any, any>(
         driverDocumentTypes: data.data,
       });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -226,6 +234,6 @@ export const uploadDriverProfileImage = createAsyncThunk<
       driverDetails: driverDataRes.data,
     });
   } catch (err) {
-    handleUnauthorizedError(err, thunkApi);
+    return handleUnauthorizedError(err, thunkApi);
   }
 });
