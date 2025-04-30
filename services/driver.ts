@@ -124,6 +124,25 @@ export const getDriver = createAsyncThunk<any, any>(
   }
 );
 
+export const editDriver = createAsyncThunk<any, any>(
+  'DriverSlice/editDriver',
+  async (params, thunkApi) => {
+    try {
+      console.log('131>>>>>>>>>>>>>', params?.driverDetails?.is_online)
+      await updateDriver({ ...params?.driverDetails});
+      const { data: driverDataRes } = await fetchDriver();
+      console.log('134>>>>>>>>>>>>>', driverDataRes.data)
+      Toast.show({
+        type: 'success',
+        text1: driverDataRes.data?.is_online ? 'You’re now available for rides!' : 'You’re now offline. See you soon!',
+      });
+      return thunkApi.fulfillWithValue({ driverDetails: driverDataRes.data });
+    } catch (err) {
+      handleUnauthorizedError(err, thunkApi);
+    }
+  }
+);
+
 export const uploadDriverDocument = createAsyncThunk<
   any,
   { imageData: PickedImageModal; documentTypeId: number }

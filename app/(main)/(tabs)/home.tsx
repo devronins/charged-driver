@@ -1,7 +1,9 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icons from '@/constants/icons';
 import { useTypedSelector } from '@/store';
+import OnlineOffline from '@/components/home/online-offline-section';
+import Loader from '@/components/ui/Loader';
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -11,7 +13,7 @@ const coordinatesObj = {
 };
 
 const Home = () => {
-  const { location } = useTypedSelector((state) => state.Permission);
+  const { driverDetailsLoading } = useTypedSelector((state) => state.Driver);
 
   return (
     <View className="flex-1">
@@ -42,6 +44,10 @@ const Home = () => {
       <TouchableOpacity className="w-12 h-12 flex items-center justify-center bg-primary-300 rounded-full absolute bottom-8 right-5">
         <Icons.Locate size={20} color={'#FFFFFF'} />
       </TouchableOpacity>
+
+      <OnlineOffline/>
+
+      <Loader open={driverDetailsLoading} className='bg-black/80'/>
     </View>
   );
 };
