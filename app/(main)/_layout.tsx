@@ -1,13 +1,25 @@
 import Icons from '@/constants/icons';
 import { VehicleActions } from '@/reducers';
+import { appStateTaskHandler, getDriver } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { Redirect, Stack } from 'expo-router';
-import { Platform, Text, TouchableOpacity } from 'react-native';
+import { useEffect } from 'react';
+import { AppState, Platform, Text, TouchableOpacity } from 'react-native';
 
 const Layout = () => {
   const dispatch = useAppDispatch();
   const { isLogin } = useTypedSelector((state) => state.Driver);
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        appStateTaskHandler(dispatch);
+      }
+    });
+
+    return () => sub.remove();
+  }, []);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 

@@ -107,5 +107,3 @@ export const fileUpload = (formData: any) =>
 // export const forgotPassword = (data) => axios.post(`${process.env.REACT_APP_API_BASE_URL}`, data)
 //export const arboristResetPassword = (data) => API.post("arborist/resetpassword", data)
 
-//----------------------------------------------------------------------background task
-export const updateDriverForBackgroundTask = (data: any) => axiosInstance.put(`/driver`, data);
