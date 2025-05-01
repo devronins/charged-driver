@@ -11,12 +11,12 @@ import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DriverActions, VehicleActions } from '@/reducers';
-import {
-  handleUnauthorizedError,
-  PickedImageModal,
-  startBackgroundLocationUpdates,
-} from './common';
+import { handleUnauthorizedError, PickedImageModal, requestLocationPermission } from './common';
 import { DriverModal } from '@/utils/modals/driver';
+import {
+  startLocationUpdatesBackgroundTask,
+  stopLocationUpdatesBackgroundTask,
+} from './task-manager';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
@@ -93,6 +93,7 @@ export const logoutDriver = createAsyncThunk<any, any>(
   'DriverSlice/logoutDriver',
   async (params, thunkApi) => {
     try {
+      await stopLocationUpdatesBackgroundTask();
       await AsyncStorage.clear();
 
       // params?.navigate();
@@ -133,7 +134,10 @@ export const editDriver = createAsyncThunk<any, any>(
   async (params, thunkApi) => {
     try {
       if (params?.driverDetails?.is_online) {
-        await startBackgroundLocationUpdates();
+        await requestLocationPermission();
+        await startLocationUpdatesBackgroundTask();
+      } else {
+        await stopLocationUpdatesBackgroundTask();
       }
       await updateDriver({ ...params?.driverDetails });
       const { data: driverDataRes } = await fetchDriver();
