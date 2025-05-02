@@ -101,8 +101,8 @@ export const logoutDriver = createAsyncThunk<any, any>(
       thunkApi.dispatch(VehicleActions.setIntialState({}));
 
       Toast.show({
-        type: params?.data?.isSessionExpired ? 'info' : 'success',
-        text1: params?.data?.isSessionExpired ? 'Session Expired!' : 'Driver Logout successfully',
+        type: 'success',
+        text1: 'Driver Logout successfully',
       });
 
       return thunkApi.fulfillWithValue({});
