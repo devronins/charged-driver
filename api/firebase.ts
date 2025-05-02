@@ -1,6 +1,10 @@
+import { RideActions } from '@/reducers';
+import { DriverModal } from '@/utils/modals/driver';
+import { firebaseRidesModal } from '@/utils/modals/firebase';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { onSnapshot, Unsubscribe } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -25,6 +29,7 @@ const firebaseErrorMap: Record<string, string> = {
   'auth/missing-password': 'Password is required.',
   'auth/invalid-credential': 'Invalid Credentials',
   'auth/current-user-session-not-found': 'Firebase current user session not exist',
+  'firestore/listner-error': 'Firestore listner error',
 };
 
 export const formatFirebaseError = (code: any) => {
@@ -41,6 +46,7 @@ export const formatFirebaseError = (code: any) => {
   };
 };
 
+const listenerMap = new Map<string, Unsubscribe>();
 // API methods
 export const firebaseApi = {
   // GET request
@@ -135,6 +141,47 @@ export const firebaseApi = {
     } catch (error: any) {
       console.log('136>>>>>>>', error);
       throw formatFirebaseError(error.code);
+    }
+  },
+
+  //firebase listner
+  startFirebaseListner: async (
+    collectionName: string,
+    dispatch: Function,
+    driverDetails: DriverModal | null
+  ) => {
+    try {
+      const dataCol = collection(db, collectionName);
+      const queryInstance = query(dataCol, where('driver_id', '==', driverDetails?.id));
+      const unsubscribe = onSnapshot(
+        queryInstance,
+        (snapshot) => {
+          //@ts-ignore
+          const data = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as firebaseRidesModal[];
+          console.log('Changes detected in:', collectionName, data);
+          dispatch(RideActions.setRideRequests({ rideRequests: data }));
+        },
+        (error) => {
+          formatFirebaseError('firestore/listner-error');
+        }
+      );
+      listenerMap.set(collectionName, unsubscribe);
+    } catch (err) {
+      formatFirebaseError('firestore/listner-error');
+    }
+  },
+
+  stopFirebaseListener: (collectionName: string) => {
+    const unsubscribe = listenerMap.get(collectionName);
+    if (unsubscribe) {
+      console.log('Stopping Firestore listener for Collection...', collectionName);
+      unsubscribe();
+      listenerMap.delete(collectionName);
+    } else {
+      console.warn(`No active Firestore listener for ${collectionName}`);
     }
   },
 };

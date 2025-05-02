@@ -1,4 +1,5 @@
 export interface DriverModal {
+  id: number;
   uuid: string;
   email: string;
   password: string;
