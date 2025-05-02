@@ -45,7 +45,7 @@ const ProfilePageNavigation = () => {
         //@ts-ignore
         <Link href={nav.href}>
           <View
-            key={nav.id}
+            key={nav.id.toString()}
             className={`w-full flex flex-row items-center justify-between gap-1 p-5 ${index > 0 && 'border-t-[2px] border-secondary-300'}`}
           >
             <View className="flex flex-row items-cente justify-center gap-4">
