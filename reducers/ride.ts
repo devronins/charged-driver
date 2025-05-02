@@ -24,6 +24,9 @@ const RideSlice = createSlice({
         (item) => item.ride_id !== action.payload.rideRequest.ride_id
       );
     },
+    removeAllRideRequest: (state, action) => {
+      state.rideRequests = []
+    },
   }, // action methods
   extraReducers: (builder) => {},
 });
