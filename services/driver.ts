@@ -11,8 +11,9 @@ import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DriverActions, VehicleActions } from '@/reducers';
-import { handleUnauthorizedError, PickedImageModal } from './common';
+import { handleUnauthorizedError, PickedImageModal, requestLocationPermission } from './common';
 import { DriverModal } from '@/utils/modals/driver';
+import { stopLocationUpdatesBackgroundTask } from './task-manager';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
@@ -46,7 +47,7 @@ export const registerDriver = createAsyncThunk<any, any>(
         navigate: params?.navigate,
       }); // save Driver data;
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -80,7 +81,7 @@ export const loginDriver = createAsyncThunk<any, any>(
         navigate: params?.navigate,
       });
     } catch (err: any) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -89,6 +90,7 @@ export const logoutDriver = createAsyncThunk<any, any>(
   'DriverSlice/logoutDriver',
   async (params, thunkApi) => {
     try {
+      await stopLocationUpdatesBackgroundTask();
       await AsyncStorage.clear();
 
       // params?.navigate();
@@ -96,8 +98,8 @@ export const logoutDriver = createAsyncThunk<any, any>(
       thunkApi.dispatch(VehicleActions.setIntialState({}));
 
       Toast.show({
-        type: params?.data?.isSessionExpired ? 'info' : 'success',
-        text1: params?.data?.isSessionExpired ? 'Session Expired!' : 'Driver Logout successfully',
+        type: 'success',
+        text1: 'Driver Logout successfully',
       });
 
       return thunkApi.fulfillWithValue({});
@@ -119,7 +121,27 @@ export const getDriver = createAsyncThunk<any, any>(
       const { data } = await fetchDriver();
       return thunkApi.fulfillWithValue(data.data);
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
+    }
+  }
+);
+
+export const editDriver = createAsyncThunk<any, any>(
+  'DriverSlice/editDriver',
+  async (params, thunkApi) => {
+    try {
+      await updateDriver({ ...params?.driverDetails });
+      const { data: driverDataRes } = await fetchDriver();
+
+      Toast.show({
+        type: 'success',
+        text1: driverDataRes.data?.is_online
+          ? 'You’re now available for rides!'
+          : 'You’re now offline. See you soon!',
+      });
+      return thunkApi.fulfillWithValue({ driverDetails: driverDataRes.data });
+    } catch (err) {
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -148,7 +170,7 @@ export const uploadDriverDocument = createAsyncThunk<
       driverUploadedDocuments: data.data,
     });
   } catch (err) {
-    handleUnauthorizedError(err, thunkApi);
+    return handleUnauthorizedError(err, thunkApi);
   }
 });
 
@@ -162,7 +184,7 @@ export const getDriverUploadedDocuments = createAsyncThunk<any, any>(
         driverUploadedDocuments: data.data,
       });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -177,7 +199,7 @@ export const getDriverDocumentTypes = createAsyncThunk<any, any>(
         driverDocumentTypes: data.data,
       });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -207,6 +229,6 @@ export const uploadDriverProfileImage = createAsyncThunk<
       driverDetails: driverDataRes.data,
     });
   } catch (err) {
-    handleUnauthorizedError(err, thunkApi);
+    return handleUnauthorizedError(err, thunkApi);
   }
 });

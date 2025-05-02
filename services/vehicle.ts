@@ -25,7 +25,7 @@ export const addVehicleDetails = createAsyncThunk<any, any>(
       });
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -47,7 +47,7 @@ export const getVehicleDetails = createAsyncThunk<any, any>(
 
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
@@ -75,7 +75,7 @@ export const editVehicleDetails = createAsyncThunk<any, any>(
 
       return thunkApi.fulfillWithValue({ vehicleDetails });
     } catch (err) {
-      handleUnauthorizedError(err, thunkApi);
+      return handleUnauthorizedError(err, thunkApi);
     }
   }
 );
