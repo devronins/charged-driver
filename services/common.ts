@@ -160,7 +160,6 @@ export async function requestLocationPermission(): Promise<boolean> {
       };
     }
     const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
-    console.log('status>>>>>', status, bgStatus);
     if (bgStatus !== 'granted') {
       throw {
         response: {

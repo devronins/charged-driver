@@ -55,14 +55,3 @@ export const AvailableRoutes = Object.values(RoutesName);
 export const ConvertIntoValidRoute = (path: string) => {
   return path?.toLocaleLowerCase()?.split(' ')?.join('-');
 };
-
-//firebase collection names
-
-export const firebaseCollectionName = {
-  ClientReviews: 'client_reviews',
-  Devronins: 'devronins',
-  Services: 'services',
-  TeamMembers: 'team_members',
-  Technologies: 'technologies',
-  Projects: 'projects',
-};

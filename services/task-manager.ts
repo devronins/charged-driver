@@ -20,7 +20,7 @@ TaskManager.defineTask(
 
     if (data) {
       const { locations } = data;
-      console.log('Received new locations in background:', locations);
+      // console.log('Received new locations in background:', locations);
 
       const locationObj = locations[0]?.coords;
       if (locationObj) {
@@ -62,7 +62,7 @@ export async function startLocationUpdatesBackgroundTask(): Promise<void> {
         notificationColor: '#0000ff',
       },
     });
-    console.log('has started location updates background task');
+    // console.log('has started location updates background task');
   } catch (error: any) {
     console.log('Start Location Updates Background Task Error:6464646464', error);
     Toast.show({
@@ -77,9 +77,8 @@ async function updateDriverLocationBackgroundTask(payload: {
   last_location_lng: number;
 }): Promise<void> {
   try {
-    console.log('Received driver location payload:', payload);
     const { data } = await updateVehicleDetails(payload);
-    console.log('new driver location has been updated to server');
+    // console.log('new driver location has been updated to server');
   } catch (error: any) {
     console.log('Background Task Error:', error);
     Toast.show({
