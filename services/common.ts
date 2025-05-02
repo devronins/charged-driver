@@ -11,6 +11,7 @@ import {
 } from './task-manager';
 import { firebaseApi } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert, Linking, Platform } from 'react-native';
 
 export type PickedImageModal = {
   uri: string;
@@ -154,6 +155,7 @@ export async function requestLocationPermission(): Promise<boolean> {
         data: {
           code: 400,
           message: 'Foreground permission not granted',
+          type: 'Location Permission',
         },
       };
     }
@@ -167,6 +169,7 @@ export async function requestLocationPermission(): Promise<boolean> {
         data: {
           code: 400,
           message: 'Background permission not granted',
+          type: 'Location Permission',
         },
       };
     }
@@ -185,15 +188,47 @@ export async function requestLocationPermission(): Promise<boolean> {
   }
 }
 
-export async function appStateTaskHandler(dispatch: Function) {
+export async function appStateTaskHandler(
+  dispatch: Function,
+  payload: { is_driver_online: boolean }
+) {
   try {
-    await requestLocationPermission();
-    const hasStarted = await hasStartedLocationUpdatesBackgroundTask();
-    if (!hasStarted) {
-      await startLocationUpdatesBackgroundTask();
+    if (payload.is_driver_online) {
+      await requestLocationPermission();
+      const hasStarted = await hasStartedLocationUpdatesBackgroundTask();
+      if (!hasStarted) {
+        await startLocationUpdatesBackgroundTask();
+      }
     }
   } catch (error: any) {
-    console.log('AppState_Task_Handler_Error', error);
-    dispatch(editDriver({ driverDetails: { is_online: false } }));
+    await dispatch(editDriver({ driverDetails: { is_online: false } }));
+    Alert.alert(error.data.type, error.data.message, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Open Settings',
+        style: 'destructive',
+        onPress: () => {
+          openAppSettings();
+        },
+      },
+    ]);
   }
 }
+
+export const openAppSettings = async () => {
+  try {
+    if (Platform.OS === 'ios') {
+      const supported = await Linking.canOpenURL('app-settings:');
+      if (supported) {
+        await Linking.openURL('app-settings:');
+      } else {
+        Alert.alert('Error', 'Unable to open settings on this device.');
+      }
+    } else {
+      await Linking.openSettings();
+    }
+  } catch (error) {
+    console.error('Failed to open settings:', error);
+    Alert.alert('Error', 'Could not open settings. Please do it manually.');
+  }
+};

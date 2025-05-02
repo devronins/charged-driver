@@ -3,18 +3,25 @@ import { VehicleActions } from '@/reducers';
 import { appStateTaskHandler, getDriver } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { Redirect, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AppState, Platform, Text, TouchableOpacity } from 'react-native';
 
 const Layout = () => {
   const dispatch = useAppDispatch();
-  const { isLogin } = useTypedSelector((state) => state.Driver);
+  const { isLogin, driverDetails } = useTypedSelector((state) => state.Driver);
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
+  const driverRef = useRef(driverDetails);
+
+  useEffect(() => {
+    driverRef.current = driverDetails;
+  }, [driverDetails]);
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        appStateTaskHandler(dispatch);
+        appStateTaskHandler(dispatch, {
+          is_driver_online: driverRef.current?.is_online ? true : false,
+        });
       }
     });
 
