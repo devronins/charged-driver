@@ -2,13 +2,15 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
-import { editDriver, logoutDriver } from './driver';
+import { editDriver } from './driver';
 import { GetThunkAPI } from '@reduxjs/toolkit';
 import { Toast } from '@/utils/toast';
 import {
   hasStartedLocationUpdatesBackgroundTask,
   startLocationUpdatesBackgroundTask,
 } from './task-manager';
+import { firebaseApi } from '@/api/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type PickedImageModal = {
   uri: string;
@@ -122,12 +124,16 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
   }
 }
 
-export const handleUnauthorizedError = (error: any, thunkApi: GetThunkAPI<any>) => {
-  console.log('!39>>>>>>>>>>>>>>>>>', error);
-  if (error.response?.code === 401 || error?.status === 401) {
-    thunkApi.dispatch(logoutDriver({ data: { isSessionExpired: true } }));
-    return thunkApi.rejectWithValue(error.response?.status);
-  } else {
+export const handleUnauthorizedError = async (error: any, thunkApi: GetThunkAPI<any>) => {
+  try {
+    if (error.response?.code === 401 || error?.status === 401) {
+      const { accessToken } = await firebaseApi.getNewAccessToken();
+      await AsyncStorage.setItem('accessToken', accessToken);
+      return thunkApi.rejectWithValue(error.response?.status);
+    } else {
+      throw error;
+    }
+  } catch (error: any) {
     Toast.show({
       type: 'error',
       text1: error?.data?.message || "Oop's something went wrong!",
