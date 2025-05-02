@@ -131,8 +131,9 @@ export const firebaseApi = {
         const newToken = await auth.currentUser.getIdToken(true);
         return { accessToken: newToken };
       }
-      throw formatFirebaseError('auth/current-user-session-not-found');
+      throw { code: 'auth/current-user-session-not-found' };
     } catch (error: any) {
+      console.log('136>>>>>>>', error);
       throw formatFirebaseError(error.code);
     }
   },

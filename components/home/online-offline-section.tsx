@@ -1,10 +1,12 @@
-import { Animated, Switch, Text, TouchableOpacity, View } from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
-import Icons from '@/constants/icons';
+import { Alert, Animated, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { editDriver } from '@/services';
+import { editDriver, openAppSettings, requestLocationPermission } from '@/services';
+import {
+  startLocationUpdatesBackgroundTask,
+  stopLocationUpdatesBackgroundTask,
+} from '@/services/task-manager';
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -37,13 +39,38 @@ const OnlineOffline = () => {
       }, 800);
     });
   };
-  const toggleSwitch = () => {
-    animateScale();
-    dispatch(
-      editDriver({
-        driverDetails: { ...driverDetails, is_online: driverDetails?.is_online ? false : true },
-      })
-    );
+  const toggleSwitch = async () => {
+    try {
+      animateScale();
+      const driverUpdatedPayload = {
+        ...driverDetails,
+        is_online: driverDetails?.is_online ? false : true,
+      };
+
+      if (driverUpdatedPayload?.is_online) {
+        await requestLocationPermission();
+        await startLocationUpdatesBackgroundTask();
+      } else {
+        await stopLocationUpdatesBackgroundTask();
+      }
+
+      dispatch(
+        editDriver({
+          driverDetails: { ...driverDetails, is_online: driverDetails?.is_online ? false : true },
+        })
+      );
+    } catch (error: any) {
+      Alert.alert(error.data.type, error.data.message, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Open Settings',
+          style: 'destructive',
+          onPress: () => {
+            openAppSettings();
+          },
+        },
+      ]);
+    }
   };
 
   return (
