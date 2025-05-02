@@ -24,6 +24,7 @@ const firebaseErrorMap: Record<string, string> = {
   'auth/weak-password': 'Password should be at least 6 characters.',
   'auth/missing-password': 'Password is required.',
   'auth/invalid-credential': 'Invalid Credentials',
+  'auth/current-user-session-not-found': 'Firebase current user session not exist',
 };
 
 export const formatFirebaseError = (code: any) => {
@@ -121,6 +122,19 @@ export const firebaseApi = {
       return data;
     } catch (error) {
       throw error;
+    }
+  },
+  getNewAccessToken: async () => {
+    try {
+      const auth = getAuth();
+      if (auth.currentUser) {
+        const newToken = await auth.currentUser.getIdToken(true);
+        return { accessToken: newToken };
+      }
+      throw { code: 'auth/current-user-session-not-found' };
+    } catch (error: any) {
+      console.log('136>>>>>>>', error);
+      throw formatFirebaseError(error.code);
     }
   },
 };

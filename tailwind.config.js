@@ -25,6 +25,7 @@ module.exports = {
           300: '#F5F7FA',
         },
         tertiary: {
+          200: '#bbf7d0',
           300: '#34C759',
         },
         input: {

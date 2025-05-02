@@ -1,13 +1,32 @@
 import Icons from '@/constants/icons';
 import { VehicleActions } from '@/reducers';
+import { appStateTaskHandler, getDriver } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { Redirect, Stack } from 'expo-router';
-import { Platform, Text, TouchableOpacity } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { AppState, Platform, Text, TouchableOpacity } from 'react-native';
 
 const Layout = () => {
   const dispatch = useAppDispatch();
-  const { isLogin } = useTypedSelector((state) => state.Driver);
+  const { isLogin, driverDetails } = useTypedSelector((state) => state.Driver);
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
+  const driverRef = useRef(driverDetails);
+
+  useEffect(() => {
+    driverRef.current = driverDetails;
+  }, [driverDetails]);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        appStateTaskHandler(dispatch, {
+          is_driver_online: driverRef.current?.is_online ? true : false,
+        });
+      }
+    });
+
+    return () => sub.remove();
+  }, []);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
@@ -39,7 +58,7 @@ const Layout = () => {
             </TouchableOpacity>
           ),
           headerRight: () => {
-            return vehicleDetails ?
+            return vehicleDetails ? (
               <TouchableOpacity
                 className="h-auto flex items-end justify-center px-2"
                 onPressIn={() => {
@@ -47,8 +66,8 @@ const Layout = () => {
                 }}
               >
                 <Text className="text-primary-300">{isEditMode ? 'Cancel' : 'Edit'}</Text>
-              </TouchableOpacity> :
-              null
+              </TouchableOpacity>
+            ) : null;
           },
         })}
       />

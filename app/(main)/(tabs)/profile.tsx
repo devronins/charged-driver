@@ -16,7 +16,7 @@ const Profile = () => {
           <ProfileLogout />
         </View>
       </ScrollView>
-      <Loader open={driverDetailsLoading}/>
+      <Loader open={driverDetailsLoading} />
     </>
   );
 };
