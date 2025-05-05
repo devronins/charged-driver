@@ -92,7 +92,7 @@ export const logoutDriver = createAsyncThunk<any, any>(
   'DriverSlice/logoutDriver',
   async (params, thunkApi) => {
     try {
-      await updateDriver({is_online: false})
+      // await updateDriver({is_online: false})
       await stopLocationUpdatesBackgroundTask();
       await AsyncStorage.clear();
 

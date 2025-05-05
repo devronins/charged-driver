@@ -2,9 +2,17 @@ import { RideActions } from '@/reducers';
 import { DriverModal } from '@/utils/modals/driver';
 import { firebaseRidesModal } from '@/utils/modals/firebase';
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+//@ts-ignore
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  getReactNativePersistence,
+  initializeAuth,
+} from 'firebase/auth';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { onSnapshot, Unsubscribe } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -19,7 +27,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
 //firebase error object
 const firebaseErrorMap: Record<string, string> = {

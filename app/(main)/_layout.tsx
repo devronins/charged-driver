@@ -8,6 +8,7 @@ import { firebaseCollectionName } from '@/utils/modals/firebase';
 import { Redirect, Stack } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AppState, Platform, Text, TouchableOpacity } from 'react-native';
+import { useAppState } from '@react-native-community/hooks';
 
 const Layout = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ const Layout = () => {
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
   const { rideRequests } = useTypedSelector((state) => state.Ride);
   const driverRef = useRef(driverDetails);
+  const appState = useAppState();
 
   useEffect(() => {
     driverRef.current = driverDetails;
@@ -26,16 +28,10 @@ const Layout = () => {
   }, [driverDetails]);
 
   useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        appStateTaskHandler(dispatch, {
-          is_driver_online: driverRef.current?.is_online ? true : false,
-        });
-      }
-    });
-
-    return () => sub.remove();
-  }, []);
+    if (appState === 'active' && driverRef.current?.is_online) {
+      appStateTaskHandler(dispatch, { is_driver_online: true });
+    }
+  }, [appState]);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
