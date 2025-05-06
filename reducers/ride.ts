@@ -2,11 +2,13 @@ import { firebaseRidesModal } from '@/utils/modals/firebase';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface RideInitialStateType {
+  activeRide: firebaseRidesModal | null;
   rideRequests: firebaseRidesModal[];
   error: boolean;
 }
 
 const initialState: RideInitialStateType = {
+  activeRide: null,
   rideRequests: [],
   error: false,
 };
@@ -26,6 +28,12 @@ const RideSlice = createSlice({
     },
     removeAllRideRequest: (state, action) => {
       state.rideRequests = [];
+    },
+    //TODO: currently this is synchrnous later on we call api to accept ride
+    acceptRideRequest: (state, action) => {
+      state.activeRide = action.payload.rideRequest;
+      state.rideRequests = [];
+      action.payload?.navigate();
     },
   }, // action methods
   extraReducers: (builder) => {},

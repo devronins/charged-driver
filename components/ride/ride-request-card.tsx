@@ -5,10 +5,12 @@ import { useAppDispatch } from '@/store';
 import { RideActions } from '@/reducers';
 import { firebaseRidesModal } from '@/utils/modals/firebase';
 import { MapPin } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const RideCard = ({ item, index }: { item: firebaseRidesModal; index: number }) => {
+  const navigate = useRouter();
   const dispatch = useAppDispatch();
   const translateX = useRef(new Animated.Value(0)).current;
   const slideY = useRef(new Animated.Value(-100)).current;
@@ -78,7 +80,14 @@ const RideCard = ({ item, index }: { item: firebaseRidesModal; index: number }) 
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => dispatch(RideActions.removeRideRequest({ rideRequest: item }))}
+            onPress={() =>
+              dispatch(
+                RideActions.acceptRideRequest({
+                  rideRequest: item,
+                  navigate: () => navigate.push('/ride/active-ride'),
+                })
+              )
+            }
             className="flex-1 bg-tertiary-300 py-2 rounded-full items-center"
           >
             <Text className="text-white font-medium">Accept</Text>
