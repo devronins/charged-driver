@@ -162,7 +162,7 @@ export const firebaseApi = {
   ) => {
     try {
       const dataCol = collection(db, collectionName);
-      const queryInstance = query(dataCol, where('driver_id', '==', driverDetails?.id));
+      const queryInstance = query(dataCol, where('driver_id', '==', String(driverDetails?.id)));
       const unsubscribe = onSnapshot(
         queryInstance,
         (snapshot) => {
@@ -171,7 +171,7 @@ export const firebaseApi = {
             id: doc.id,
             ...doc.data(),
           })) as firebaseRidesModal[];
-          console.log('Changes detected in:', collectionName, data);
+          // console.log('Changes detected in:', collectionName, data);
           dispatch(RideActions.setRideRequests({ rideRequests: data }));
         },
         (error) => {

@@ -22,6 +22,8 @@ const Layout = () => {
     driverRef.current = driverDetails;
     if (driverDetails?.is_online) {
       firebaseApi.startFirebaseListner(firebaseCollectionName.DriverRides, dispatch, driverDetails);
+    } else {
+      firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
     }
 
     return () => firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);

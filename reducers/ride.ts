@@ -25,7 +25,7 @@ const RideSlice = createSlice({
       );
     },
     removeAllRideRequest: (state, action) => {
-      state.rideRequests = []
+      state.rideRequests = [];
     },
   }, // action methods
   extraReducers: (builder) => {},

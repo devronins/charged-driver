@@ -11,11 +11,9 @@ import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DriverActions, VehicleActions } from '@/reducers';
-import { handleUnauthorizedError, PickedImageModal, requestLocationPermission } from './common';
+import { handleUnauthorizedError, PickedImageModal } from './common';
 import { DriverModal } from '@/utils/modals/driver';
 import { stopLocationUpdatesBackgroundTask } from './task-manager';
-import { firebaseCollectionName } from '@/utils/modals/firebase';
-import { RootState } from '@/store';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
@@ -133,17 +131,6 @@ export const editDriver = createAsyncThunk<any, any>(
   'DriverSlice/editDriver',
   async (params, thunkApi) => {
     try {
-      const state = thunkApi.getState() as RootState;
-      if (params?.driverDetails?.is_online === true) {
-        firebaseApi.startFirebaseListner(
-          firebaseCollectionName.DriverRides,
-          thunkApi.dispatch,
-          state.Driver.driverDetails
-        );
-      } else if (params?.driverDetails?.is_online === false) {
-        firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
-      }
-
       await updateDriver({ ...params?.driverDetails });
       const { data: driverDataRes } = await fetchDriver();
 
