@@ -1,15 +1,21 @@
-import { firebaseRidesModal } from '@/utils/modals/firebase';
+import { changeRideStatus } from '@/services';
+import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
+import { RideModal } from '@/utils/modals/ride';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface RideInitialStateType {
-  activeRide: firebaseRidesModal | null;
-  rideRequests: firebaseRidesModal[];
+  activeRide: RideModal | null;
+  rideRequests: firebaseDriverRidesModal[];
+  rides: any[];
+  ridesLoading: boolean;
   error: boolean;
 }
 
 const initialState: RideInitialStateType = {
   activeRide: null,
   rideRequests: [],
+  rides: [],
+  ridesLoading: false,
   error: false,
 };
 
@@ -36,7 +42,25 @@ const RideSlice = createSlice({
       action.payload?.navigate();
     },
   }, // action methods
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(changeRideStatus.pending, (state) => {
+      state.ridesLoading = true;
+      state.error = false;
+    });
+    builder.addCase(changeRideStatus.fulfilled, (state, action) => {
+      state.ridesLoading = false;
+      state.rideRequests = [];
+      state.activeRide = action.payload?.activeRide || null;
+      if (action.payload?.navigate) {
+        //call navigate function
+        action.payload?.navigate();
+      }
+    });
+    builder.addCase(changeRideStatus.rejected, (state, action) => {
+      state.error = true;
+      state.ridesLoading = false;
+    });
+  },
 });
 
 export const RideActions = {

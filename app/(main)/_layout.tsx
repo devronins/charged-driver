@@ -25,7 +25,8 @@ const Layout = () => {
     }
     if (activeRide) {
       firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
-    } else {
+    }
+    if (driverDetails?.is_online === false) {
       firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
     }
 

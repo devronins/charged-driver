@@ -92,6 +92,12 @@ export const uploadFileDocument = (type: number, formData: any) =>
 export const fetchDocumentTypes = () => axiosInstance.get(`/driver/documenttypes`);
 export const fetchUploadedDocuments = () => axiosInstance.get(`/driver/documents`);
 
+//----------------------------------------------------------------------Driver Ride
+export const updateRideStatus = (id: string, data: any) =>
+  axiosInstance.put(`/driver/changeridestatus/${id}`, data);
+export const fetchRide = (id: string) => axiosInstance.get(`/driver/getride/${id}`);
+export const fetchRides = () => axiosInstance.get('/v1/driver/getmyrides');
+
 //---------------------------------------------------------------------upload image
 export const fileUpload = (formData: any) =>
   axiosInstance.post(`/driver/uploadfiles`, formData, {

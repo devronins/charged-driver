@@ -3,13 +3,13 @@ import { View, Text, Animated, Dimensions, TouchableOpacity } from 'react-native
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { useAppDispatch } from '@/store';
 import { RideActions } from '@/reducers';
-import { firebaseRidesModal } from '@/utils/modals/firebase';
+import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { MapPin } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const RideCard = ({ item, index }: { item: firebaseRidesModal; index: number }) => {
+const RideCard = ({ item, index }: { item: firebaseDriverRidesModal; index: number }) => {
   const navigate = useRouter();
   const dispatch = useAppDispatch();
   const translateX = useRef(new Animated.Value(0)).current;

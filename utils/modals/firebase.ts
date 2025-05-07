@@ -2,7 +2,7 @@ export const firebaseCollectionName = {
   DriverRides: 'driverRides',
 };
 
-export interface firebaseRidesModal {
+export interface firebaseDriverRidesModal {
   driver_earnings: number;
   driver_id: 6;
   dropoff_address: string;

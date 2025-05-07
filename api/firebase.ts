@@ -1,6 +1,6 @@
 import { RideActions } from '@/reducers';
 import { DriverModal } from '@/utils/modals/driver';
-import { firebaseRidesModal } from '@/utils/modals/firebase';
+import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { initializeApp } from 'firebase/app';
 //@ts-ignore
 import {
@@ -170,7 +170,7 @@ export const firebaseApi = {
           const data = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          })) as firebaseRidesModal[];
+          })) as firebaseDriverRidesModal[];
           // console.log('Changes detected in:', collectionName, data);
           dispatch(RideActions.setRideRequests({ rideRequests: data }));
         },
