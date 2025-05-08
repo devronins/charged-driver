@@ -37,7 +37,9 @@ const RideCard = ({ item, index }: { item: firebaseDriverRidesModal; index: numb
         toValue: nativeEvent.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH,
         duration: 200,
         useNativeDriver: true,
-      }).start(() => dispatch(cancelRideRequest({ driverRide: { ...item, status: RideStatus.Cancelled } })));
+      }).start(() =>
+        dispatch(cancelRideRequest({ driverRide: { ...item, status: RideStatus.Cancelled } }))
+      );
     } else {
       Animated.spring(translateX, {
         toValue: 0,

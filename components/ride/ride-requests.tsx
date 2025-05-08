@@ -31,7 +31,7 @@ const RideRequests = () => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-      <Loader open={loading}/>
+      <Loader open={loading} />
     </>
   );
 };
