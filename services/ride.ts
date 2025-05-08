@@ -51,3 +51,18 @@ export const getRides = createAsyncThunk<any, any>(
     }
   }
 );
+
+export const getRideTypes = createAsyncThunk<any, any>(
+  'RideSlice/getRideTypes',
+  async (params, thunkApi) => {
+    try {
+      const { data } = await fetchRideTypes();
+
+      return thunkApi.fulfillWithValue({
+        rideTypes: data.data,
+      });
+    } catch (err) {
+      return handleUnauthorizedError(err, thunkApi);
+    }
+  }
+);

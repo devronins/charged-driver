@@ -5,14 +5,16 @@ import { useAppDispatch, useTypedSelector } from '@/store';
 import { useEffect } from 'react';
 import { getVehicleDetails } from '@/services/vehicle';
 import Loader from '@/components/ui/Loader';
+import { getRideTypes } from '@/services';
 
 const VehicleInfromation = () => {
-  const { vehicleDetailsLoading, isEditMode } = useTypedSelector((state) => state.Vehicle);
-  const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
+  const { vehicleDetailsLoading } = useTypedSelector((state) => state.Vehicle);
+  const { loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getVehicleDetails({}));
+    dispatch(getRideTypes({}));
   }, []);
 
   return (
@@ -21,7 +23,7 @@ const VehicleInfromation = () => {
         <VehicleInfromationInfo />
         <VehicleInfromationForm />
       </View>
-      <Loader open={vehicleDetailsLoading} />
+      <Loader open={vehicleDetailsLoading || loading} />
     </ScrollView>
   );
 };

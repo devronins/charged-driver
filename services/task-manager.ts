@@ -90,7 +90,7 @@ async function updateDriverLocationBackgroundTask(payload: {
     } else {
       console.log('Background Task Error:', error);
       Toast.show({
-        type: 'Background Task Error:',
+        type: 'error',
         text1: 'Background task error while updating driver location',
       });
     }

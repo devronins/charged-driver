@@ -16,6 +16,7 @@ const coordinatesObj = {
 
 const Home = () => {
   const { driverDetailsLoading } = useTypedSelector((state) => state.Driver);
+  const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
 
   return (
     <View className="flex-1">
@@ -34,7 +35,7 @@ const Home = () => {
         <Icons.Locate size={20} color={'#FFFFFF'} />
       </TouchableOpacity>
 
-      <OnlineOffline />
+      {vehicleDetails && <OnlineOffline />}
 
       <Loader open={driverDetailsLoading} className="bg-black/80" />
 

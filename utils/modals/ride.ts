@@ -33,9 +33,38 @@ export interface RideModal {
   started_at: string | null;
   completed_at: string | null;
   cancelled_at: string | null;
-  status: string;
+  status: RideStatus;
   govt_tax_percentage: string;
   name: string;
   rider: string;
   driver: string;
+}
+
+export interface RideTypeModal {
+  id: number;
+  name: string;
+  description: string;
+  base_price: string;
+  price_per_km: string;
+  price_per_minute: string;
+  min_fare: string;
+  icon: string;
+  is_active: boolean;
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
+  cancel_fee: string;
+  refund_distance_in_m: number;
+  minimum_billable_distance: string;
+  commission_percentage: string;
+  keyword: string;
+  govt_tax_percentage: string;
+}
+
+export enum RideStatus {
+  Requested = 'requested',
+  Accepted = 'accepted',
+  Started = 'started',
+  Cancelled = 'canceled',
+  Completed = 'completed',
+  Progress = 'progress',
 }

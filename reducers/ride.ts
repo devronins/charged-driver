@@ -1,13 +1,14 @@
-import { changeRideStatus } from '@/services';
+import { cancelRideRequest, changeRideStatus, getRides, getRideTypes } from '@/services';
 import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
-import { RideModal } from '@/utils/modals/ride';
+import { RideModal, RideStatus, RideTypeModal } from '@/utils/modals/ride';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface RideInitialStateType {
   activeRide: RideModal | null;
   rideRequests: firebaseDriverRidesModal[];
-  rides: any[];
-  ridesLoading: boolean;
+  rides: RideModal[];
+  rideTypes: RideTypeModal[];
+  loading: boolean;
   error: boolean;
 }
 
@@ -15,7 +16,8 @@ const initialState: RideInitialStateType = {
   activeRide: null,
   rideRequests: [],
   rides: [],
-  ridesLoading: false,
+  rideTypes: [],
+  loading: false,
   error: false,
 };
 
@@ -44,11 +46,11 @@ const RideSlice = createSlice({
   }, // action methods
   extraReducers: (builder) => {
     builder.addCase(changeRideStatus.pending, (state) => {
-      state.ridesLoading = true;
+      state.loading = true;
       state.error = false;
     });
     builder.addCase(changeRideStatus.fulfilled, (state, action) => {
-      state.ridesLoading = false;
+      state.loading = false;
       state.rideRequests = [];
       state.activeRide = action.payload?.activeRide || null;
       if (action.payload?.navigate) {
@@ -58,7 +60,50 @@ const RideSlice = createSlice({
     });
     builder.addCase(changeRideStatus.rejected, (state, action) => {
       state.error = true;
-      state.ridesLoading = false;
+      state.loading = false;
+    });
+
+    builder.addCase(cancelRideRequest.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(cancelRideRequest.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(cancelRideRequest.rejected, (state, action) => {
+      state.error = true;
+      state.loading = false;
+    });
+
+    builder.addCase(getRides.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(getRides.fulfilled, (state, action: { payload: { rides: RideModal[] } }) => {
+      state.loading = false;
+      state.rides = action.payload.rides;
+      state.activeRide =
+        action.payload?.rides?.find((item) => item.status === RideStatus.Progress) || null;
+    });
+    builder.addCase(getRides.rejected, (state, action) => {
+      state.error = true;
+      state.loading = false;
+    });
+
+    builder.addCase(getRideTypes.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(
+      getRideTypes.fulfilled,
+      (state, action: { payload: { rideTypes: RideTypeModal[] } }) => {
+        state.loading = false;
+        state.rideTypes = action.payload.rideTypes;
+      }
+    );
+    builder.addCase(getRideTypes.rejected, (state, action) => {
+      state.error = true;
+      state.loading = false;
     });
   },
 });
