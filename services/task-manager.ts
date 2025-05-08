@@ -83,17 +83,21 @@ async function updateDriverLocationBackgroundTask(payload: {
     const { data } = await updateVehicleDetails(payload);
     console.log('new driver location has been updated to server');
   } catch (error: any) {
-    if (error.response?.code === 401 || error?.status === 401) {
-      const { accessToken } = await firebaseApi.getNewAccessToken();
-      await AsyncStorage.setItem('accessToken', accessToken);
-      const { data } = await updateVehicleDetails(payload);
-    } else {
-      console.log('Background Task Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Background task error while updating driver location',
-      });
-    }
+    // if (error.response?.code === 401 || error?.status === 401) {
+    //   const { accessToken } = await firebaseApi.getNewAccessToken();
+    //   await AsyncStorage.setItem('accessToken', accessToken);
+    //   const { data } = await updateVehicleDetails(payload);
+    // } else {
+    //   console.log('Background Task Error:', error);
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Background task error while updating driver location',
+    //   });
+    // }
+    Toast.show({
+      type: 'error',
+      text1: 'Background task error while updating driver location',
+    });
   }
 }
 

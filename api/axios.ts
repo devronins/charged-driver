@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { ErrorResponse } from '@/utils/error-response';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import { firebaseApi } from './firebase';
 
 interface ApiConfig {
   baseURL: string;
@@ -31,11 +32,28 @@ axiosInstance.interceptors.request.use(async (req: any) => {
 // Error handling interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
+    const originalRequest: any = error.config;
     const errorResponse: ErrorResponse = {};
 
     if (error.response) {
-      // The request was made and the server responded with a status code
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+
+        try {
+          const { accessToken } = await firebaseApi.getNewAccessToken();
+          await AsyncStorage.setItem('accessToken', accessToken);
+
+          // Set the new Authorization header and retry the request
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return axiosInstance(originalRequest);
+        } catch (tokenRefreshError) {
+          // Optional: logout or redirect
+          console.log('Axios Refresh Token Error:');
+          return Promise.reject(tokenRefreshError);
+        }
+      }
+
       errorResponse.status = error.response.status;
       errorResponse.message = error.message;
       errorResponse.data = error.response.data as any;

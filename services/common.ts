@@ -126,21 +126,22 @@ export async function pickImageFromGallery(): Promise<PickedImageModal | null> {
 }
 
 export const handleUnauthorizedError = async (error: any, thunkApi: GetThunkAPI<any>) => {
-  try {
-    if (error.response?.code === 401 || error?.status === 401) {
-      const { accessToken } = await firebaseApi.getNewAccessToken();
-      await AsyncStorage.setItem('accessToken', accessToken);
-      return thunkApi.rejectWithValue(error.response?.status);
-    } else {
-      throw error;
-    }
-  } catch (error: any) {
-    Toast.show({
-      type: 'error',
-      text1: error?.data?.message || "Oop's something went wrong!",
-    });
-    return thunkApi.rejectWithValue(error.response?.status || error?.status || 500);
-  }
+  // try {
+  //   if (error.response?.code === 401 || error?.status === 401) {
+  //     const { accessToken } = await firebaseApi.getNewAccessToken();
+  //     await AsyncStorage.setItem('accessToken', accessToken);
+  //     return thunkApi.rejectWithValue(error.response?.status);
+  //   } else {
+  //     throw error;
+  //   }
+  // } catch (error: any) {
+  //   Toast.show({
+  //     type: 'error',
+  //     text1: error?.data?.message || "Oop's something went wrong!",
+  //   });
+  //   return thunkApi.rejectWithValue(error.response?.status || error?.status || 500);
+  // }
+  throw error;
 };
 
 export async function requestLocationPermission(): Promise<boolean> {

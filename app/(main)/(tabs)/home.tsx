@@ -15,7 +15,9 @@ const coordinatesObj = {
 };
 
 const Home = () => {
-  const { driverDetailsLoading, accessToken, driverDetails } = useTypedSelector((state) => state.Driver);
+  const { driverDetailsLoading, accessToken, driverDetails } = useTypedSelector(
+    (state) => state.Driver
+  );
   const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
   console.log('19>>>>>>', accessToken, driverDetails?.id);
 
@@ -36,7 +38,7 @@ const Home = () => {
         <Icons.Locate size={20} color={'#FFFFFF'} />
       </TouchableOpacity>
 
-      {vehicleDetails && <OnlineOffline />}
+      {vehicleDetails && driverDetails?.is_active && <OnlineOffline />}
 
       <Loader open={driverDetailsLoading} className="bg-black/80" />
 
