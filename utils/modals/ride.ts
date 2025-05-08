@@ -65,6 +65,5 @@ export enum RideStatus {
   Accepted = 'accepted',
   Started = 'started',
   Cancelled = 'canceled',
-  Completed = 'completed',
-  Progress = 'progress',
+  Completed = 'completed'
 }

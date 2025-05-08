@@ -15,8 +15,9 @@ const coordinatesObj = {
 };
 
 const Home = () => {
-  const { driverDetailsLoading } = useTypedSelector((state) => state.Driver);
+  const { driverDetailsLoading, accessToken, driverDetails } = useTypedSelector((state) => state.Driver);
   const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
+  console.log('19>>>>>>', accessToken, driverDetails?.id);
 
   return (
     <View className="flex-1">

@@ -1,6 +1,6 @@
 import { RideActions } from '@/reducers';
 import { DriverModal } from '@/utils/modals/driver';
-import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
+import { firebaseCollectionName, firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { initializeApp } from 'firebase/app';
 //@ts-ignore
 import {
@@ -10,9 +10,18 @@ import {
   getReactNativePersistence,
   initializeAuth,
 } from 'firebase/auth';
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+} from 'firebase/firestore';
 import { onSnapshot, Unsubscribe } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RideStatus } from '@/utils/modals/ride';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -40,6 +49,7 @@ const firebaseErrorMap: Record<string, string> = {
   'auth/invalid-credential': 'Invalid Credentials',
   'auth/current-user-session-not-found': 'Firebase current user session not exist',
   'firestore/listner-error': 'Firestore listner error',
+  'firestore/record-not-found': 'Record not found',
 };
 
 export const formatFirebaseError = (code: any) => {
@@ -154,6 +164,37 @@ export const firebaseApi = {
     }
   },
 
+  cancelDriverRideByRideId: async (
+    ride_id: number,
+    driver_id: number,
+    updateData: firebaseDriverRidesModal
+  ): Promise<void> => {
+    try {
+      // Use Firestore query to filter by ride_id
+      const dataCol = collection(db, firebaseCollectionName.DriverRides);
+      const rideQuery = query(
+        dataCol,
+        where('ride_id', '==', ride_id),
+        where('driver_id', '==', driver_id)
+      );
+      const snapshot = await getDocs(rideQuery);
+
+      if (snapshot.empty) {
+        throw new Error(`firestore/record-not-found`);
+      }
+
+      const targetDoc = snapshot.docs[0];
+      const docRef = doc(db, firebaseCollectionName.DriverRides, targetDoc.id);
+
+      console.log('176>>>>>>>', targetDoc, updateData);
+
+      await updateDoc(docRef, { status: updateData.status });
+    } catch (error: any) {
+      const errorMessage = firebaseErrorMap[error.code] || 'An unexpected error occurred.';
+      throw formatFirebaseError(error.code ?? error.message);
+    }
+  },
+
   //firebase listner
   startFirebaseListner: async (
     collectionName: string,
@@ -171,8 +212,12 @@ export const firebaseApi = {
             id: doc.id,
             ...doc.data(),
           })) as firebaseDriverRidesModal[];
-          // console.log('Changes detected in:', collectionName, data);
-          dispatch(RideActions.setRideRequests({ rideRequests: data }));
+          console.log('Changes detected in:', collectionName, data);
+          dispatch(
+            RideActions.setRideRequests({
+              rideRequests: data?.filter((item) => item.status !== RideStatus.Cancelled),
+            })
+          );
         },
         (error) => {
           formatFirebaseError('firestore/listner-error');

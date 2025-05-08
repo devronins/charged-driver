@@ -20,18 +20,16 @@ const Layout = () => {
 
   useEffect(() => {
     driverRef.current = driverDetails;
-    if (driverDetails?.is_online) {
-      firebaseApi.startFirebaseListner(firebaseCollectionName.DriverRides, dispatch, driverDetails);
-    }
     if (activeRide) {
       firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
-    }
-    if (driverDetails?.is_online === false) {
+    } else if (driverDetails?.is_online) {
+      firebaseApi.startFirebaseListner(firebaseCollectionName.DriverRides, dispatch, driverDetails);
+    } else if (driverDetails?.is_online === false) {
       firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
     }
 
     return () => firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
-  }, [driverDetails]);
+  }, [driverDetails, activeRide]);
 
   useEffect(() => {
     if (appState === 'active' && driverRef.current?.is_online) {

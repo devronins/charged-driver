@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchRide, fetchRides, updateRideStatus } from '@/api/axios';
+import { fetchRide, fetchRides, fetchRideTypes, updateRideStatus } from '@/api/axios';
 import { Toast } from '@/utils/toast';
 import { handleUnauthorizedError } from './common';
-import { RideModal } from '@/utils/modals/ride';
 import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
+import { firebaseApi } from '@/api/firebase';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const getRideDetails = createAsyncThunk<any, any>(
@@ -23,16 +23,29 @@ export const changeRideStatus = createAsyncThunk<
   { driverRide: firebaseDriverRidesModal & { status: string }; navigate?: Function }
 >('RideSlice/changeRideStatus', async (params, thunkApi) => {
   try {
-    console.log('26>>>>>>>', params?.driverRide);
     await updateRideStatus(params?.driverRide?.ride_id, { status: params?.driverRide?.status });
     const { data } = await fetchRide(params?.driverRide?.ride_id);
-
     return thunkApi.fulfillWithValue({
       activeRide: data.data,
-      navigate: params?.driverRide?.status ? params.driverRide.status : null,
+      navigate: params?.navigate,
     });
   } catch (err) {
-    console.log('44>>>>>>>>>>>>>', err);
+    return handleUnauthorizedError(err, thunkApi);
+  }
+});
+
+export const cancelRideRequest = createAsyncThunk<
+  any,
+  { driverRide: firebaseDriverRidesModal & { status: string } }
+>('RideSlice/cancelRideRequest', async (params, thunkApi) => {
+  try {
+    await firebaseApi.cancelDriverRideByRideId(
+      params?.driverRide?.ride_id,
+      params?.driverRide?.driver_id,
+      params.driverRide
+    );
+    return thunkApi.fulfillWithValue({});
+  } catch (err) {
     return handleUnauthorizedError(err, thunkApi);
   }
 });

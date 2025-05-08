@@ -83,7 +83,7 @@ const RideSlice = createSlice({
       state.loading = false;
       state.rides = action.payload.rides;
       state.activeRide =
-        action.payload?.rides?.find((item) => item.status === RideStatus.Progress) || null;
+        action.payload?.rides?.find((item) => item.status === RideStatus.Accepted) || null;
     });
     builder.addCase(getRides.rejected, (state, action) => {
       state.error = true;
