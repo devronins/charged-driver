@@ -1,11 +1,13 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icons from '@/constants/icons';
-import { useTypedSelector } from '@/store';
+import { useAppDispatch, useTypedSelector } from '@/store';
 import OnlineOffline from '@/components/home/online-offline-section';
 import Loader from '@/components/ui/Loader';
 import GoogleMap from '@/components/ui/map';
 import RideInProgressCard from '@/components/ride/active-ride-notification-card';
+import { useEffect } from 'react';
+import { getVehicleDetails } from '@/services';
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -19,7 +21,12 @@ const Home = () => {
     (state) => state.Driver
   );
   const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
-  console.log('19>>>>>>', accessToken, driverDetails?.id);
+  const dispatch = useAppDispatch();
+  console.log('19>>>>>>', accessToken, driverDetails?.id, vehicleDetails);
+
+  useEffect(() => {
+    dispatch(getVehicleDetails({}));
+  }, []);
 
   return (
     <View className="flex-1">

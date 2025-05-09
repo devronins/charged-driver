@@ -12,6 +12,9 @@ import { useAppDispatch, useTypedSelector } from '@/store';
 import { RideStatus } from '@/utils/modals/ride';
 import { useEffect } from 'react';
 import { Text, View } from 'react-native';
+import LottieView from 'lottie-react-native';
+import { DropoffJson, PickupJson } from '@/constants/animation';
+import { useRouter } from 'expo-router';
 
 const ActiveRide = () => {
   const { activeRide, loading, activeRideMapDirectionCoordinates } = useTypedSelector(
@@ -19,9 +22,15 @@ const ActiveRide = () => {
   );
   const { driverDetails } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
+  const navigate = useRouter();
 
   const handleChangeRideStatus = (status: RideStatus) => {
-    dispatch(changeRideStatus({ ride: { ride_id: activeRide?.id || 0, status: status } }));
+    dispatch(
+      changeRideStatus({
+        ride: { ride_id: activeRide?.id || 0, status: status },
+        navigate: () => navigate.push('/home'),
+      })
+    );
   };
 
   useEffect(() => {
@@ -64,17 +73,31 @@ const ActiveRide = () => {
           {
             latitude: Number(activeRide?.pickup_lat) || 0,
             longitude: Number(activeRide?.pickup_lng) || 0,
-            icon: <Icons.MapPin size={30} color="#22c55e" strokeWidth={2} />,
+            icon: (
+              <LottieView
+                source={PickupJson}
+                style={{ width: 70, height: 70 }}
+                autoPlay
+                loop={true}
+              />
+            ),
           },
           {
             latitude: Number(activeRide?.dropoff_lat) || 0,
             longitude: Number(activeRide?.dropoff_lng) || 0,
-            icon: <Icons.MapPin size={30} color="#ef4444" strokeWidth={2} />,
+            icon: (
+              <LottieView
+                source={DropoffJson}
+                style={{ width: 70, height: 70 }}
+                autoPlay
+                loop={true}
+              />
+            ),
           },
           {
             latitude: Number(driverDetails?.last_location_lat) || 0,
             longitude: Number(driverDetails?.last_location_lng) || 0,
-            icon: <Icons.CarFront size={17} color="#fff" />,
+            icon: <Icons.CarFront size={30} color="#fff" />,
           },
         ]}
         polyLineCoords={activeRideMapDirectionCoordinates}

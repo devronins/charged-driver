@@ -31,6 +31,12 @@ export const changeRideStatus = createAsyncThunk<
   try {
     await updateRideStatus(params?.ride?.ride_id, { status: params?.ride?.status });
     const { data } = await fetchRide(params?.ride?.ride_id);
+
+    Toast.show({
+      type: 'success',
+      text1: `You have successfully ${params?.ride?.status?.toLowerCase()} your ride.`,
+    });
+
     return thunkApi.fulfillWithValue({
       activeRide: data.data,
       navigate: params?.navigate,

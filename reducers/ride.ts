@@ -64,7 +64,11 @@ const RideSlice = createSlice({
     builder.addCase(changeRideStatus.fulfilled, (state, action) => {
       state.loading = false;
       state.rideRequests = [];
-      state.activeRide = action.payload?.activeRide || null;
+      state.activeRide =
+        action.payload?.activeRide?.status === RideStatus.Accepted ||
+        action.payload?.activeRide?.status === RideStatus.Started
+          ? action.payload?.activeRide
+          : null;
       if (action.payload?.navigate) {
         //call navigate function
         action.payload?.navigate();
