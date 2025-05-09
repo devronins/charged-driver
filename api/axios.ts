@@ -92,8 +92,14 @@ export const updateDriver = (data: any) => axiosInstance.put(`/driver`, data);
 export const fetchDriver = () => axiosInstance.get(`/driver`);
 export const fetchDrivers = (data: any) => axiosInstance.get('/v1/driver/getall', { data });
 export const deleteDriver = (id: string) => axiosInstance.delete(`/v1/driver/delete/${id}`);
-export const saveRideLocation = (id: string, data: any) =>
-  axiosInstance.put(`/driver/saveridelocation/${id}`, data);
+export const saveRideLocation = (
+  id: number,
+  data: {
+    lat: number;
+    lng: number;
+    heading: number;
+  }
+) => axiosInstance.post(`/driver/saveridelocation/${id}`, data);
 
 //----------------------------------------------------------------------Driver vehicles
 export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/details`, data);

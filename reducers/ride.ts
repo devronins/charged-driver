@@ -3,7 +3,7 @@ import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { RideModal, RideStatus, RideTypeModal } from '@/utils/modals/ride';
 import { createSlice } from '@reduxjs/toolkit';
 
-interface RideInitialStateType {
+export interface RideInitialStateType {
   activeRide: RideModal | null;
   rideRequests: firebaseDriverRidesModal[];
   rides: RideModal[];

@@ -227,3 +227,18 @@ export const openAppSettings = async () => {
     Alert.alert('Error', 'Could not open settings. Please do it manually.');
   }
 };
+
+export const getPersistedSlice = async <T = any>(sliceName: string): Promise<T | null> => {
+  try {
+    const persisted = await AsyncStorage.getItem('persist:root');
+    if (!persisted) return null;
+
+    const rootState = JSON.parse(persisted);
+    if (!rootState[sliceName]) return null;
+
+    return JSON.parse(rootState[sliceName]);
+  } catch (error) {
+    console.error(`Failed to get persisted slice: ${sliceName}`, error);
+    throw `Failed to get persisted slice: ${sliceName}`;
+  }
+};
