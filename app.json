@@ -10,9 +10,19 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.damanjot.CHARGED",
+      "bundleIdentifier": "com.charged.driver",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSLocationWhenInUseUsageDescription": "We need your location to provide services",
+        "NSLocationAlwaysUsageDescription": "We need your location to run in the background",
+        "UIBackgroundModes": ["location", "fetch"]
+      },
+      "buildNumber": "2",
+      "config": {
+        "googleMapsApiKey": "REMOVED_KEY"
       }
     },
     "android": {
@@ -29,10 +39,10 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.damanjot.CHARGED",
+      "package": "com.charged.driver",
       "config": {
         "googleMaps": {
-          "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+          "apiKey": "REMOVED_KEY"
         },
         "usesCleartextTraffic": true
       }
@@ -77,7 +87,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
         }
       ],
       [
@@ -103,7 +114,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "cc09d0a1-e180-4d70-84bc-ad7dbabf3ad2"
+        "projectId": "a1c4a181-0021-452b-af7b-cd1678b98530"
       }
     }
   }
