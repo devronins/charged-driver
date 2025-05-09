@@ -19,6 +19,7 @@ import {
   RefreshCcw,
   Upload,
   X,
+  MapPin,
 } from 'lucide-react-native';
 
 export default {
@@ -41,4 +42,5 @@ export default {
   RefreshCcw,
   Upload,
   Close: X,
+  MapPin,
 };

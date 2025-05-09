@@ -1,5 +1,6 @@
+import { useCallback, useEffect, useRef } from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT, MapViewProps } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT, MapViewProps, Polyline } from 'react-native-maps';
 import { twMerge } from 'tailwind-merge';
 
 interface MarkerType {
@@ -13,6 +14,8 @@ interface GoogleMapProps {
   style?: StyleProp<ViewStyle>;
   mapViewProps?: Partial<MapViewProps>;
   markers?: MarkerType[];
+  polyLineCoords?: { latitude: number; longitude: number }[];
+  liveCoords?: { latitude: number; longitude: number };
 }
 
 const defaultRegion = {
@@ -22,21 +25,55 @@ const defaultRegion = {
   longitudeDelta: 0.0421,
 };
 
-const GoogleMap = ({ style, mapViewProps, markers = [] }: GoogleMapProps) => {
+const GoogleMap = ({
+  style,
+  mapViewProps,
+  markers = [],
+  polyLineCoords = [],
+  liveCoords,
+}: GoogleMapProps) => {
+  const mapRef = useRef<MapView>(null);
+
+  const handleMapReady = useCallback(() => {
+    if (markers.length >= 2 && mapRef.current) {
+      mapRef.current.fitToCoordinates(
+        markers.map((m) => ({ latitude: m.latitude, longitude: m.longitude })),
+        {
+          edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },
+          animated: true,
+        }
+      );
+    }
+  }, [markers]);
+
+  useEffect(() => {
+    if (liveCoords && mapRef.current) {
+      mapRef.current.animateCamera({
+        center: {
+          latitude: liveCoords.latitude,
+          longitude: liveCoords.longitude,
+        },
+        pitch: 0,
+        heading: 0,
+        zoom: 17,
+      });
+    }
+  }, [liveCoords]);
+
   return (
     <MapView
+      ref={mapRef}
       style={[{ width: '100%', height: '100%' }, style]}
       provider={PROVIDER_DEFAULT}
       initialRegion={defaultRegion}
-      showsUserLocation
-      onMapReady={() => console.log('loaded map')}
+      onMapReady={handleMapReady}
       {...mapViewProps}
     >
       {markers.map((marker, index) => (
         <Marker key={index} coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}>
           <View
             className={twMerge(
-              'w-[36px] h-[36px] rounded-full flex items-center justify-center border-[2px] border-white bg-primary-300',
+              'w-[36px] h-[36px] rounded-full flex items-center justify-center ',
               marker.style
             )}
           >
@@ -44,6 +81,16 @@ const GoogleMap = ({ style, mapViewProps, markers = [] }: GoogleMapProps) => {
           </View>
         </Marker>
       ))}
+
+      {polyLineCoords?.length > 0 && (
+        <Polyline
+          coordinates={polyLineCoords}
+          strokeColor="#4285F4" // Google Blue
+          strokeWidth={5}
+          lineCap="round"
+          lineJoin="round"
+        />
+      )}
     </MapView>
   );
 };

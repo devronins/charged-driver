@@ -1,10 +1,17 @@
-import { cancelRideRequest, changeRideStatus, getRides, getRideTypes } from '@/services';
+import {
+  cancelRideRequest,
+  changeRideStatus,
+  getRideMapDirectionCoordinates,
+  getRides,
+  getRideTypes,
+} from '@/services';
 import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { RideModal, RideStatus, RideTypeModal } from '@/utils/modals/ride';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface RideInitialStateType {
   activeRide: RideModal | null;
+  activeRideMapDirectionCoordinates: { latitude: number; longitude: number }[];
   rideRequests: firebaseDriverRidesModal[];
   rides: RideModal[];
   rideTypes: RideTypeModal[];
@@ -14,6 +21,7 @@ export interface RideInitialStateType {
 
 const initialState: RideInitialStateType = {
   activeRide: null,
+  activeRideMapDirectionCoordinates: [],
   rideRequests: [],
   rides: [],
   rideTypes: [],
@@ -42,6 +50,10 @@ const RideSlice = createSlice({
       state.activeRide = action.payload.rideRequest;
       state.rideRequests = [];
       action.payload?.navigate();
+    },
+
+    setActiveRideMapDirection: (state, action) => {
+      state.activeRideMapDirectionCoordinates = action.payload.activeRideMapDirectionCoordinates;
     },
   }, // action methods
   extraReducers: (builder) => {
@@ -83,7 +95,9 @@ const RideSlice = createSlice({
       state.loading = false;
       state.rides = action.payload.rides;
       state.activeRide =
-        action.payload?.rides?.find((item) => item.status === RideStatus.Accepted) || null;
+        action.payload?.rides?.find(
+          (item) => item.status === RideStatus.Accepted || item.status === RideStatus.Started
+        ) || null;
     });
     builder.addCase(getRides.rejected, (state, action) => {
       state.error = true;
@@ -102,6 +116,27 @@ const RideSlice = createSlice({
       }
     );
     builder.addCase(getRideTypes.rejected, (state, action) => {
+      state.error = true;
+      state.loading = false;
+    });
+
+    builder.addCase(getRideMapDirectionCoordinates.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(
+      getRideMapDirectionCoordinates.fulfilled,
+      (
+        state,
+        action: {
+          payload: { activeRideMapDirectionCoordinates: { latitude: number; longitude: number }[] };
+        }
+      ) => {
+        state.loading = false;
+        state.activeRideMapDirectionCoordinates = action.payload.activeRideMapDirectionCoordinates;
+      }
+    );
+    builder.addCase(getRideMapDirectionCoordinates.rejected, (state, action) => {
       state.error = true;
       state.loading = false;
     });

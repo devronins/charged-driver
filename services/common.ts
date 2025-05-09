@@ -9,9 +9,11 @@ import {
   hasStartedLocationUpdatesBackgroundTask,
   startLocationUpdatesBackgroundTask,
 } from './task-manager';
-import { firebaseApi } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, Platform } from 'react-native';
+import { DriverActions, RideActions } from '@/reducers';
+import { RideModal } from '@/utils/modals/ride';
+import { fetchRideMapDirection } from '@/api/axios';
 
 export type PickedImageModal = {
   uri: string;
@@ -241,4 +243,65 @@ export const getPersistedSlice = async <T = any>(sliceName: string): Promise<T |
     console.error(`Failed to get persisted slice: ${sliceName}`, error);
     throw `Failed to get persisted slice: ${sliceName}`;
   }
+};
+
+export let locationSubscriber: Location.LocationSubscription | null = null;
+
+export const startDriverLocationTracking = async (dispatch: Function, activeRide: RideModal) => {
+  try {
+    await requestLocationPermission();
+    locationSubscriber = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.High,
+        distanceInterval: 1,
+      },
+      async (location) => {
+        const { latitude, longitude } = location.coords;
+        console.log('260>>>>>>', location.coords);
+
+        const coords = await fetchRideMapDirection({
+          origin: { lat: latitude, lng: longitude },
+          destination: {
+            lat: Number(activeRide.dropoff_lat),
+            lng: Number(activeRide.dropoff_lng),
+          },
+          waypoints: [
+            {
+              lat: Number(activeRide.pickup_lat),
+              lng: Number(activeRide.pickup_lng),
+            },
+          ]
+            .map((wp) => `${wp.lat},${wp.lng}`)
+            .join('|'),
+        });
+        dispatch(
+          DriverActions.setDriverLocation({
+            last_location_lat: latitude,
+            last_location_lng: longitude,
+          })
+        );
+        dispatch(
+          RideActions.setActiveRideMapDirection({
+            activeRideMapDirectionCoordinates: [{ latitude, longitude }, ...coords],
+          })
+        );
+      }
+    );
+  } catch (error: any) {
+    Alert.alert(error.data.type, error.data.message, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Open Settings',
+        style: 'destructive',
+        onPress: () => {
+          openAppSettings();
+        },
+      },
+    ]);
+  }
+};
+
+export const stopDriverLocationTracking = () => {
+  locationSubscriber?.remove();
+  locationSubscriber = null;
 };

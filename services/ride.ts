@@ -1,5 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchRide, fetchRides, fetchRideTypes, updateRideStatus } from '@/api/axios';
+import {
+  fetchRide,
+  fetchRideMapDirection,
+  fetchRides,
+  fetchRideTypes,
+  updateRideStatus,
+} from '@/api/axios';
 import { Toast } from '@/utils/toast';
 import { handleUnauthorizedError } from './common';
 import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
@@ -79,3 +85,23 @@ export const getRideTypes = createAsyncThunk<any, any>(
     }
   }
 );
+
+export const getRideMapDirectionCoordinates = createAsyncThunk<
+  any,
+  {
+    coordinates: {
+      origin: { lat: number; lng: number };
+      destination: { lat: number; lng: number };
+      waypoints?: string;
+    };
+  }
+>('RideSlice/getRideMapDirectionCoordinates', async (params, thunkApi) => {
+  try {
+    const coords = await fetchRideMapDirection(params.coordinates);
+    return thunkApi.fulfillWithValue({
+      activeRideMapDirectionCoordinates: coords,
+    });
+  } catch (err) {
+    return handleUnauthorizedError(err, thunkApi);
+  }
+});

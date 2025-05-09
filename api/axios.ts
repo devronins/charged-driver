@@ -3,6 +3,7 @@ import { ErrorResponse } from '@/utils/error-response';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { firebaseApi } from './firebase';
+import polyline from '@mapbox/polyline';
 
 interface ApiConfig {
   baseURL: string;
@@ -124,6 +125,33 @@ export const updateRideStatus = (id: number, data: any) =>
 export const fetchRide = (id: number) => axiosInstance.get(`/driver/getride/${id}`);
 export const fetchRides = () => axiosInstance.get('/driver/getmyrides');
 export const fetchRideTypes = () => axiosInstance.get('/ride/ridetype');
+export const fetchRideMapDirection = async (payload: {
+  origin: { lat: number; lng: number };
+  destination: { lat: number; lng: number };
+  waypoints?: string;
+}): Promise<{ latitude: number; longitude: number }[]> => {
+  try {
+    const { data } = await axiosInstance.get(
+      `https://maps.googleapis.com/maps/api/directions/json?origin=${payload.origin.lat},${payload.origin.lng}&destination=${payload.destination.lat},${payload.destination.lng}&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}${
+        payload?.waypoints ? `&waypoints=${payload?.waypoints}` : ''
+      }`
+    );
+
+    let coords: { latitude: number; longitude: number }[] = [];
+    const points = data.routes?.[0]?.overview_polyline?.points;
+
+    if (points) {
+      coords = polyline.decode(points).map(([lat, lng]) => ({
+        latitude: lat,
+        longitude: lng,
+      }));
+    }
+
+    return coords;
+  } catch (error) {
+    throw error;
+  }
+};
 
 //---------------------------------------------------------------------upload image
 export const fileUpload = (formData: any) =>

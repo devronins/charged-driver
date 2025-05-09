@@ -3,7 +3,7 @@ import { Toast } from '@/utils/toast';
 import * as Location from 'expo-location';
 import { saveRideLocation, updateVehicleDetails } from '@/api/axios';
 import { getPersistedSlice } from './common';
-import { RideInitialStateType } from '@/reducers';
+import { DriverInitialStateType, RideInitialStateType } from '@/reducers';
 
 export const LOCATION_TASK_NAME = 'BACKGROUND_LOCATION_TASK';
 
