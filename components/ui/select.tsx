@@ -15,7 +15,7 @@ import { Search, Check } from 'lucide-react-native';
 import { Model } from './model';
 
 interface FullScreenSelectProps {
-  options: string[];
+  options: { value: string; label: string }[];
   value: string | null | undefined;
   onChange: (value: string) => void;
   label?: string;
@@ -39,7 +39,7 @@ const Select: React.FC<FullScreenSelectProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [filtered, setFiltered] = useState<string[]>(options);
+  const [filtered, setFiltered] = useState<{ value: string; label: string }[]>(options);
   const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Select: React.FC<FullScreenSelectProps> = ({
       setFiltered(options);
     } else {
       const lower = searchText.toLowerCase();
-      setFiltered(options.filter((opt) => opt.toLowerCase().includes(lower)));
+      setFiltered(options.filter((opt) => opt.label.toLowerCase().includes(lower)));
     }
   }, [searchText, options]);
 
@@ -64,7 +64,7 @@ const Select: React.FC<FullScreenSelectProps> = ({
         <Text
           className={`rounded-md font-normal text-[18px] text-text-300 flex-1 ${inputStyle} text-left`}
         >
-          {value?.toUpperCase() || placeholder}
+          {options?.find((item) => item.value === value)?.label?.toUpperCase() || placeholder}
         </Text>
       </TouchableOpacity>
 
@@ -102,14 +102,14 @@ const Select: React.FC<FullScreenSelectProps> = ({
           {/* Options */}
           <FlatList
             data={filtered}
-            keyExtractor={(item) => item}
+            keyExtractor={(item) => item.value}
             contentContainerStyle={{ paddingVertical: 16 }}
             renderItem={({ item }) => {
-              const selected = value === item;
+              const selected = value === item.value;
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    onChange(item);
+                    onChange(item.value);
                     setOpen(false);
                     setSearchText('');
                   }}
@@ -118,7 +118,9 @@ const Select: React.FC<FullScreenSelectProps> = ({
                   }`}
                 >
                   {selected && <Check size={18} color="#4b5563" />}
-                  <Text className="text-base text-gray-800">{item?.toUpperCase() || ''}</Text>
+                  <Text className="text-base text-gray-800">
+                    {item?.label?.toUpperCase() || ''}
+                  </Text>
                 </TouchableOpacity>
               );
             }}

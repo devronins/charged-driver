@@ -3,12 +3,16 @@ import { View, Text, Animated, Dimensions, TouchableOpacity } from 'react-native
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { useAppDispatch } from '@/store';
 import { RideActions } from '@/reducers';
-import { firebaseRidesModal } from '@/utils/modals/firebase';
+import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { MapPin } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { cancelRideRequest, changeRideStatus } from '@/services';
+import { RideStatus } from '@/utils/modals/ride';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const RideCard = ({ item, index }: { item: firebaseRidesModal; index: number }) => {
+const RideCard = ({ item, index }: { item: firebaseDriverRidesModal; index: number }) => {
+  const navigate = useRouter();
   const dispatch = useAppDispatch();
   const translateX = useRef(new Animated.Value(0)).current;
   const slideY = useRef(new Animated.Value(-100)).current;
@@ -33,7 +37,9 @@ const RideCard = ({ item, index }: { item: firebaseRidesModal; index: number }) 
         toValue: nativeEvent.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH,
         duration: 200,
         useNativeDriver: true,
-      }).start(() => dispatch(RideActions.removeRideRequest({ rideRequest: item })));
+      }).start(() =>
+        dispatch(cancelRideRequest({ driverRide: { ...item, status: RideStatus.Cancelled } }))
+      );
     } else {
       Animated.spring(translateX, {
         toValue: 0,
@@ -65,20 +71,29 @@ const RideCard = ({ item, index }: { item: firebaseRidesModal; index: number }) 
         </View>
 
         <View className="flex-row justify-between items-center mt-2 mb-3">
-          <Text className="text-text-100 text-sm">Fare: ₹{item.fare.toFixed(2)}</Text>
+          <Text className="text-text-100 text-sm">Fare: ₹{item.fare?.toFixed(2)}</Text>
           <Text className="text-text-100 text-sm">By: {item.requested_by}</Text>
         </View>
 
         <View className="flex-row gap-3">
           <TouchableOpacity
-            onPress={() => dispatch(RideActions.removeRideRequest({ rideRequest: item }))}
+            onPress={() =>
+              dispatch(cancelRideRequest({ driverRide: { ...item, status: RideStatus.Cancelled } }))
+            }
             className="flex-1 bg-border-100 py-2 rounded-full items-center"
           >
             <Text className="text-text-200 font-medium">Cancel</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => dispatch(RideActions.removeRideRequest({ rideRequest: item }))}
+            onPress={() =>
+              dispatch(
+                changeRideStatus({
+                  ride: { ride_id: item.ride_id, status: RideStatus.Accepted },
+                  navigate: () => navigate.push('/ride/active-ride'),
+                })
+              )
+            }
             className="flex-1 bg-tertiary-300 py-2 rounded-full items-center"
           >
             <Text className="text-white font-medium">Accept</Text>

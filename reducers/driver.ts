@@ -16,7 +16,7 @@ import {
 } from '@/services/driver';
 import { createSlice } from '@reduxjs/toolkit';
 
-interface DriverInitialStateType {
+export interface DriverInitialStateType {
   isLogin: boolean;
   accessToken: string | null;
   loading: boolean;
@@ -45,6 +45,12 @@ const DriverSlice = createSlice({
   initialState, //the initial state of the slice
   reducers: {
     setIntialState: (state, action) => initialState,
+    setDriverLocation: (state, action) => {
+      if (state.driverDetails) {
+        state.driverDetails.last_location_lat = action.payload.last_location_lat;
+        state.driverDetails.last_location_lng = action.payload.last_location_lng;
+      }
+    },
   }, // action methods
   extraReducers: (builder) => {
     builder.addCase(registerDriver.pending, (state) => {

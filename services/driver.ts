@@ -10,10 +10,11 @@ import {
 import { Toast } from '@/utils/toast';
 import { firebaseApi, formatFirebaseError } from '@/api/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DriverActions, VehicleActions } from '@/reducers';
+import { DriverActions, RideActions, VehicleActions } from '@/reducers';
 import { handleUnauthorizedError, PickedImageModal } from './common';
 import { DriverModal } from '@/utils/modals/driver';
 import { stopLocationUpdatesBackgroundTask } from './task-manager';
+import { getRides } from './ride';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
@@ -70,6 +71,8 @@ export const loginDriver = createAsyncThunk<any, any>(
         throw formatFirebaseError('"auth/invalid-credential"');
       }
 
+      thunkApi.dispatch(getRides({}));
+
       Toast.show({
         type: 'success',
         text1: 'Driver Login successfully',
@@ -97,6 +100,7 @@ export const logoutDriver = createAsyncThunk<any, any>(
       // params?.navigate();
       thunkApi.dispatch(DriverActions.setIntialState({}));
       thunkApi.dispatch(VehicleActions.setIntialState({}));
+      thunkApi.dispatch(RideActions.setIntialState({}));
 
       Toast.show({
         type: 'success',

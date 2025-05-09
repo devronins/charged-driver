@@ -14,26 +14,26 @@ const Layout = () => {
   const dispatch = useAppDispatch();
   const { isLogin, driverDetails } = useTypedSelector((state) => state.Driver);
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
-  const { rideRequests } = useTypedSelector((state) => state.Ride);
-  const driverRef = useRef(driverDetails);
+  const { activeRide } = useTypedSelector((state) => state.Ride);
   const appState = useAppState();
 
   useEffect(() => {
-    driverRef.current = driverDetails;
-    if (driverDetails?.is_online) {
+    if (activeRide) {
+      firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
+    } else if (driverDetails?.is_online) {
       firebaseApi.startFirebaseListner(firebaseCollectionName.DriverRides, dispatch, driverDetails);
-    } else {
+    } else if (driverDetails?.is_online === false) {
       firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
     }
 
     return () => firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
-  }, [driverDetails]);
+  }, [driverDetails, activeRide]);
 
   useEffect(() => {
-    if (appState === 'active' && driverRef.current?.is_online) {
-      appStateTaskHandler(dispatch, { is_driver_online: true });
+    if (appState === 'active' && (driverDetails?.is_online || activeRide)) {
+      appStateTaskHandler(dispatch);
     }
-  }, [appState]);
+  }, [appState, driverDetails, activeRide]);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
@@ -84,6 +84,28 @@ const Layout = () => {
           //@ts-ignore
           options={({ navigation }) => ({
             headerTitle: 'Documents',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="w-[90px] h-10 flex items-start justify-center px-1"
+                onPressIn={() => navigation.goBack()}
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+        <Stack.Screen
+          name="ride/active-ride"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Active Ride',
             headerTitleAlign: 'center', // for android
             headerTitleStyle: {
               color: '#007FFF',

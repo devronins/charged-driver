@@ -15,7 +15,7 @@ export interface VehicleInfromationFormDataType {
   license_plate: string | undefined;
   car_color: string | undefined;
   car_year: number | undefined;
-  car_type: string | undefined;
+  ride_type_id: number | undefined;
 }
 
 const getVehicleInfromationFormData = (data: VehicleModal | null) => {
@@ -24,7 +24,7 @@ const getVehicleInfromationFormData = (data: VehicleModal | null) => {
     license_plate: data?.license_plate || undefined,
     car_color: data?.car_color || undefined,
     car_year: data?.car_year || undefined,
-    car_type: data?.car_type || undefined,
+    ride_type_id: data?.ride_type_id || undefined,
   };
 };
 
@@ -37,21 +37,15 @@ const schema = yup.object().shape({
     .required('Vehicle Year is required')
     .min(1900, 'Vehicle Year must be 1900 or later')
     .max(new Date().getFullYear(), `Vehicle Year cannot be in the future`),
-  car_type: yup
-    .string()
-    .required('Vehicle Type is required')
-    .oneOf(
-      ['suv', 'regular', 'electric'],
-      'Vehicle Type should be one of the following: suv, regular, or electric.'
-    ),
+  ride_type_id: yup.number().required('Vehicle Type is required'),
 });
 
 const VehicleInfromationForm = () => {
   const { vehicleDetails, vehicleDetailsLoading, isEditMode } = useTypedSelector(
     (state) => state.Vehicle
   );
+  const { rideTypes } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const {
     control,
@@ -170,22 +164,22 @@ const VehicleInfromationForm = () => {
       />
       <Controller
         control={control}
-        name="car_type"
+        name="ride_type_id"
         render={({ field: { onChange } }) => (
           <Select
             containerStyle={`bg-secondary-300 ${!isEditMode && 'border-0'} ${Platform.OS === 'ios' ? 'px-3 py-8' : 'px-2'}`}
             label="Vehicle Type"
             placeholder="eg. Suv"
-            options={['suv', 'regular', 'electric']}
+            options={rideTypes?.map((item) => ({ value: item.id.toString(), label: item.name }))}
             value={
               isEditMode
-                ? watch('car_type')
-                : vehicleDetails?.car_type
-                  ? vehicleDetails.car_type
+                ? watch('ride_type_id')?.toString()
+                : vehicleDetails?.ride_type_id
+                  ? vehicleDetails.ride_type_id?.toString()
                   : 'Not Provided'
             }
             onChange={onChange}
-            error={isEditMode ? errors.car_type?.message : undefined}
+            error={isEditMode ? errors.ride_type_id?.message : undefined}
             disabled={!isEditMode ? true : vehicleDetailsLoading ? true : false}
           />
         )}

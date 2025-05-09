@@ -11,30 +11,28 @@ import {
 import { Model } from '../ui/model';
 import { useEffect, useState } from 'react';
 import RideCard from './ride-request-card';
+import Loader from '../ui/Loader';
 
 const RideRequests = () => {
-  const { rideRequests } = useTypedSelector((state) => state.Ride);
-  const [isModelVisible, setIsModelVisible] = useState(false);
+  const { rideRequests, loading } = useTypedSelector((state) => state.Ride);
 
-  useEffect(() => {
-    rideRequests.length === 0 ? setIsModelVisible(false) : setIsModelVisible(true);
-  }, [rideRequests.length]);
+  if (rideRequests.length === 0) {
+    return null;
+  }
 
   return (
-    <Model
-      animationType="fade"
-      open={isModelVisible}
-      setValue={() => {}}
-      className={`flex-1 flex justify-start mt-10`}
-    >
-      <FlatList
-        data={rideRequests}
-        keyExtractor={(item, index) => (index + 1).toString()}
-        renderItem={({ item, index }) => <RideCard item={item} index={index} />}
-        className="p-5"
-        showsVerticalScrollIndicator={false}
-      />
-    </Model>
+    <>
+      <View className={`absolute inset-0 mt-10 z-[0]`}>
+        <FlatList
+          data={rideRequests}
+          keyExtractor={(item, index) => (index + 1).toString()}
+          renderItem={({ item, index }) => <RideCard item={item} index={index} />}
+          className="p-5"
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+      <Loader open={loading} />
+    </>
   );
 };
 

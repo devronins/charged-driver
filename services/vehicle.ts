@@ -16,6 +16,7 @@ export const addVehicleDetails = createAsyncThunk<any, any>(
             car_color: data.data.car_color,
             car_year: data.data.car_year,
             car_type: data.data.car_type,
+            ride_type_id: data.data.ride_type_id,
           }
         : null;
 
@@ -41,7 +42,7 @@ export const getVehicleDetails = createAsyncThunk<any, any>(
             license_plate: data.data.license_plate,
             car_color: data.data.car_color,
             car_year: data.data.car_year,
-            car_type: data.data.car_type,
+            ride_type_id: data.data.ride_type_id,
           }
         : null;
 
@@ -64,7 +65,7 @@ export const editVehicleDetails = createAsyncThunk<any, any>(
             license_plate: data.data.license_plate,
             car_color: data.data.car_color,
             car_year: data.data.car_year,
-            car_type: data.data.car_type,
+            ride_type_id: data.data.ride_type_id,
           }
         : null;
 

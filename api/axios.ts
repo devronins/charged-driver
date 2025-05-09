@@ -2,6 +2,8 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { ErrorResponse } from '@/utils/error-response';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import { firebaseApi } from './firebase';
+import polyline from '@mapbox/polyline';
 
 interface ApiConfig {
   baseURL: string;
@@ -31,11 +33,28 @@ axiosInstance.interceptors.request.use(async (req: any) => {
 // Error handling interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
+    const originalRequest: any = error.config;
     const errorResponse: ErrorResponse = {};
 
     if (error.response) {
-      // The request was made and the server responded with a status code
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+
+        try {
+          const { accessToken } = await firebaseApi.getNewAccessToken();
+          await AsyncStorage.setItem('accessToken', accessToken);
+
+          // Set the new Authorization header and retry the request
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return axiosInstance(originalRequest);
+        } catch (tokenRefreshError) {
+          // Optional: logout or redirect
+          console.log('Axios Refresh Token Error:');
+          return Promise.reject(tokenRefreshError);
+        }
+      }
+
       errorResponse.status = error.response.status;
       errorResponse.message = error.message;
       errorResponse.data = error.response.data as any;
@@ -74,6 +93,14 @@ export const updateDriver = (data: any) => axiosInstance.put(`/driver`, data);
 export const fetchDriver = () => axiosInstance.get(`/driver`);
 export const fetchDrivers = (data: any) => axiosInstance.get('/v1/driver/getall', { data });
 export const deleteDriver = (id: string) => axiosInstance.delete(`/v1/driver/delete/${id}`);
+export const saveRideLocation = (
+  id: number,
+  data: {
+    lat: number;
+    lng: number;
+    heading: number;
+  }
+) => axiosInstance.post(`/driver/saveridelocation/${id}`, data);
 
 //----------------------------------------------------------------------Driver vehicles
 export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/details`, data);
@@ -91,6 +118,40 @@ export const uploadFileDocument = (type: number, formData: any) =>
   });
 export const fetchDocumentTypes = () => axiosInstance.get(`/driver/documenttypes`);
 export const fetchUploadedDocuments = () => axiosInstance.get(`/driver/documents`);
+
+//----------------------------------------------------------------------Driver Ride
+export const updateRideStatus = (id: number, data: any) =>
+  axiosInstance.put(`/driver/changeridestatus/${id}`, data);
+export const fetchRide = (id: number) => axiosInstance.get(`/driver/getride/${id}`);
+export const fetchRides = () => axiosInstance.get('/driver/getmyrides');
+export const fetchRideTypes = () => axiosInstance.get('/ride/ridetype');
+export const fetchRideMapDirection = async (payload: {
+  origin: { lat: number; lng: number };
+  destination: { lat: number; lng: number };
+  waypoints?: string;
+}): Promise<{ latitude: number; longitude: number }[]> => {
+  try {
+    const { data } = await axiosInstance.get(
+      `https://maps.googleapis.com/maps/api/directions/json?origin=${payload.origin.lat},${payload.origin.lng}&destination=${payload.destination.lat},${payload.destination.lng}&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}${
+        payload?.waypoints ? `&waypoints=${payload?.waypoints}` : ''
+      }`
+    );
+
+    let coords: { latitude: number; longitude: number }[] = [];
+    const points = data.routes?.[0]?.overview_polyline?.points;
+
+    if (points) {
+      coords = polyline.decode(points).map(([lat, lng]) => ({
+        latitude: lat,
+        longitude: lng,
+      }));
+    }
+
+    return coords;
+  } catch (error) {
+    throw error;
+  }
+};
 
 //---------------------------------------------------------------------upload image
 export const fileUpload = (formData: any) =>
