@@ -20,11 +20,11 @@ export const getRideDetails = createAsyncThunk<any, any>(
 
 export const changeRideStatus = createAsyncThunk<
   any,
-  { driverRide: firebaseDriverRidesModal & { status: string }; navigate?: Function }
+  { ride: { ride_id: number; status: string }; navigate?: Function }
 >('RideSlice/changeRideStatus', async (params, thunkApi) => {
   try {
-    await updateRideStatus(params?.driverRide?.ride_id, { status: params?.driverRide?.status });
-    const { data } = await fetchRide(params?.driverRide?.ride_id);
+    await updateRideStatus(params?.ride?.ride_id, { status: params?.ride?.status });
+    const { data } = await fetchRide(params?.ride?.ride_id);
     return thunkApi.fulfillWithValue({
       activeRide: data.data,
       navigate: params?.navigate,

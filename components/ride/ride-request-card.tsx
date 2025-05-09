@@ -89,7 +89,7 @@ const RideCard = ({ item, index }: { item: firebaseDriverRidesModal; index: numb
             onPress={() =>
               dispatch(
                 changeRideStatus({
-                  driverRide: { ...item, status: RideStatus.Accepted },
+                  ride: { ride_id: item.ride_id, status: RideStatus.Accepted },
                   navigate: () => navigate.push('/ride/active-ride'),
                 })
               )
