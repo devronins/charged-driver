@@ -16,10 +16,13 @@ const Layout = () => {
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
   const { activeRide } = useTypedSelector((state) => state.Ride);
   const driverRef = useRef(driverDetails);
+  const activeRideRef = useRef(activeRide);
   const appState = useAppState();
 
   useEffect(() => {
     driverRef.current = driverDetails;
+    activeRideRef.current = activeRide;
+
     if (activeRide) {
       firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
     } else if (driverDetails?.is_online) {
@@ -33,7 +36,7 @@ const Layout = () => {
 
   useEffect(() => {
     if (appState === 'active' && driverRef.current?.is_online) {
-      appStateTaskHandler(dispatch, { is_driver_online: true });
+      appStateTaskHandler(dispatch);
     }
   }, [appState]);
 

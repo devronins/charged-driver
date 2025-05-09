@@ -1,4 +1,4 @@
-import RideDetailsBottomSheet from '@/components/ui/bottomSheet';
+import RideDetailsBottomSheet from '@/components/ride/active-ride-bottom-sheet';
 import GoogleMap from '@/components/ui/map';
 import Icons from '@/constants/icons';
 import { useTypedSelector } from '@/store';

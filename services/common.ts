@@ -188,17 +188,12 @@ export async function requestLocationPermission(): Promise<boolean> {
   }
 }
 
-export async function appStateTaskHandler(
-  dispatch: Function,
-  payload: { is_driver_online: boolean }
-) {
+export async function appStateTaskHandler(dispatch: Function) {
   try {
-    if (payload.is_driver_online) {
-      await requestLocationPermission();
-      const hasStarted = await hasStartedLocationUpdatesBackgroundTask();
-      if (!hasStarted) {
-        await startLocationUpdatesBackgroundTask();
-      }
+    await requestLocationPermission();
+    const hasStarted = await hasStartedLocationUpdatesBackgroundTask();
+    if (!hasStarted) {
+      await startLocationUpdatesBackgroundTask();
     }
   } catch (error: any) {
     await dispatch(editDriver({ driverDetails: { is_online: false } }));
