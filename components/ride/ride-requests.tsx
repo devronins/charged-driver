@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -22,7 +23,7 @@ const RideRequests = () => {
 
   return (
     <>
-      <View className={`absolute inset-0 mt-10 z-[0]`}>
+      <View className={`absolute inset-0 z-[0] ${Platform.OS === 'ios' && 'mt-10'}`}>
         <FlatList
           data={rideRequests}
           keyExtractor={(item, index) => (index + 1).toString()}

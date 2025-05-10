@@ -4,7 +4,6 @@ import Icons from '@/constants/icons';
 import { VehicleActions } from '@/reducers';
 import { appStateTaskHandler, getDriver } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
-import { firebaseCollectionName } from '@/utils/modals/firebase';
 import { Redirect, Stack } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AppState, Platform, Text, TouchableOpacity } from 'react-native';
@@ -19,21 +18,29 @@ const Layout = () => {
 
   useEffect(() => {
     if (activeRide) {
-      firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
+      firebaseApi.stopFirebaseDriverRideListener();
     } else if (driverDetails?.is_online) {
-      firebaseApi.startFirebaseListner(firebaseCollectionName.DriverRides, dispatch, driverDetails);
+      firebaseApi.startFirebaseDriverRideListner(dispatch, driverDetails);
     } else if (driverDetails?.is_online === false) {
-      firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
+      firebaseApi.stopFirebaseDriverRideListener();
     }
 
-    return () => firebaseApi.stopFirebaseListener(firebaseCollectionName.DriverRides);
+    return () => firebaseApi.stopFirebaseDriverRideListener();
   }, [driverDetails, activeRide]);
+
+  useEffect(() => {
+    if (activeRide) {
+      firebaseApi.startFirebaseRidesListner(dispatch, activeRide);
+    } else if (!activeRide) {
+      firebaseApi.stopFirebaseRidesListener();
+    }
+  }, [activeRide]);
 
   useEffect(() => {
     if (appState === 'active' && (driverDetails?.is_online || activeRide)) {
       appStateTaskHandler(dispatch);
     }
-  }, [appState, driverDetails, activeRide]);
+  }, [driverDetails, activeRide]);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
@@ -106,6 +113,28 @@ const Layout = () => {
           //@ts-ignore
           options={({ navigation }) => ({
             headerTitle: 'Active Ride',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="w-[90px] h-10 flex items-start justify-center px-1"
+                onPressIn={() => navigation.goBack()}
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+        <Stack.Screen
+          name="ride/rides"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Your Rides',
             headerTitleAlign: 'center', // for android
             headerTitleStyle: {
               color: '#007FFF',

@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { View, Text, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, Animated, TouchableOpacity, Platform } from 'react-native';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { MapPin } from 'lucide-react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { Model } from '../ui/model';
+import { RideStatus } from '@/utils/modals/ride';
 
 const RideInProgressCard = () => {
   const { activeRide } = useTypedSelector((state) => state.Ride);
@@ -25,8 +26,16 @@ const RideInProgressCard = () => {
     return null;
   }
 
+  const handelNavigate = (status: RideStatus) => {
+    if (status === RideStatus.Cancelled) {
+      navigate.push('/ride/rides');
+    } else if (status === RideStatus.Accepted) {
+      navigate.push('/ride/active-ride');
+    }
+  };
+
   return (
-    <View className={`absolute w-full flex justify-start mt-10 p-5`}>
+    <View className={`absolute w-full flex justify-start p-5 ${Platform.OS === 'ios' && 'mt-10'}`}>
       <Animated.View
         style={{ transform: [{ translateY: slideY }] }}
         className="w-full rounded-2xl bg-white p-3 mb-3 shadow-sm"
@@ -44,10 +53,12 @@ const RideInProgressCard = () => {
         </View>
 
         <TouchableOpacity
-          onPress={() => navigate.push('/ride/active-ride')}
-          className="bg-primary-300 py-2 rounded-full items-center"
+          onPress={() => handelNavigate(activeRide.status)}
+          className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'}`}
         >
-          <Text className="text-white font-medium text-sm">See Ride Details</Text>
+          <Text className="text-white font-medium text-sm">
+            {activeRide.status === RideStatus.Accepted ? 'See Ride Details' : 'Canceled By User'}
+          </Text>
         </TouchableOpacity>
       </Animated.View>
     </View>

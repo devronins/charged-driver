@@ -117,7 +117,7 @@ const RideDetailsBottomSheet = ({
 
             {/* Chat Button */}
             <TouchableOpacity
-              onPress={onChat}
+              onPress={() => onChnageRideStatus(RideStatus.Cancelled)}
               className="flex-1 bg-red-500 rounded-full flex-row justify-center items-center shadow-lg"
             >
               <Ionicons name="close-circle-outline" size={20} color="white" />

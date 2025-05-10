@@ -45,11 +45,8 @@ const RideSlice = createSlice({
     removeAllRideRequest: (state, action) => {
       state.rideRequests = [];
     },
-    //TODO: currently this is synchrnous later on we call api to accept ride
-    acceptRideRequest: (state, action) => {
-      state.activeRide = action.payload.rideRequest;
-      state.rideRequests = [];
-      action.payload?.navigate();
+    setActiveRide: (state, action) => {
+      state.activeRide = action.payload.activeRide;
     },
 
     setActiveRideMapDirection: (state, action) => {
