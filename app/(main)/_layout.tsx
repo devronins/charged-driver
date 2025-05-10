@@ -151,6 +151,28 @@ const Layout = () => {
             ),
           })}
         />
+
+        <Stack.Screen
+          name="ride/ride-cancel-screen"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Cancelations reasons',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="w-[90px] h-10 flex items-start justify-center px-1"
+                onPressIn={() => navigation.goBack()}
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
       </Stack>
       <RideRequests />
     </>

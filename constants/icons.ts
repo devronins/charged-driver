@@ -20,6 +20,14 @@ import {
   Upload,
   X,
   MapPin,
+  MoveRight,
+  Briefcase,
+  Users,
+  UserX,
+  Baby,
+  PawPrint,
+  AlertCircle,
+  AlertTriangle,
 } from 'lucide-react-native';
 
 export default {
@@ -43,4 +51,12 @@ export default {
   Upload,
   Close: X,
   MapPin,
+  MoveRight,
+  Briefcase,
+  Users,
+  UserX,
+  Baby,
+  PawPrint,
+  AlertCircle,
+  AlertTriangle,
 };
