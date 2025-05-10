@@ -1,6 +1,10 @@
 import { RideActions } from '@/reducers';
 import { DriverModal } from '@/utils/modals/driver';
-import { firebaseCollectionName, firebaseDriverRidesModal } from '@/utils/modals/firebase';
+import {
+  firebaseCollectionName,
+  firebaseDriverRidesModal,
+  firebaseRidesModal,
+} from '@/utils/modals/firebase';
 import { initializeApp } from 'firebase/app';
 //@ts-ignore
 import {
@@ -21,7 +25,7 @@ import {
 } from 'firebase/firestore';
 import { onSnapshot, Unsubscribe } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RideStatus } from '@/utils/modals/ride';
+import { RideModal, RideStatus } from '@/utils/modals/ride';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -196,13 +200,9 @@ export const firebaseApi = {
   },
 
   //firebase listner
-  startFirebaseListner: async (
-    collectionName: string,
-    dispatch: Function,
-    driverDetails: DriverModal | null
-  ) => {
+  startFirebaseDriverRideListner: async (dispatch: Function, driverDetails: DriverModal | null) => {
     try {
-      const dataCol = collection(db, collectionName);
+      const dataCol = collection(db, firebaseCollectionName.DriverRides);
       const queryInstance = query(dataCol, where('driver_id', '==', driverDetails?.id));
       const unsubscribe = onSnapshot(
         queryInstance,
@@ -212,7 +212,7 @@ export const firebaseApi = {
             id: doc.id,
             ...doc.data(),
           })) as firebaseDriverRidesModal[];
-          console.log('Changes detected in:', collectionName, data);
+          console.log('Changes detected in:', firebaseCollectionName.DriverRides, data);
           dispatch(
             RideActions.setRideRequests({
               rideRequests: data?.filter((item) => item.status !== RideStatus.Cancelled),
@@ -223,20 +223,72 @@ export const firebaseApi = {
           formatFirebaseError('firestore/listner-error');
         }
       );
-      listenerMap.set(collectionName, unsubscribe);
+      listenerMap.set(firebaseCollectionName.DriverRides, unsubscribe);
     } catch (err) {
       formatFirebaseError('firestore/listner-error');
     }
   },
 
-  stopFirebaseListener: (collectionName: string) => {
-    const unsubscribe = listenerMap.get(collectionName);
+  stopFirebaseDriverRideListener: () => {
+    const unsubscribe = listenerMap.get(firebaseCollectionName.DriverRides);
     if (unsubscribe) {
-      console.log('Stopping Firestore listener for Collection...', collectionName);
+      console.log(
+        'Stopping Firestore listener for Collection...',
+        firebaseCollectionName.DriverRides
+      );
       unsubscribe();
-      listenerMap.delete(collectionName);
+      listenerMap.delete(firebaseCollectionName.DriverRides);
     } else {
-      console.warn(`No active Firestore listener for ${collectionName}`);
+      console.warn(`No active Firestore listener for ${firebaseCollectionName.DriverRides}`);
+    }
+  },
+
+  startFirebaseRidesListner: async (dispatch: Function, activeRide: RideModal | null) => {
+    try {
+      const dataCol = collection(db, firebaseCollectionName.Rides);
+      const queryInstance = query(
+        dataCol,
+        where('driver_id', '==', activeRide?.driver_id),
+        where('ride_id', '==', activeRide?.id),
+        where('status', '==', RideStatus.Cancelled)
+      );
+      const unsubscribe = onSnapshot(
+        queryInstance,
+        (snapshot) => {
+          //@ts-ignore
+          const data = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as firebaseRidesModal[];
+
+          //we are assuming at same time, driver have only one acrive ride request
+          console.log('Changes detected in:', firebaseCollectionName.Rides, data?.[0]);
+          if (data?.[0]) {
+            dispatch(
+              RideActions.setActiveRide({
+                activeRide: data?.[0],
+              })
+            );
+          }
+        },
+        (error) => {
+          formatFirebaseError('firestore/listner-error');
+        }
+      );
+      listenerMap.set(firebaseCollectionName.Rides, unsubscribe);
+    } catch (err) {
+      formatFirebaseError('firestore/listner-error');
+    }
+  },
+
+  stopFirebaseRidesListener: () => {
+    const unsubscribe = listenerMap.get(firebaseCollectionName.Rides);
+    if (unsubscribe) {
+      console.log('Stopping Firestore listener for Collection...', firebaseCollectionName.Rides);
+      unsubscribe();
+      listenerMap.delete(firebaseCollectionName.Rides);
+    } else {
+      console.warn(`No active Firestore listener for ${firebaseCollectionName.Rides}`);
     }
   },
 };

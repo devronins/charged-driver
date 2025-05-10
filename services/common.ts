@@ -175,18 +175,27 @@ export async function requestLocationPermission(): Promise<boolean> {
         },
       };
     }
+
+    //check location icon on or not only in android
+    if (Platform.OS === 'android') {
+      await Location.getCurrentPositionAsync();
+    }
     return true;
-  } catch (error) {
-    console.log(`Location Permission Error: ${JSON.stringify(error)}`);
-    throw {
-      response: {
-        status: 400,
-      },
-      data: {
-        code: 400,
-        message: 'Background permission not granted',
-      },
-    };
+  } catch (error: any) {
+    // console.log(`Location Permission Error: ${JSON.stringify(error)}`);
+    if (error?.code === 'ERR_LOCATION_SETTINGS_UNSATISFIED') {
+      throw {
+        response: {
+          status: 400,
+        },
+        data: {
+          code: 400,
+          message: 'Location services are turned off. Please enable GPS.',
+          type: 'Location Services',
+        },
+      };
+    }
+    throw error;
   }
 }
 
