@@ -21,8 +21,9 @@ const Home = () => {
     (state) => state.Driver
   );
   const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
+  const { activeRide } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
-  console.log('19>>>>>>', accessToken, driverDetails?.id, vehicleDetails);
+  // console.log('19>>>>>>', accessToken, driverDetails?.id, vehicleDetails);
 
   useEffect(() => {
     dispatch(getVehicleDetails({}));
@@ -45,7 +46,7 @@ const Home = () => {
         <Icons.Locate size={20} color={'#FFFFFF'} />
       </TouchableOpacity>
 
-      {vehicleDetails && driverDetails?.is_active && <OnlineOffline />}
+      {vehicleDetails && driverDetails?.is_active && !activeRide && <OnlineOffline />}
 
       <Loader open={driverDetailsLoading} className="bg-black/80" />
 

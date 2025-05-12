@@ -34,7 +34,7 @@ const GoogleMap = ({
 }: GoogleMapProps) => {
   const mapRef = useRef<MapView>(null);
 
-  const handleMapReady = useCallback(() => {
+  useEffect(() => {
     if (markers.length >= 2 && mapRef.current) {
       mapRef.current.fitToCoordinates(
         markers.map((m) => ({ latitude: m.latitude, longitude: m.longitude })),
@@ -66,7 +66,7 @@ const GoogleMap = ({
       style={[{ width: '100%', height: '100%' }, style]}
       provider={PROVIDER_DEFAULT}
       initialRegion={defaultRegion}
-      onMapReady={handleMapReady}
+      // onMapReady={handleMapReady}
       {...mapViewProps}
     >
       {markers.map((marker, index) => (

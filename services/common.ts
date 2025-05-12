@@ -266,7 +266,6 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
       },
       async (location) => {
         const { latitude, longitude } = location.coords;
-        console.log('260>>>>>>', location.coords);
 
         const coords = await fetchRideMapDirection({
           origin: { lat: latitude, lng: longitude },

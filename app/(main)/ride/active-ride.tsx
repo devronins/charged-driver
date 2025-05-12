@@ -35,29 +35,7 @@ const ActiveRide = () => {
 
   useEffect(() => {
     if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
-      dispatch(
-        getRideMapDirectionCoordinates({
-          coordinates: {
-            origin: {
-              lat: Number(driverDetails?.last_location_lat),
-              lng: Number(driverDetails?.last_location_lng),
-            },
-            destination: {
-              lat: Number(activeRide.dropoff_lat),
-              lng: Number(activeRide.dropoff_lng),
-            },
-            waypoints: [
-              {
-                lat: Number(activeRide.pickup_lat),
-                lng: Number(activeRide.pickup_lng),
-              },
-            ]
-              .map((wp) => `${wp.lat},${wp.lng}`)
-              .join('|'),
-          },
-        })
-      );
-
+      
       startDriverLocationTracking(dispatch, activeRide);
     }
 

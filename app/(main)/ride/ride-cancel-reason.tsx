@@ -1,4 +1,4 @@
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icons from '@/constants/icons';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { useRouter } from 'expo-router';
@@ -79,12 +79,25 @@ const RideCancel = () => {
   const navigate = useRouter();
 
   const handleChangeRideStatus = (status: RideStatus, cancelReason: string) => {
-    dispatch(
-      changeRideStatus({
-        ride: { ride_id: activeRide?.id || 0, status: status, cancellation_reason: cancelReason },
-        navigate: () => navigate.push('/home'),
-      })
-    );
+    Alert.alert('Cancel Ride', 'Are you sure you want to Cancel this ride?', [
+      { text: 'No', style: 'cancel' },
+      {
+        text: 'Yes',
+        style: 'destructive',
+        onPress: () => {
+          dispatch(
+            changeRideStatus({
+              ride: {
+                ride_id: activeRide?.id || 0,
+                status: status,
+                cancellation_reason: cancelReason,
+              },
+              navigate: () => navigate.push('/home'),
+            })
+          );
+        },
+      },
+    ]);
   };
 
   return (
