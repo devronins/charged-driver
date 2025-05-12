@@ -31,7 +31,7 @@ const RideInProgressCard = () => {
     if (status === RideStatus.Cancelled) {
       dispatch(RideActions.setActiveRide({ activeRide: null })); //clear the current active ride
       navigate.push('/ride/rides');
-    } else if (status === RideStatus.Accepted) {
+    } else if (status === RideStatus.Accepted || status === RideStatus.Started) {
       navigate.push('/ride/active-ride');
     }
   };
@@ -59,7 +59,9 @@ const RideInProgressCard = () => {
           className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'}`}
         >
           <Text className="text-white font-medium text-sm">
-            {activeRide.status === RideStatus.Accepted ? 'See Ride Details' : 'Canceled By User'}
+            {activeRide.status === RideStatus.Accepted || activeRide.status === RideStatus.Started
+              ? 'See Ride Details'
+              : 'Canceled By User'}
           </Text>
         </TouchableOpacity>
       </Animated.View>
