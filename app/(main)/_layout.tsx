@@ -145,7 +145,7 @@ const Layout = () => {
             headerLeft: () => (
               <TouchableOpacity
                 className="w-[90px] h-10 flex items-start justify-center px-1"
-                onPressIn={() => navigation.goBack()}
+                onPressIn={() => navigate.push('/home')}
               >
                 <Icons.ChevronLeft size={30} color="#5A5660" />
               </TouchableOpacity>

@@ -27,10 +27,38 @@ const ActiveRide = () => {
     dispatch(
       changeRideStatus({
         ride: { ride_id: activeRide?.id || 0, status: status },
-        navigate: status === RideStatus.Completed ? () => navigate.push('/home') : undefined,
+        navigate:
+          status === RideStatus.Completed ? () => navigate.push('/ride/ride-details') : undefined,
       })
     );
   };
+
+  useEffect(() => {
+    if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
+      dispatch(
+        getRideMapDirectionCoordinates({
+          coordinates: {
+            origin: {
+              lat: Number(driverDetails?.last_location_lat),
+              lng: Number(driverDetails?.last_location_lng),
+            },
+            destination: {
+              lat: Number(activeRide.dropoff_lat),
+              lng: Number(activeRide.dropoff_lng),
+            },
+            waypoints: [
+              {
+                lat: Number(activeRide.pickup_lat),
+                lng: Number(activeRide.pickup_lng),
+              },
+            ]
+              .map((wp) => `${wp.lat},${wp.lng}`)
+              .join('|'),
+          },
+        })
+      );
+    }
+  }, [activeRide]);
 
   useEffect(() => {
     if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {

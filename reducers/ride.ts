@@ -79,6 +79,10 @@ const RideSlice = createSlice({
         action.payload?.activeRide?.status === RideStatus.Started
           ? action.payload?.activeRide
           : null;
+      state.rideDetails =
+        action.payload?.activeRide?.status === RideStatus.Completed
+          ? action.payload?.activeRide
+          : null;
       if (action.payload?.navigate) {
         //call navigate function
         action.payload?.navigate();
