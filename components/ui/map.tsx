@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, MapViewProps, Polyline } from 'react-native-maps';
 import { twMerge } from 'tailwind-merge';
@@ -46,19 +46,26 @@ const GoogleMap = ({
     }
   }, [markers]);
 
-  useEffect(() => {
-    if (liveCoords && mapRef.current) {
-      mapRef.current.animateCamera({
-        center: {
-          latitude: liveCoords.latitude,
-          longitude: liveCoords.longitude,
-        },
-        pitch: 0,
-        heading: 0,
-        zoom: 17,
-      });
-    }
-  }, [liveCoords]);
+  // Memoize markers to prevent re-rendering
+  const renderedMarkers = useMemo(
+    () =>
+      markers.map((marker, index) => (
+        <Marker
+          key={`${marker.latitude}-${marker.longitude}-${index}`}
+          coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+        >
+          <View
+            className={twMerge(
+              'w-[36px] h-[36px] rounded-full flex items-center justify-center',
+              marker.style
+            )}
+          >
+            {marker.icon}
+          </View>
+        </Marker>
+      )),
+    [markers]
+  );
 
   return (
     <MapView
@@ -69,18 +76,7 @@ const GoogleMap = ({
       // onMapReady={handleMapReady}
       {...mapViewProps}
     >
-      {markers.map((marker, index) => (
-        <Marker key={index} coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}>
-          <View
-            className={twMerge(
-              'w-[36px] h-[36px] rounded-full flex items-center justify-center ',
-              marker.style
-            )}
-          >
-            {marker.icon}
-          </View>
-        </Marker>
-      ))}
+      {renderedMarkers}
 
       {polyLineCoords?.length > 0 && (
         <Polyline
