@@ -96,15 +96,15 @@ const ActiveRide = () => {
               />
             ),
           },
-          {
-            latitude: Number(driverDetails?.last_location_lat) || 0,
-            longitude: Number(driverDetails?.last_location_lng) || 0,
-            icon: (
-              <View className="bg-primary-300 w-10 h-10 rounded-full flex items-center justify-center">
-                <Icons.CarFront size={30} color="#fff" />
-              </View>
-            ),
-          },
+          // {
+          //   latitude: Number(driverDetails?.last_location_lat) || 0,
+          //   longitude: Number(driverDetails?.last_location_lng) || 0,
+          //   icon: (
+          //     <View className="bg-primary-300 w-10 h-10 rounded-full flex items-center justify-center">
+          //       <Icons.CarFront size={30} color="#fff" />
+          //     </View>
+          //   ),
+          // },
         ]}
         polyLineCoords={activeRideMapDirectionCoordinates}
       />

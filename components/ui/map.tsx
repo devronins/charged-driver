@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT, MapViewProps, Polyline } from 'react-native-maps';
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  MapViewProps,
+  Polyline,
+  Region,
+} from 'react-native-maps';
 import { twMerge } from 'tailwind-merge';
 import Loader from './Loader';
 
@@ -36,21 +42,37 @@ const GoogleMap = ({
   const mapRef = useRef<MapView>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const [didZoomToUser, setDidZoomToUser] = useState(false);
 
   const mapFullyReady = isMapReady && isLayoutReady;
 
   // Trigger fitToCoordinates only after map and layout are ready
-  useEffect(() => {
-    if (mapFullyReady && markers.length >= 2 && mapRef.current) {
-      mapRef.current.fitToCoordinates(
-        markers.map((m) => ({ latitude: m.latitude, longitude: m.longitude })),
-        {
-          edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },
-          animated: true,
-        }
-      );
+  // useEffect(() => {
+  //   if (mapFullyReady && markers.length >= 2 && mapRef.current) {
+  //     mapRef.current.fitToCoordinates(
+  //       markers.map((m) => ({ latitude: m.latitude, longitude: m.longitude })),
+  //       {
+  //         edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },
+  //         animated: true,
+  //       }
+  //     );
+  //   }
+  // }, [mapFullyReady, markers]);
+
+  // Zoom to user location once map is ready
+  const handleUserLocationChange = (event: any) => {
+    if (!didZoomToUser && mapRef.current) {
+      const { latitude, longitude } = event.nativeEvent.coordinate;
+      const region: Region = {
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+      mapRef.current.animateToRegion(region, 1000);
+      setDidZoomToUser(true);
     }
-  }, [mapFullyReady, markers]);
+  };
 
   // Memoize markers to avoid re-rendering
   const renderedMarkers = useMemo(
@@ -80,6 +102,9 @@ const GoogleMap = ({
         style={[{ width: '100%', height: '100%' }, style]}
         provider={PROVIDER_DEFAULT}
         initialRegion={defaultRegion}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
+        onUserLocationChange={handleUserLocationChange}
         onMapReady={() => setIsMapReady(true)}
         onLayout={() => setIsLayoutReady(true)}
         {...mapViewProps}
