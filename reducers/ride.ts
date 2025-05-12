@@ -11,6 +11,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface RideInitialStateType {
   activeRide: RideModal | null;
+  rideDetails: RideModal | null;
   activeRideMapDirectionCoordinates: { latitude: number; longitude: number }[];
   rideRequests: firebaseDriverRidesModal[];
   rides: RideModal[];
@@ -20,6 +21,7 @@ export interface RideInitialStateType {
 }
 
 const initialState: RideInitialStateType = {
+  rideDetails: null,
   activeRide: null,
   activeRideMapDirectionCoordinates: [],
   rideRequests: [],
@@ -48,7 +50,18 @@ const RideSlice = createSlice({
     setActiveRide: (state, action) => {
       state.activeRide = action.payload.activeRide;
     },
-
+    setRideDetails: (
+      state,
+      action: {
+        payload: {
+          rideDetails: RideModal;
+          navigate: Function;
+        };
+      }
+    ) => {
+      state.rideDetails = action.payload.rideDetails;
+      action.payload.navigate();
+    },
     setActiveRideMapDirection: (state, action) => {
       state.activeRideMapDirectionCoordinates = action.payload.activeRideMapDirectionCoordinates;
     },

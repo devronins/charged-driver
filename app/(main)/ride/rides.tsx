@@ -8,6 +8,8 @@ import moment from 'moment';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
 import Loader from '@/components/ui/Loader';
 import { twMerge } from 'tailwind-merge';
+import { RideActions } from '@/reducers';
+import { useLocalSearchParams, usePathname, useRouter } from 'expo-router';
 
 const statusOrder: Record<RideStatus, number> = {
   [RideStatus.Started]: 1,
@@ -38,11 +40,15 @@ const filterOptions = [
 const Rides = () => {
   const { rides, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
+  const navigate = useRouter();
+  const { fromRideDetailsScreen } = useLocalSearchParams();
   const [ridesCopy, setRidesCopy] = useState<RideModal[]>([]);
   const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
-    dispatch(getRides({}));
+    if (!fromRideDetailsScreen) {
+      dispatch(getRides({}));
+    }
   }, []);
 
   useEffect(() => {
@@ -77,7 +83,17 @@ const Rides = () => {
   };
 
   const renderRideItem = ({ item: ride }: { item: RideModal }) => (
-    <View className="w-full bg-white p-4 rounded-2xl shadow-md mb-5">
+    <TouchableOpacity
+      className="w-full bg-white p-4 rounded-2xl shadow-md mb-5"
+      onPress={() =>
+        dispatch(
+          RideActions.setRideDetails({
+            rideDetails: ride,
+            navigate: () => navigate.push('/ride/ride-details'),
+          })
+        )
+      }
+    >
       <View className="w-full flex flex-row items-start gap-5">
         <View className="flex-1 flex-col items-start justify-center">
           <View className="flex-row items-center mb-2">
@@ -126,7 +142,7 @@ const Rides = () => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

@@ -174,6 +174,33 @@ const Layout = () => {
             ),
           })}
         />
+
+        <Stack.Screen
+          name="ride/ride-details"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Ride Details',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="w-[90px] h-10 flex items-start justify-center px-1"
+                onPressIn={() =>
+                  navigate.push({
+                    pathname: '/ride/rides',
+                    params: { fromRideDetailsScreen: 'true' },
+                  })
+                }
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
       </Stack>
       <RideRequests />
     </>
