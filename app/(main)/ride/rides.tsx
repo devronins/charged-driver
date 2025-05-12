@@ -38,7 +38,7 @@ const filterOptions = [
 const Rides = () => {
   const { rides, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
-  const [ridesCopy, setRidesCopy] = useState(rides);
+  const [ridesCopy, setRidesCopy] = useState<RideModal[]>([]);
   const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
@@ -47,7 +47,11 @@ const Rides = () => {
 
   useEffect(() => {
     if (rides?.length) {
-      const sortedRides = [...rides].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+      const sortedRides = rides
+        ?.filter(
+          (ride) => ride.status === RideStatus.Completed || ride.status === RideStatus.Cancelled
+        )
+        ?.sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf());
       setRidesCopy(sortedRides);
     }
   }, [rides]);
@@ -57,12 +61,18 @@ const Rides = () => {
   const handleFilter = (data: { id: number; title: string; value: string }) => {
     if (data.value) {
       setFilterValue(data.value);
-      const filteredRides = rides?.filter((ride) => ride.status === data.value);
+      const filteredRides = rides
+        ?.filter((ride) => ride.status === data.value)
+        ?.sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf());
       setRidesCopy(filteredRides);
     } else if (data.value === '') {
       setFilterValue(data.value);
-      const sortedRides = [...rides].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
-      setRidesCopy(sortedRides);
+      const filteredRides = rides
+        ?.filter(
+          (ride) => ride.status === RideStatus.Completed || ride.status === RideStatus.Cancelled
+        )
+        ?.sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf());
+      setRidesCopy(filteredRides);
     }
   };
 
