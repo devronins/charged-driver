@@ -4,7 +4,7 @@ import Icons from '@/constants/icons';
 import { VehicleActions } from '@/reducers';
 import { appStateTaskHandler, getDriver } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
-import { Redirect, Stack } from 'expo-router';
+import { Redirect, Stack, useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AppState, Platform, Text, TouchableOpacity } from 'react-native';
 import { useAppState } from '@react-native-community/hooks';
@@ -15,6 +15,7 @@ const Layout = () => {
   const { isEditMode, vehicleDetails } = useTypedSelector((state) => state.Vehicle);
   const { activeRide } = useTypedSelector((state) => state.Ride);
   const appState = useAppState();
+  const navigate = useRouter();
 
   useEffect(() => {
     if (activeRide) {
@@ -144,7 +145,56 @@ const Layout = () => {
             headerLeft: () => (
               <TouchableOpacity
                 className="w-[90px] h-10 flex items-start justify-center px-1"
-                onPressIn={() => navigation.goBack()}
+                onPressIn={() => navigate.push('/home')}
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+        <Stack.Screen
+          name="ride/ride-cancel-screen"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Cancelations reasons',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="w-[90px] h-10 flex items-start justify-center px-1"
+                onPressIn={() => navigate.push('/home')}
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+        <Stack.Screen
+          name="ride/ride-details"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Ride Details',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="w-[90px] h-10 flex items-start justify-center px-1"
+                onPressIn={() =>
+                  navigate.push({
+                    pathname: '/ride/rides',
+                    params: { fromRideDetailsScreen: 'true' },
+                  })
+                }
               >
                 <Icons.ChevronLeft size={30} color="#5A5660" />
               </TouchableOpacity>

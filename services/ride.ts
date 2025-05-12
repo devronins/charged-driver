@@ -26,10 +26,13 @@ export const getRideDetails = createAsyncThunk<any, any>(
 
 export const changeRideStatus = createAsyncThunk<
   any,
-  { ride: { ride_id: number; status: string }; navigate?: Function }
+  { ride: { ride_id: number; status: string; cancellation_reason?: string }; navigate?: Function }
 >('RideSlice/changeRideStatus', async (params, thunkApi) => {
   try {
-    await updateRideStatus(params?.ride?.ride_id, { status: params?.ride?.status });
+    await updateRideStatus(params?.ride?.ride_id, {
+      status: params?.ride?.status,
+      cancellation_reason: params?.ride?.cancellation_reason || null,
+    });
     const { data } = await fetchRide(params?.ride?.ride_id);
 
     Toast.show({

@@ -215,7 +215,7 @@ export const firebaseApi = {
           console.log('Changes detected in:', firebaseCollectionName.DriverRides, data);
           dispatch(
             RideActions.setRideRequests({
-              rideRequests: data?.filter((item) => item.status !== RideStatus.Cancelled),
+              rideRequests: data?.filter((item) => !item.status),
             })
           );
         },

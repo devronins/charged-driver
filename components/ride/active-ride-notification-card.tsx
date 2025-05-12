@@ -3,11 +3,12 @@ import { View, Text, Animated, TouchableOpacity, Platform } from 'react-native';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { MapPin } from 'lucide-react-native';
 import { useRouter, usePathname } from 'expo-router';
-import { Model } from '../ui/model';
 import { RideStatus } from '@/utils/modals/ride';
+import { RideActions } from '@/reducers';
 
 const RideInProgressCard = () => {
   const { activeRide } = useTypedSelector((state) => state.Ride);
+  const dispatch = useAppDispatch();
   const navigate = useRouter();
   const pathname = usePathname();
   const slideY = useRef(new Animated.Value(-100)).current;
@@ -28,8 +29,9 @@ const RideInProgressCard = () => {
 
   const handelNavigate = (status: RideStatus) => {
     if (status === RideStatus.Cancelled) {
+      dispatch(RideActions.setActiveRide({ activeRide: null })); //clear the current active ride
       navigate.push('/ride/rides');
-    } else if (status === RideStatus.Accepted) {
+    } else if (status === RideStatus.Accepted || status === RideStatus.Started) {
       navigate.push('/ride/active-ride');
     }
   };
@@ -57,7 +59,9 @@ const RideInProgressCard = () => {
           className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'}`}
         >
           <Text className="text-white font-medium text-sm">
-            {activeRide.status === RideStatus.Accepted ? 'See Ride Details' : 'Canceled By User'}
+            {activeRide.status === RideStatus.Accepted || activeRide.status === RideStatus.Started
+              ? 'See Ride Details'
+              : 'Canceled By User'}
           </Text>
         </TouchableOpacity>
       </Animated.View>

@@ -11,9 +11,8 @@ import {
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { RideStatus } from '@/utils/modals/ride';
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
-import LottieView from 'lottie-react-native';
-import { DropoffJson, PickupJson } from '@/constants/animation';
+import { Image, Text, View } from 'react-native';
+import images from '@/constants/images';
 import { useRouter } from 'expo-router';
 
 const ActiveRide = () => {
@@ -28,7 +27,7 @@ const ActiveRide = () => {
     dispatch(
       changeRideStatus({
         ride: { ride_id: activeRide?.id || 0, status: status },
-        navigate: () => navigate.push('/home'),
+        navigate: status === RideStatus.Completed ? () => navigate.push('/ride/rides') : undefined,
       })
     );
   };
@@ -57,7 +56,11 @@ const ActiveRide = () => {
           },
         })
       );
+    }
+  }, [activeRide]);
 
+  useEffect(() => {
+    if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
       startDriverLocationTracking(dispatch, activeRide);
     }
 
@@ -74,11 +77,10 @@ const ActiveRide = () => {
             latitude: Number(activeRide?.pickup_lat) || 0,
             longitude: Number(activeRide?.pickup_lng) || 0,
             icon: (
-              <LottieView
-                source={PickupJson}
-                style={{ width: 70, height: 70 }}
-                autoPlay
-                loop={true}
+              <Image
+                source={images.LocationPickupImage}
+                className="h-[30px] w-[30px]"
+                resizeMode="contain"
               />
             ),
           },
@@ -86,19 +88,22 @@ const ActiveRide = () => {
             latitude: Number(activeRide?.dropoff_lat) || 0,
             longitude: Number(activeRide?.dropoff_lng) || 0,
             icon: (
-              <LottieView
-                source={DropoffJson}
-                style={{ width: 70, height: 70 }}
-                autoPlay
-                loop={true}
+              <Image
+                source={images.LocationDropOffImage}
+                className="h-[30px] w-[30px]"
+                resizeMode="contain"
               />
             ),
           },
-          {
-            latitude: Number(driverDetails?.last_location_lat) || 0,
-            longitude: Number(driverDetails?.last_location_lng) || 0,
-            icon: <Icons.CarFront size={30} color="#fff" />,
-          },
+          // {
+          //   latitude: Number(driverDetails?.last_location_lat) || 0,
+          //   longitude: Number(driverDetails?.last_location_lng) || 0,
+          //   icon: (
+          //     <View className="bg-primary-300 w-10 h-10 rounded-full flex items-center justify-center">
+          //       <Icons.CarFront size={30} color="#fff" />
+          //     </View>
+          //   ),
+          // },
         ]}
         polyLineCoords={activeRideMapDirectionCoordinates}
       />

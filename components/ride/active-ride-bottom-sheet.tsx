@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
+import { useRouter } from 'expo-router';
 
 interface RideBottomSheetProps {
   ride: RideModal;
@@ -17,6 +18,7 @@ const RideDetailsBottomSheet = ({
   onChat,
   isVisible = true,
 }: RideBottomSheetProps) => {
+  const navigate = useRouter();
   // ref
   const bottomSheetRef = useRef(null);
 
@@ -117,7 +119,7 @@ const RideDetailsBottomSheet = ({
 
             {/* Chat Button */}
             <TouchableOpacity
-              onPress={() => onChnageRideStatus(RideStatus.Cancelled)}
+              onPress={() => navigate.push('/ride/ride-cancel-reason')}
               className="flex-1 bg-red-500 rounded-full flex-row justify-center items-center shadow-lg"
             >
               <Ionicons name="close-circle-outline" size={20} color="white" />

@@ -20,7 +20,7 @@ const navigationContants = [
     id: 3,
     labelIcon: Icons.Clock,
     title: 'Ride History',
-    href: '#',
+    href: 'ride/rides',
   },
   {
     id: 4,

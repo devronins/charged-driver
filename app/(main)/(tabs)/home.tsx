@@ -21,8 +21,9 @@ const Home = () => {
     (state) => state.Driver
   );
   const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
+  const { activeRide } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
-  console.log('19>>>>>>', accessToken, driverDetails?.id, vehicleDetails);
+  // console.log('19>>>>>>', accessToken, driverDetails?.id, vehicleDetails);
 
   useEffect(() => {
     dispatch(getVehicleDetails({}));
@@ -32,20 +33,15 @@ const Home = () => {
     <View className="flex-1">
       <GoogleMap
         markers={[
-          {
-            latitude: 37.7749,
-            longitude: -122.4194,
-            icon: <Icons.CarFront size={17} color="#fff" />,
-          },
         ]}
       />
 
       {/*Center map on current location */}
-      <TouchableOpacity className="w-12 h-12 flex items-center justify-center bg-primary-300 rounded-full absolute bottom-8 right-5">
+      {/* <TouchableOpacity className="w-12 h-12 flex items-center justify-center bg-primary-300 rounded-full absolute bottom-8 right-5">
         <Icons.Locate size={20} color={'#FFFFFF'} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      {vehicleDetails && driverDetails?.is_active && <OnlineOffline />}
+      {vehicleDetails && driverDetails?.is_active && !activeRide && <OnlineOffline />}
 
       <Loader open={driverDetailsLoading} className="bg-black/80" />
 
