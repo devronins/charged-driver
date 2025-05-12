@@ -57,7 +57,11 @@ const Rides = () => {
         ?.filter(
           (ride) => ride.status === RideStatus.Completed || ride.status === RideStatus.Cancelled
         )
-        ?.sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf());
+        ?.sort(
+          (a, b) =>
+            moment(b.completed_at || b.accepted_at).valueOf() -
+            moment(a.completed_at || b.accepted_at).valueOf()
+        );
       setRidesCopy(sortedRides);
     }
   }, [rides]);
@@ -69,7 +73,11 @@ const Rides = () => {
       setFilterValue(data.value);
       const filteredRides = rides
         ?.filter((ride) => ride.status === data.value)
-        ?.sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf());
+        ?.sort(
+          (a, b) =>
+            moment(b.completed_at || b.accepted_at).valueOf() -
+            moment(a.completed_at || b.accepted_at).valueOf()
+        );
       setRidesCopy(filteredRides);
     } else if (data.value === '') {
       setFilterValue(data.value);
@@ -77,7 +85,11 @@ const Rides = () => {
         ?.filter(
           (ride) => ride.status === RideStatus.Completed || ride.status === RideStatus.Cancelled
         )
-        ?.sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf());
+        ?.sort(
+          (a, b) =>
+            moment(b.completed_at || b.accepted_at).valueOf() -
+            moment(a.completed_at || b.accepted_at).valueOf()
+        );
       setRidesCopy(filteredRides);
     }
   };
@@ -99,7 +111,7 @@ const Rides = () => {
           <View className="flex-row items-center mb-2">
             <CalendarDays size={16} color="#007FFF" />
             <Text className="ml-2 text-sm font-semibold text-gray-800">
-              {moment(ride.created_at).format('D MMMM, h:mm A')}
+              {moment(ride.completed_at || ride.accepted_at).format('D MMMM, h:mm A')}
             </Text>
           </View>
 

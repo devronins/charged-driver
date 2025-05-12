@@ -27,8 +27,7 @@ const ActiveRide = () => {
     dispatch(
       changeRideStatus({
         ride: { ride_id: activeRide?.id || 0, status: status },
-        navigate:
-          status === RideStatus.Completed ? () => navigate.push('/ride/ride-details') : undefined,
+        navigate: status === RideStatus.Completed ? () => navigate.push('/ride/rides') : undefined,
       })
     );
   };
