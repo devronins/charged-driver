@@ -1,7 +1,7 @@
 import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icons from '@/constants/icons';
 import { useAppDispatch, useTypedSelector } from '@/store';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { RideStatus } from '@/utils/modals/ride';
 import { changeRideStatus } from '@/services';
 import Loader from '@/components/ui/Loader';
@@ -99,6 +99,8 @@ const RideCancel = () => {
       },
     ]);
   };
+
+  if (!activeRide) return <Redirect href="/(main)/(tabs)/home" />;
 
   return (
     <ScrollView className="flex-1 bg-secondary-300">

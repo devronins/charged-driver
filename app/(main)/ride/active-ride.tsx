@@ -13,7 +13,7 @@ import { RideStatus } from '@/utils/modals/ride';
 import { useEffect } from 'react';
 import { Image, Text, View } from 'react-native';
 import images from '@/constants/images';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 
 const ActiveRide = () => {
   const { activeRide, loading, activeRideMapDirectionCoordinates } = useTypedSelector(
@@ -68,6 +68,8 @@ const ActiveRide = () => {
       stopDriverLocationTracking();
     };
   }, [activeRide]);
+
+  if (!activeRide) return <Redirect href="/(main)/(tabs)/home" />;
 
   return (
     <View className="flex-1 h-full w-full pb-5 bg-white">

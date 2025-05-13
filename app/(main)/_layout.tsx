@@ -154,10 +154,10 @@ const Layout = () => {
         />
 
         <Stack.Screen
-          name="ride/ride-cancel-screen"
+          name="ride/ride-cancel-reason"
           //@ts-ignore
           options={({ navigation }) => ({
-            headerTitle: 'Cancelations reasons',
+            headerTitle: 'Cancelation Reasons',
             headerTitleAlign: 'center', // for android
             headerTitleStyle: {
               color: '#007FFF',
