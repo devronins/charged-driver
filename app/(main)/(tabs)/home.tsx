@@ -31,10 +31,7 @@ const Home = () => {
 
   return (
     <View className="flex-1">
-      <GoogleMap
-        markers={[
-        ]}
-      />
+      <GoogleMap markers={[]} />
 
       {/*Center map on current location */}
       {/* <TouchableOpacity className="w-12 h-12 flex items-center justify-center bg-primary-300 rounded-full absolute bottom-8 right-5">
@@ -43,7 +40,7 @@ const Home = () => {
 
       {vehicleDetails && driverDetails?.is_active && !activeRide && <OnlineOffline />}
 
-      <Loader open={driverDetailsLoading} className="bg-black/80" />
+      {/* <Loader open={driverDetailsLoading} className="bg-black/80" /> */}
 
       <RideInProgressCard />
     </View>

@@ -6,6 +6,7 @@ import MapView, {
   MapViewProps,
   Polyline,
   Region,
+  PROVIDER_GOOGLE,
 } from 'react-native-maps';
 import { twMerge } from 'tailwind-merge';
 import Loader from './Loader';
@@ -100,7 +101,7 @@ const GoogleMap = ({
       <MapView
         ref={mapRef}
         style={[{ width: '100%', height: '100%' }, style]}
-        provider={PROVIDER_DEFAULT}
+        provider={PROVIDER_GOOGLE}
         initialRegion={defaultRegion}
         showsUserLocation={true}
         showsMyLocationButton={true}

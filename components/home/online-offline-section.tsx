@@ -1,6 +1,6 @@
 import { Alert, Animated, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useTypedSelector } from '@/store';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { editDriver, openAppSettings, requestLocationPermission } from '@/services';
 import {
@@ -20,7 +20,7 @@ const OnlineOffline = () => {
   const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isOnline, setIsOnline] = useState(driverDetails?.is_online || false);
 
   const animateScale = () => {
     Animated.spring(scaleAnim, {
@@ -41,11 +41,13 @@ const OnlineOffline = () => {
   };
   const toggleSwitch = async () => {
     try {
-      animateScale();
       const driverUpdatedPayload = {
         ...driverDetails,
         is_online: driverDetails?.is_online ? false : true,
       };
+
+      setIsOnline(driverUpdatedPayload.is_online);
+      animateScale();
 
       if (driverUpdatedPayload?.is_online) {
         await requestLocationPermission();
@@ -73,6 +75,10 @@ const OnlineOffline = () => {
     }
   };
 
+  useEffect(() => {
+    setIsOnline(driverDetails?.is_online || false);
+  }, [driverDetails?.is_online]);
+
   return (
     <View className="absolute bottom-8 z-10 self-center">
       <Animated.View
@@ -83,19 +89,19 @@ const OnlineOffline = () => {
           <Text
             className={twMerge(
               'text-lg font-semibold',
-              driverDetails?.is_online ? 'text-tertiary-300' : 'text-red-400'
+              isOnline ? 'text-tertiary-300' : 'text-red-400'
             )}
           >
-            {driverDetails?.is_online ? 'Online' : 'Offline'}
+            {isOnline ? 'Online' : 'Offline'}
           </Text>
         </View>
         <View className="flex items-center justify-center">
           <Switch
             trackColor={{ false: '#fecaca', true: '#bbf7d0' }}
-            thumbColor={driverDetails?.is_online ? '#34C759' : '#ef4444'}
+            thumbColor={isOnline ? '#34C759' : '#ef4444'}
             ios_backgroundColor="#fecaca"
             onValueChange={toggleSwitch}
-            value={driverDetails?.is_online}
+            value={isOnline}
           />
         </View>
       </Animated.View>
