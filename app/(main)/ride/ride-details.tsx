@@ -145,7 +145,7 @@ const RideDetails = () => {
             <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Cancelation Fare</Text>
-              <Text className="text-gray-900 font-medium">${ride.cancellation_fee}</Text>
+              <Text className="text-gray-900 font-medium">CAD {ride.cancellation_fee}</Text>
             </View>
           </View>
         ) : (
@@ -153,15 +153,15 @@ const RideDetails = () => {
             <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Base Fare</Text>
-              <Text className="text-gray-900 font-medium">${ride.base_fare}</Text>
+              <Text className="text-gray-900 font-medium">CAD {ride.base_fare}</Text>
             </View>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Distance Fare</Text>
-              <Text className="text-gray-900 font-medium">${ride.distance_fare}</Text>
+              <Text className="text-gray-900 font-medium">CAD {ride.distance_fare}</Text>
             </View>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Time Fare</Text>
-              <Text className="text-gray-900 font-medium">${ride.time_fare}</Text>
+              <Text className="text-gray-900 font-medium">CAD {ride.time_fare}</Text>
             </View>
             {/* <View className="flex-row justify-between mb-2">
           <Text className="text-gray-700 font-medium">Surge</Text>
@@ -169,15 +169,15 @@ const RideDetails = () => {
         </View> */}
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Platform Fee</Text>
-              <Text className="text-gray-900 font-medium">${ride.platform_fee}</Text>
+              <Text className="text-gray-900 font-medium">CAD {ride.platform_fee}</Text>
             </View>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Govt Tax</Text>
-              <Text className="text-gray-900 font-medium">${ride.govt_tax_percentage}</Text>
+              <Text className="text-gray-900 font-medium">CAD {ride.govt_tax_percentage}</Text>
             </View>
             <View className="flex-row justify-between mt-3 border-t border-gray-300 pt-2">
               <Text className="font-semibold text-gray-900 text-lg">Total Fare</Text>
-              <Text className="font-semibold text-xl text-gray-900">${ride.total_fare}</Text>
+              <Text className="font-semibold text-xl text-gray-900">CAD {ride.total_fare}</Text>
             </View>
           </View>
         )}
