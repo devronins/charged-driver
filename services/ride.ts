@@ -7,9 +7,11 @@ import {
   updateRideStatus,
 } from '@/api/axios';
 import { Toast } from '@/utils/toast';
-import { handleUnauthorizedError } from './common';
+import { handleUnauthorizedError, requestLocationPermission } from './common';
 import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { firebaseApi } from '@/api/firebase';
+import { RideModal, RideStatus } from '@/utils/modals/ride';
+import * as Location from 'expo-location';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const getRideDetails = createAsyncThunk<any, any>(
@@ -98,17 +100,42 @@ export const getRideTypes = createAsyncThunk<any, any>(
 export const getRideMapDirectionCoordinates = createAsyncThunk<
   any,
   {
-    coordinates: {
-      origin: { lat: number; lng: number };
-      destination: { lat: number; lng: number };
-      waypoints?: string;
-    };
+    activeRide: RideModal;
   }
->('RideSlice/getRideMapDirectionCoordinates', async (params, thunkApi) => {
+>('RideSlice/getRideMapDirectionCoordinates', async ({ activeRide }, thunkApi) => {
   try {
-    const coords = await fetchRideMapDirection(params.coordinates);
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync();
+
+    const coordsObj =
+      activeRide.status === RideStatus.Started
+        ? {
+            origin: { lat: latitude, lng: longitude },
+            destination: {
+              lat: Number(activeRide.dropoff_lat),
+              lng: Number(activeRide.dropoff_lng),
+            },
+            waypoints: [
+              {
+                lat: Number(activeRide.pickup_lat),
+                lng: Number(activeRide.pickup_lng),
+              },
+            ]
+              .map((wp) => `${wp.lat},${wp.lng}`)
+              .join('|'),
+          }
+        : {
+            origin: { lat: latitude, lng: longitude },
+            destination: {
+              lat: Number(activeRide.pickup_lat),
+              lng: Number(activeRide.pickup_lng),
+            },
+          };
+
+    const coords = await fetchRideMapDirection(coordsObj);
     return thunkApi.fulfillWithValue({
-      activeRideMapDirectionCoordinates: coords,
+      activeRideMapDirectionCoordinates: [{ latitude, longitude }, ...coords],
     });
   } catch (err) {
     return handleUnauthorizedError(err, thunkApi);

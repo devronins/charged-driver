@@ -19,7 +19,6 @@ const ActiveRide = () => {
   const { activeRide, loading, activeRideMapDirectionCoordinates } = useTypedSelector(
     (state) => state.Ride
   );
-  const { driverDetails } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const navigate = useRouter();
 
@@ -33,31 +32,17 @@ const ActiveRide = () => {
   };
 
   useEffect(() => {
-    if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
+    if (
+      !activeRideMapDirectionCoordinates.length &&
+      (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted)
+    ) {
       dispatch(
         getRideMapDirectionCoordinates({
-          coordinates: {
-            origin: {
-              lat: Number(driverDetails?.last_location_lat),
-              lng: Number(driverDetails?.last_location_lng),
-            },
-            destination: {
-              lat: Number(activeRide.dropoff_lat),
-              lng: Number(activeRide.dropoff_lng),
-            },
-            waypoints: [
-              {
-                lat: Number(activeRide.pickup_lat),
-                lng: Number(activeRide.pickup_lng),
-              },
-            ]
-              .map((wp) => `${wp.lat},${wp.lng}`)
-              .join('|'),
-          },
+          activeRide: activeRide,
         })
       );
     }
-  }, [activeRide]);
+  }, []);
 
   useEffect(() => {
     if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
@@ -67,7 +52,7 @@ const ActiveRide = () => {
     return () => {
       stopDriverLocationTracking();
     };
-  }, [activeRide]);
+  }, []);
 
   if (!activeRide) return <Redirect href="/(main)/(tabs)/home" />;
 

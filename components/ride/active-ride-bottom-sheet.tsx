@@ -33,7 +33,7 @@ const RideDetailsBottomSheet = ({
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={isVisible ? 1 : 0} // Use 0 instead of -1 to keep 20% always visible
+      index={isVisible ? 2 : 0} // Use 0 instead of -1 to keep 20% always visible
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose={false} // Disable pan down to close

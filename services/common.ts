@@ -12,7 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, Platform } from 'react-native';
 import { DriverActions, RideActions } from '@/reducers';
-import { RideModal } from '@/utils/modals/ride';
+import { RideModal, RideStatus } from '@/utils/modals/ride';
 import { fetchRideMapDirection } from '@/api/axios';
 
 export type PickedImageModal = {
@@ -251,26 +251,37 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
     locationSubscriber = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
-        distanceInterval: 1,
+        distanceInterval: 50, // in meters
       },
       async (location) => {
         const { latitude, longitude } = location.coords;
 
-        const coords = await fetchRideMapDirection({
-          origin: { lat: latitude, lng: longitude },
-          destination: {
-            lat: Number(activeRide.dropoff_lat),
-            lng: Number(activeRide.dropoff_lng),
-          },
-          waypoints: [
-            {
-              lat: Number(activeRide.pickup_lat),
-              lng: Number(activeRide.pickup_lng),
-            },
-          ]
-            .map((wp) => `${wp.lat},${wp.lng}`)
-            .join('|'),
-        });
+        const coordsObj =
+          activeRide.status === RideStatus.Started
+            ? {
+                origin: { lat: latitude, lng: longitude },
+                destination: {
+                  lat: Number(activeRide.dropoff_lat),
+                  lng: Number(activeRide.dropoff_lng),
+                },
+                waypoints: [
+                  {
+                    lat: Number(activeRide.pickup_lat),
+                    lng: Number(activeRide.pickup_lng),
+                  },
+                ]
+                  .map((wp) => `${wp.lat},${wp.lng}`)
+                  .join('|'),
+              }
+            : {
+                origin: { lat: latitude, lng: longitude },
+                destination: {
+                  lat: Number(activeRide.pickup_lat),
+                  lng: Number(activeRide.pickup_lng),
+                },
+              };
+
+        const coords = await fetchRideMapDirection(coordsObj);
         dispatch(
           DriverActions.setDriverLocation({
             last_location_lat: latitude,

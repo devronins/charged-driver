@@ -7,7 +7,7 @@ import Loader from '@/components/ui/Loader';
 import GoogleMap from '@/components/ui/map';
 import RideInProgressCard from '@/components/ride/active-ride-notification-card';
 import { useEffect } from 'react';
-import { getDriver, getVehicleDetails } from '@/services';
+import { getDriver, getRides, getVehicleDetails } from '@/services';
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -28,6 +28,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(getVehicleDetails({}));
     dispatch(getDriver({}));
+    dispatch(getRides({}));
   }, []);
 
   return (

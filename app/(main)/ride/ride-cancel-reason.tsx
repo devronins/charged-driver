@@ -104,7 +104,7 @@ const RideCancel = () => {
 
   return (
     <ScrollView className="flex-1 bg-secondary-300">
-      <View className="flex-1 flex flex-col items-center p-6 gap-5">
+      <View className="flex-1 flex flex-col items-center p-6 mb-16 gap-5">
         <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center">
           <View className="w-full flex items-start justify-center p-5 pb-0">
             <Text className="text-2xl font-semibold text-primary-300">
