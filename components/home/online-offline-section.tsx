@@ -17,7 +17,9 @@ const coordinatesObj = {
 
 const OnlineOffline = () => {
   const { location } = useTypedSelector((state) => state.Permission);
-  const { driverDetails, accessToken } = useTypedSelector((state) => state.Driver);
+  const { driverDetails, accessToken, driverDetailsLoading } = useTypedSelector(
+    (state) => state.Driver
+  );
   const dispatch = useAppDispatch();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isOnline, setIsOnline] = useState(driverDetails?.is_online || false);
@@ -82,7 +84,10 @@ const OnlineOffline = () => {
   return (
     <View className="absolute bottom-8 z-10 self-center">
       <Animated.View
-        className="flex-row items-center py-2.5 px-4 rounded-full border border-black/10 shadow-md bg-white gap-4"
+        className={twMerge(
+          'flex-row items-center py-2.5 px-4 rounded-full border border-black/10 shadow-md bg-white gap-4',
+          driverDetailsLoading && 'bg-gray-200'
+        )}
         style={{ transform: [{ scale: scaleAnim }] }}
       >
         <View className="flex items-center justify-center">
@@ -102,6 +107,7 @@ const OnlineOffline = () => {
             ios_backgroundColor="#fecaca"
             onValueChange={toggleSwitch}
             value={isOnline}
+            disabled={driverDetailsLoading}
           />
         </View>
       </Animated.View>

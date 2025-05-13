@@ -1,14 +1,6 @@
 import { useTypedSelector } from '@/store';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
-import {
-  CalendarDays,
-  Car,
-  CheckCircle2,
-  Clock4,
-  Flag,
-  MapPin,
-  X,
-} from 'lucide-react-native';
+import { CalendarDays, Car, CheckCircle2, Clock4, Flag, MapPin, X } from 'lucide-react-native';
 import moment from 'moment';
 import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native';

@@ -2,7 +2,7 @@ import { firebaseApi } from '@/api/firebase';
 import RideRequests from '@/components/ride/ride-requests';
 import Icons from '@/constants/icons';
 import { VehicleActions } from '@/reducers';
-import { appStateTaskHandler, getDriver } from '@/services';
+import { appStateTaskHandler } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { Redirect, Stack, useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';

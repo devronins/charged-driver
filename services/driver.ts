@@ -71,8 +71,6 @@ export const loginDriver = createAsyncThunk<any, any>(
         throw formatFirebaseError('"auth/invalid-credential"');
       }
 
-      thunkApi.dispatch(getRides({}));
-
       Toast.show({
         type: 'success',
         text1: 'Driver Login successfully',
