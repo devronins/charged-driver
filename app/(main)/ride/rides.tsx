@@ -41,14 +41,11 @@ const Rides = () => {
   const { rides, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
   const navigate = useRouter();
-  const { fromRideDetailsScreen } = useLocalSearchParams();
   const [ridesCopy, setRidesCopy] = useState<RideModal[]>([]);
   const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
-    if (!fromRideDetailsScreen) {
-      dispatch(getRides({}));
-    }
+    dispatch(getRides({}));
   }, []);
 
   useEffect(() => {
@@ -65,8 +62,6 @@ const Rides = () => {
       setRidesCopy(sortedRides);
     }
   }, [rides]);
-
-  // console.log(statusOrder);
 
   const handleFilter = (data: { id: number; title: string; value: string }) => {
     if (data.value) {
