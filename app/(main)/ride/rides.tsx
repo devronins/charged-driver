@@ -66,7 +66,7 @@ const Rides = () => {
     }
   }, [rides]);
 
-  console.log(statusOrder);
+  // console.log(statusOrder);
 
   const handleFilter = (data: { id: number; title: string; value: string }) => {
     if (data.value) {

@@ -1,6 +1,14 @@
 import { useTypedSelector } from '@/store';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
-import { CalendarDays, Car, CheckCircle2, Clock4, Flag, Inbox, MapPin } from 'lucide-react-native';
+import {
+  CalendarDays,
+  Car,
+  CheckCircle2,
+  Clock4,
+  Flag,
+  MapPin,
+  X,
+} from 'lucide-react-native';
 import moment from 'moment';
 import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native';
@@ -66,7 +74,7 @@ const RideDetails = () => {
             <Text className="text-gray-800">{ride.distance_km} km</Text>
           </View>
 
-          {ride.requested_at && (
+          {/* {ride.requested_at && (
             <View className="flex-row justify-between mb-2">
               <View className="flex-row items-center">
                 <Inbox size={18} color="#007FFF" />
@@ -76,7 +84,7 @@ const RideDetails = () => {
                 {moment(ride.requested_at).format('D MMM YYYY, h:mm A')}
               </Text>
             </View>
-          )}
+          )} */}
 
           {ride.accepted_at && (
             <View className="flex-row justify-between mb-2">
@@ -125,36 +133,62 @@ const RideDetails = () => {
               </Text>
             </View>
           )}
+
+          {ride.cancelled_at && (
+            <View className="flex-row justify-between mb-2">
+              <View className="flex-row items-center">
+                <X size={18} color="#007FFF" />
+                <Text className="ml-3 text-gray-800">Canceled: </Text>
+              </View>
+              <Text className="text-gray-800">
+                {moment(ride.cancelled_at).format('D MMM YYYY, h:mm A')}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Fare Summary Card */}
-        <View className="w-full bg-white rounded-xl shadow-lg p-5">
-          <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-700 font-medium">Base Fare</Text>
-            <Text className="text-gray-900 font-medium">₹{ride.base_fare}</Text>
+        {ride.status === RideStatus.Cancelled ? (
+          <View className="w-full bg-white rounded-xl shadow-lg p-5">
+            <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-gray-700 font-medium">Cancelation Fare</Text>
+              <Text className="text-gray-900 font-medium">${ride.cancellation_fee}</Text>
+            </View>
           </View>
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-700 font-medium">Distance Fare</Text>
-            <Text className="text-gray-900 font-medium">₹{ride.distance_fare}</Text>
+        ) : (
+          <View className="w-full bg-white rounded-xl shadow-lg p-5">
+            <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-gray-700 font-medium">Base Fare</Text>
+              <Text className="text-gray-900 font-medium">${ride.base_fare}</Text>
+            </View>
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-gray-700 font-medium">Distance Fare</Text>
+              <Text className="text-gray-900 font-medium">${ride.distance_fare}</Text>
+            </View>
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-gray-700 font-medium">Time Fare</Text>
+              <Text className="text-gray-900 font-medium">${ride.time_fare}</Text>
+            </View>
+            {/* <View className="flex-row justify-between mb-2">
+          <Text className="text-gray-700 font-medium">Surge</Text>
+          <Text className="text-gray-900 font-medium">x{ride.surge_multiplier}</Text>
+        </View> */}
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-gray-700 font-medium">Platform Fee</Text>
+              <Text className="text-gray-900 font-medium">${ride.platform_fee}</Text>
+            </View>
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-gray-700 font-medium">Govt Tax</Text>
+              <Text className="text-gray-900 font-medium">${ride.govt_tax_percentage}</Text>
+            </View>
+            <View className="flex-row justify-between mt-3 border-t border-gray-300 pt-2">
+              <Text className="font-semibold text-gray-900 text-lg">Total Fare</Text>
+              <Text className="font-semibold text-xl text-gray-900">${ride.total_fare}</Text>
+            </View>
           </View>
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-700 font-medium">Time Fare</Text>
-            <Text className="text-gray-900 font-medium">₹{ride.time_fare}</Text>
-          </View>
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-700 font-medium">Surge</Text>
-            <Text className="text-gray-900 font-medium">x{ride.surge_multiplier}</Text>
-          </View>
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-700 font-medium">Platform Fee</Text>
-            <Text className="text-gray-900 font-medium">₹{ride.platform_fee}</Text>
-          </View>
-          <View className="flex-row justify-between mt-3 border-t border-gray-300 pt-2">
-            <Text className="font-semibold text-gray-900 text-lg">Total Fare</Text>
-            <Text className="font-semibold text-xl text-gray-900">₹{ride.total_fare}</Text>
-          </View>
-        </View>
+        )}
 
         {/* Payment Method Card */}
         <View className="w-full bg-white rounded-xl shadow-lg p-5">
@@ -163,12 +197,12 @@ const RideDetails = () => {
         </View>
 
         {/* Cancellation Card */}
-        {ride.status === RideStatus.Cancelled && ride.cancellation_reason && (
+        {/* {ride.status === RideStatus.Cancelled && ride.cancellation_reason && (
           <View className="w-full bg-white rounded-xl shadow-lg p-5">
             <Text className="text-red-600 font-semibold text-lg mb-3">Cancellation Reason</Text>
             <Text className="text-gray-800">{ride.cancellation_reason}</Text>
           </View>
-        )}
+        )} */}
       </View>
     </ScrollView>
   );

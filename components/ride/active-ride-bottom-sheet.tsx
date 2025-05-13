@@ -81,7 +81,7 @@ const RideDetailsBottomSheet = ({
             </View>
             <View>
               <Text className="text-sm text-gray-500">Fare</Text>
-              <Text className="text-base font-semibold text-green-600">₹{ride.total_fare}</Text>
+              <Text className="text-base font-semibold text-green-600">${ride.total_fare}</Text>
             </View>
           </View>
         </View>
