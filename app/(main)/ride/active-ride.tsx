@@ -26,33 +26,32 @@ const ActiveRide = () => {
     dispatch(
       changeRideStatus({
         ride: { ride_id: activeRide?.id || 0, status: status },
-        navigate: status === RideStatus.Completed ? () => navigate.push('/ride/rides') : undefined,
+        navigate:
+          status === RideStatus.Completed ? () => navigate.push('/ride/ride-details') : undefined,
       })
     );
   };
 
   useEffect(() => {
-    if (
-      !activeRideMapDirectionCoordinates.length &&
-      (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted)
-    ) {
+    if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
       dispatch(
         getRideMapDirectionCoordinates({
           activeRide: activeRide,
         })
       );
     }
-  }, []);
+  }, [activeRide?.status]);
 
   useEffect(() => {
     if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
+      stopDriverLocationTracking(); //Always clean privious task
       startDriverLocationTracking(dispatch, activeRide);
     }
 
     return () => {
       stopDriverLocationTracking();
     };
-  }, []);
+  }, [activeRide?.status]);
 
   if (!activeRide) return <Redirect href="/(main)/(tabs)/home" />;
 
