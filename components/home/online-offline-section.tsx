@@ -7,6 +7,7 @@ import {
   startLocationUpdatesBackgroundTask,
   stopLocationUpdatesBackgroundTask,
 } from '@/services/task-manager';
+import { DriverActions } from '@/reducers';
 
 const coordinatesObj = {
   latitude: 37.7749,
@@ -48,6 +49,7 @@ const OnlineOffline = () => {
         is_online: driverDetails?.is_online ? false : true,
       };
 
+      dispatch(DriverActions.setDriverDetailsLoading({ driverDetailsLoading: true }));
       setIsOnline(driverUpdatedPayload.is_online);
       animateScale();
 
@@ -64,6 +66,8 @@ const OnlineOffline = () => {
         })
       );
     } catch (error: any) {
+      dispatch(DriverActions.setDriverDetailsLoading({ driverDetailsLoading: false }));
+      setIsOnline(false);
       Alert.alert(error.data.type, error.data.message, [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -76,10 +80,6 @@ const OnlineOffline = () => {
       ]);
     }
   };
-
-  useEffect(() => {
-    setIsOnline(driverDetails?.is_online || false);
-  }, [driverDetails?.is_online]);
 
   return (
     <View className="absolute bottom-8 z-10 self-center">
