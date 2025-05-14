@@ -2,6 +2,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
+import { getDistance } from 'geolib';
 import { editDriver } from './driver';
 import { GetThunkAPI } from '@reduxjs/toolkit';
 import { Toast } from '@/utils/toast';
@@ -14,6 +15,7 @@ import { Alert, Linking, Platform } from 'react-native';
 import { DriverActions, RideActions } from '@/reducers';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
 import { fetchRideMapDirection } from '@/api/axios';
+import { Coordinates } from '@/utils/modals/common';
 
 export type PickedImageModal = {
   uri: string;
@@ -264,14 +266,6 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
                   lat: Number(activeRide.dropoff_lat),
                   lng: Number(activeRide.dropoff_lng),
                 },
-                waypoints: [
-                  {
-                    lat: Number(activeRide.pickup_lat),
-                    lng: Number(activeRide.pickup_lng),
-                  },
-                ]
-                  .map((wp) => `${wp.lat},${wp.lng}`)
-                  .join('|'),
               }
             : {
                 origin: { lat: latitude, lng: longitude },
@@ -290,7 +284,7 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
         );
         dispatch(
           RideActions.setActiveRideMapDirection({
-            activeRideMapDirectionCoordinates: [{ latitude, longitude }, ...coords],
+            activeRideMapDirectionCoordinates: coords,
           })
         );
       }
@@ -312,4 +306,17 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
 export const stopDriverLocationTracking = () => {
   locationSubscriber?.remove();
   locationSubscriber = null;
+};
+
+export const calculateDistance = (coords: {
+  from: Coordinates;
+  to: Coordinates;
+}): { distanceInMeters: number; distanceInKilometers: number } => {
+  const distanceInMeters = getDistance(coords.from, coords.to);
+  const distanceInKilometers = distanceInMeters / 1000;
+
+  return {
+    distanceInMeters,
+    distanceInKilometers: parseFloat(distanceInKilometers.toFixed(3)),
+  };
 };

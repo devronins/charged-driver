@@ -3,6 +3,7 @@ import Loader from '@/components/ui/Loader';
 import GoogleMap from '@/components/ui/map';
 import Icons from '@/constants/icons';
 import {
+  calculateDistance,
   changeRideStatus,
   getRideMapDirectionCoordinates,
   startDriverLocationTracking,
@@ -14,15 +15,38 @@ import { useEffect } from 'react';
 import { Image, Text, View } from 'react-native';
 import images from '@/constants/images';
 import { Redirect, useRouter } from 'expo-router';
+import { Toast } from '@/utils/toast';
 
 const ActiveRide = () => {
   const { activeRide, loading, activeRideMapDirectionCoordinates } = useTypedSelector(
     (state) => state.Ride
   );
+  const { driverDetails } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const navigate = useRouter();
 
   const handleChangeRideStatus = (status: RideStatus) => {
+    if (status === RideStatus.Started) {
+      const { distanceInMeters } = calculateDistance({
+        to: {
+          latitude: Number(activeRide?.pickup_lat) || 0,
+          longitude: Number(activeRide?.pickup_lng) || 0,
+        },
+        from: {
+          latitude: driverDetails?.last_location_lat || 0,
+          longitude: driverDetails?.last_location_lng || 0,
+        },
+      });
+
+      if (distanceInMeters > 50) {
+        Toast.show({
+          type: 'info',
+          text1: 'Too far from pickup location',
+          text2: `You must be within 50 meters to start the ride. You're currently ${distanceInMeters} meters away.`,
+        });
+      }
+    }
+
     dispatch(
       changeRideStatus({
         ride: { ride_id: activeRide?.id || 0, status: status },

@@ -116,14 +116,6 @@ export const getRideMapDirectionCoordinates = createAsyncThunk<
               lat: Number(activeRide.dropoff_lat),
               lng: Number(activeRide.dropoff_lng),
             },
-            waypoints: [
-              {
-                lat: Number(activeRide.pickup_lat),
-                lng: Number(activeRide.pickup_lng),
-              },
-            ]
-              .map((wp) => `${wp.lat},${wp.lng}`)
-              .join('|'),
           }
         : {
             origin: { lat: latitude, lng: longitude },
@@ -135,7 +127,7 @@ export const getRideMapDirectionCoordinates = createAsyncThunk<
 
     const coords = await fetchRideMapDirection(coordsObj);
     return thunkApi.fulfillWithValue({
-      activeRideMapDirectionCoordinates: [{ latitude, longitude }, ...coords],
+      activeRideMapDirectionCoordinates: coords,
     });
   } catch (err) {
     return handleUnauthorizedError(err, thunkApi);
