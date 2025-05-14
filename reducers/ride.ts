@@ -1,6 +1,7 @@
 import {
   cancelRideRequest,
   changeRideStatus,
+  getRideDetails,
   getRideMapDirectionCoordinates,
   getRides,
   getRideTypes,
@@ -47,8 +48,10 @@ const RideSlice = createSlice({
     removeAllRideRequest: (state, action) => {
       state.rideRequests = [];
     },
-    setActiveRide: (state, action) => {
-      state.activeRide = action.payload.activeRide;
+    setActiveRideStatus: (state, action: { payload: { status: RideStatus } }) => {
+      if (state.activeRide) {
+        state.activeRide.status = action.payload.status;
+      }
     },
     setRideDetails: (
       state,
@@ -155,6 +158,24 @@ const RideSlice = createSlice({
       }
     );
     builder.addCase(getRideMapDirectionCoordinates.rejected, (state, action) => {
+      state.error = true;
+      state.loading = false;
+    });
+
+    builder.addCase(getRideDetails.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(getRideDetails.fulfilled, (state, action) => {
+      state.loading = false;
+      state.activeRide = null;
+      state.rideDetails = action.payload.rideDetails;
+      if (action.payload?.navigate) {
+        //call navigate function
+        action.payload?.navigate();
+      }
+    });
+    builder.addCase(getRideDetails.rejected, (state, action) => {
       state.error = true;
       state.loading = false;
     });

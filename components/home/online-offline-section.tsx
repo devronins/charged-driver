@@ -60,11 +60,12 @@ const OnlineOffline = () => {
         await stopLocationUpdatesBackgroundTask();
       }
 
-      dispatch(
+      await dispatch(
         editDriver({
           driverDetails: { ...driverDetails, is_online: driverDetails?.is_online ? false : true },
         })
       );
+      dispatch(DriverActions.setDriverDetailsLoading({ driverDetailsLoading: false }));
     } catch (error: any) {
       dispatch(DriverActions.setDriverDetailsLoading({ driverDetailsLoading: false }));
       setIsOnline(false);

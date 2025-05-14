@@ -5,6 +5,7 @@ import { MapPin } from 'lucide-react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { RideStatus } from '@/utils/modals/ride';
 import { RideActions } from '@/reducers';
+import { getRideDetails } from '@/services';
 
 const RideInProgressCard = () => {
   const { activeRide } = useTypedSelector((state) => state.Ride);
@@ -29,8 +30,12 @@ const RideInProgressCard = () => {
 
   const handelNavigate = (status: RideStatus) => {
     if (status === RideStatus.Cancelled) {
-      dispatch(RideActions.setActiveRide({ activeRide: null })); //clear the current active ride
-      navigate.push('/ride/rides');
+      dispatch(
+        getRideDetails({
+          rideId: activeRide.id,
+          navigate: () => navigate.push('/ride/ride-details'),
+        })
+      );
     } else if (status === RideStatus.Accepted || status === RideStatus.Started) {
       navigate.push('/ride/active-ride');
     }

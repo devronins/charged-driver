@@ -14,12 +14,12 @@ import { RideModal, RideStatus } from '@/utils/modals/ride';
 import * as Location from 'expo-location';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
-export const getRideDetails = createAsyncThunk<any, any>(
+export const getRideDetails = createAsyncThunk<any, { rideId: number; navigate?: Function }>(
   'RideSlice/getRideDetails',
   async (params, thunkApi) => {
     try {
-      const { data } = await fetchRide(params?.data?.rideId);
-      return thunkApi.fulfillWithValue(data.data);
+      const { data } = await fetchRide(params?.rideId);
+      return thunkApi.fulfillWithValue({ rideDetails: data.data, navigate: params?.navigate });
     } catch (err) {
       return handleUnauthorizedError(err, thunkApi);
     }
@@ -106,7 +106,7 @@ export const getRideMapDirectionCoordinates = createAsyncThunk<
   try {
     const {
       coords: { latitude, longitude },
-    } = await Location.getCurrentPositionAsync();
+    } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest });
 
     const coordsObj =
       activeRide.status === RideStatus.Started

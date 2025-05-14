@@ -252,7 +252,7 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
     await requestLocationPermission();
     locationSubscriber = await Location.watchPositionAsync(
       {
-        accuracy: Location.Accuracy.High,
+        accuracy: Location.Accuracy.Highest,
         distanceInterval: 50, // in meters
       },
       async (location) => {

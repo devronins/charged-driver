@@ -56,7 +56,7 @@ export async function stopLocationUpdatesBackgroundTask(): Promise<void> {
 export async function startLocationUpdatesBackgroundTask(): Promise<void> {
   try {
     const res = await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-      accuracy: Location.Accuracy.High,
+      accuracy: Location.Accuracy.Highest,
       timeInterval: 20000, // 10 seconds
       distanceInterval: 1,
       showsBackgroundLocationIndicator: true, // Show the location indicator in the status bar
@@ -82,7 +82,7 @@ async function updateDriverLocationBackgroundTask(payload: {
   heading: number;
 }): Promise<void> {
   try {
-    console.log('new driver location has been updated to server');
+ 
     const rideState: RideInitialStateType | null = await getPersistedSlice('Ride');
     const { data } = rideState?.activeRide
       ? await saveRideLocation(rideState.activeRide.id, {
@@ -91,12 +91,16 @@ async function updateDriverLocationBackgroundTask(payload: {
           heading: payload.heading,
         })
       : await updateVehicleDetails(payload);
+    
+    console.log('new driver location has been updated to server');
   } catch (error: any) {
     console.log('Background Task Error:', error);
-    Toast.show({
-      type: 'error',
-      text1: 'Background task error while updating driver location',
-    });
+    if (process.env.NODE_ENV === 'development') {
+      Toast.show({
+        type: 'error',
+        text1: 'Background task error while updating driver location',
+      });
+    }
   }
 }
 export async function hasStartedLocationUpdatesBackgroundTask(): Promise<boolean> {

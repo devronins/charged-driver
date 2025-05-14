@@ -42,8 +42,9 @@ const ActiveRide = () => {
         Toast.show({
           type: 'info',
           text1: 'Too far from pickup location',
-          text2: `You must be within 50 meters to start the ride. You're currently ${distanceInMeters} meters away.`,
+          text2: `You must be within 50 meters to start the ride`,
         });
+        return;
       }
     }
 
@@ -77,7 +78,8 @@ const ActiveRide = () => {
     };
   }, [activeRide?.status]);
 
-  if (!activeRide) return <Redirect href="/(main)/(tabs)/home" />;
+  if (!activeRide || activeRide.status === RideStatus.Cancelled)
+    return <Redirect href="/(main)/(tabs)/home" />;
 
   return (
     <View className="flex-1 h-full w-full pb-5 bg-white">

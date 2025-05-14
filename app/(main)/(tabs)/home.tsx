@@ -21,7 +21,7 @@ const Home = () => {
     (state) => state.Driver
   );
   const { vehicleDetails } = useTypedSelector((state) => state.Vehicle);
-  const { activeRide } = useTypedSelector((state) => state.Ride);
+  const { activeRide, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
   // console.log('19>>>>>>', accessToken, driverDetails?.id, vehicleDetails);
 
@@ -42,7 +42,7 @@ const Home = () => {
 
       {vehicleDetails && driverDetails?.is_active && !activeRide && <OnlineOffline />}
 
-      {/* <Loader open={driverDetailsLoading} className="bg-black/80" /> */}
+      <Loader open={driverDetailsLoading || loading} className="bg-black/80" />
 
       <RideInProgressCard />
     </View>

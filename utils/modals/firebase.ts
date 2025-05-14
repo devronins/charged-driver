@@ -28,5 +28,5 @@ export interface firebaseRidesModal {
   pickup_lat_lng: string;
   requested_by: string;
   ride_id: number;
-  status?: RideStatus;
+  status: RideStatus;
 }
