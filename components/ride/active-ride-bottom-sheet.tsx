@@ -23,7 +23,7 @@ const RideDetailsBottomSheet = ({
   const bottomSheetRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ['10%', '20%', '38%'], []);
+  const snapPoints = useMemo(() => ['10%', '20%', '45%'], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
@@ -33,7 +33,7 @@ const RideDetailsBottomSheet = ({
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={isVisible ? 2 : 0} // Use 0 instead of -1 to keep 20% always visible
+      index={isVisible ? 3 : 0}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose={false} // Disable pan down to close

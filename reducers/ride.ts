@@ -115,10 +115,6 @@ const RideSlice = createSlice({
     builder.addCase(getRides.fulfilled, (state, action: { payload: { rides: RideModal[] } }) => {
       state.loading = false;
       state.rides = action.payload.rides;
-      state.activeRide =
-        action.payload?.rides?.find(
-          (item) => item.status === RideStatus.Accepted || item.status === RideStatus.Started
-        ) || null;
     });
     builder.addCase(getRides.rejected, (state, action) => {
       state.error = true;

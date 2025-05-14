@@ -229,9 +229,10 @@ export const firebaseApi = {
     }
   },
 
-  stopFirebaseDriverRideListener: () => {
+  stopFirebaseDriverRideListener: (dispatch: Function) => {
     const unsubscribe = listenerMap.get(firebaseCollectionName.DriverRides);
     if (unsubscribe) {
+      dispatch(RideActions.removeAllRideRequest({}));
       console.log(
         'Stopping Firestore listener for Collection...',
         firebaseCollectionName.DriverRides

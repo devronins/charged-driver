@@ -19,14 +19,14 @@ const Layout = () => {
 
   useEffect(() => {
     if (activeRide) {
-      firebaseApi.stopFirebaseDriverRideListener();
+      firebaseApi.stopFirebaseDriverRideListener(dispatch);
     } else if (driverDetails?.is_online) {
       firebaseApi.startFirebaseDriverRideListner(dispatch, driverDetails);
     } else if (driverDetails?.is_online === false) {
-      firebaseApi.stopFirebaseDriverRideListener();
+      firebaseApi.stopFirebaseDriverRideListener(dispatch);
     }
 
-    return () => firebaseApi.stopFirebaseDriverRideListener();
+    return () => firebaseApi.stopFirebaseDriverRideListener(dispatch);
   }, [driverDetails, activeRide]);
 
   useEffect(() => {

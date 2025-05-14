@@ -8,7 +8,7 @@ import { RideActions } from '@/reducers';
 import { getRideDetails } from '@/services';
 
 const RideInProgressCard = () => {
-  const { activeRide } = useTypedSelector((state) => state.Ride);
+  const { activeRide, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
   const navigate = useRouter();
   const pathname = usePathname();
@@ -60,8 +60,9 @@ const RideInProgressCard = () => {
         </View>
 
         <TouchableOpacity
+          disabled={loading}
           onPress={() => handelNavigate(activeRide.status)}
-          className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'}`}
+          className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'} ${loading && 'opacity-60'}`}
         >
           <Text className="text-white font-medium text-sm">
             {activeRide.status === RideStatus.Accepted || activeRide.status === RideStatus.Started
