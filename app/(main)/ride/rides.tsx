@@ -176,14 +176,16 @@ const Rides = () => {
           ))}
         </View>
         <View className="w-full flex-1 flex-col mb-12">
-          {ridesCopy?.length > 0 ? 
-          <FlatList
-          data={ridesCopy}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderRideItem}
-          showsVerticalScrollIndicator={false}
-        />:
-        <Text className='w-full text-center text-black text-xl font-medium'>No Rides Data</Text>}
+          {ridesCopy?.length > 0 ? (
+            <FlatList
+              data={ridesCopy}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderRideItem}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <Text className="w-full text-center text-black text-xl font-medium">No Rides Data</Text>
+          )}
         </View>
       </View>
       <Loader open={loading} />

@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   fetchDocumentTypes,
   fetchDriver,
+  fetchRides,
   fetchUploadedDocuments,
   fileUpload,
   updateDriver,
@@ -15,6 +16,7 @@ import { handleUnauthorizedError, PickedImageModal } from './common';
 import { DriverModal } from '@/utils/modals/driver';
 import { stopLocationUpdatesBackgroundTask } from './task-manager';
 import { getRides } from './ride';
+import { RideModal, RideStatus } from '@/utils/modals/ride';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
 export const registerDriver = createAsyncThunk<any, any>(
@@ -70,6 +72,15 @@ export const loginDriver = createAsyncThunk<any, any>(
       if (driverDataRes.data.user_type != 'driver') {
         throw formatFirebaseError('"auth/invalid-credential"');
       }
+
+      const { data: ridesData } = await fetchRides();
+      const activeRide =
+        ridesData?.data?.find(
+          (item: RideModal) =>
+            item.status === RideStatus.Accepted || item.status === RideStatus.Started
+        ) || null;
+        
+      thunkApi.dispatch( RideActions.setActiveRide({ activeRide }))
 
       Toast.show({
         type: 'success',

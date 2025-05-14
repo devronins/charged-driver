@@ -53,6 +53,9 @@ const RideSlice = createSlice({
         state.activeRide.status = action.payload.status;
       }
     },
+    setActiveRide: (state, action: { payload: { activeRide: RideModal | null } }) => {
+      state.activeRide = action.payload.activeRide;
+    },
     setRideDetails: (
       state,
       action: {
