@@ -91,7 +91,7 @@ const Rides = () => {
 
   const renderRideItem = ({ item: ride }: { item: RideModal }) => (
     <TouchableOpacity
-      className="w-full bg-white p-4 rounded-2xl shadow-md mb-5"
+      className="w-full bg-white p-4 rounded-2xl mb-5"
       onPress={() =>
         dispatch(
           RideActions.setRideDetails({
@@ -159,7 +159,7 @@ const Rides = () => {
           {filterOptions?.map((item) => (
             <TouchableOpacity
               className={twMerge(
-                'flex items-center justify-center py-2 px-4 rounded-full bg-white shadow-md',
+                'flex items-center justify-center py-2 px-4 rounded-full bg-white',
                 item.value === filterValue && 'bg-primary-300'
               )}
               onPress={() => handleFilter(item)}

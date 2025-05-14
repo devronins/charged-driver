@@ -92,7 +92,7 @@ const RideDetailsBottomSheet = ({
             {/* Start Ride Button */}
             <TouchableOpacity
               onPress={() => onChnageRideStatus(RideStatus.Completed)}
-              className="flex-1 bg-tertiary-300 py-3 rounded-full flex-row justify-center items-center mr-2 shadow-lg"
+              className="flex-1 bg-tertiary-300 py-3 rounded-full flex-row justify-center items-center mr-2"
             >
               <Ionicons name="navigate" size={20} color="white" />
               <Text className="text-white text-base font-semibold ml-2">Complete Ride</Text>
@@ -101,7 +101,7 @@ const RideDetailsBottomSheet = ({
             {/* Chat Button */}
             <TouchableOpacity
               onPress={onChat}
-              className="w-12 h-12 bg-primary-300 rounded-full justify-center items-center shadow-lg"
+              className="w-12 h-12 bg-primary-300 rounded-full justify-center items-center"
             >
               <Ionicons name="chatbubble-ellipses" size={20} color="white" />
             </TouchableOpacity>
@@ -111,7 +111,7 @@ const RideDetailsBottomSheet = ({
             {/* Start Ride Button */}
             <TouchableOpacity
               onPress={() => onChnageRideStatus(RideStatus.Started)}
-              className="flex-1  bg-tertiary-300 py-3 rounded-full flex-row justify-center items-center shadow-lg"
+              className="flex-1  bg-tertiary-300 py-3 rounded-full flex-row justify-center items-center"
             >
               <Ionicons name="navigate" size={20} color="white" />
               <Text className="text-white text-base font-semibold ml-2">Start Ride</Text>
@@ -120,7 +120,7 @@ const RideDetailsBottomSheet = ({
             {/* Chat Button */}
             <TouchableOpacity
               onPress={() => navigate.push('/ride/ride-cancel-reason')}
-              className="flex-1 bg-red-500 rounded-full flex-row justify-center items-center shadow-lg"
+              className="flex-1 bg-red-500 rounded-full flex-row justify-center items-center"
             >
               <Ionicons name="close-circle-outline" size={20} color="white" />
               <Text className="text-white text-base font-semibold ml-2">Cancel Ride</Text>

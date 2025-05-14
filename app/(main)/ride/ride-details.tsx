@@ -15,7 +15,7 @@ const RideDetails = () => {
     <ScrollView className="flex-1 bg-secondary-300">
       <View className="min-h-screen w-full flex flex-col items-start justify-start p-6 gap-5">
         {/* Status and Timestamp Card */}
-        <View className="w-full bg-white rounded-xl shadow-lg p-5">
+        <View className="w-full bg-white rounded-xl p-5">
           <Text
             className={`text-xs font-bold px-3 py-1 rounded-full self-start mb-4 ${
               ride.status === RideStatus.Completed
@@ -39,7 +39,7 @@ const RideDetails = () => {
         </View>
 
         {/* Pickup and Dropoff Card */}
-        <View className="w-full bg-white rounded-xl shadow-lg p-5 gap-4">
+        <View className="w-full bg-white rounded-xl p-5 gap-4">
           <Text className="text-lg font-semibold text-gray-800">Pickup & Dropoff</Text>
           <View className="w-full flex-row items-start justify-start gap-3">
             <MapPin size={20} color="#34C759" />
@@ -55,7 +55,7 @@ const RideDetails = () => {
           </View>
         </View>
 
-        <View className="w-full bg-white rounded-xl shadow-lg p-5">
+        <View className="w-full bg-white rounded-xl p-5">
           <Text className="text-lg font-semibold text-gray-800 mb-4">Duration & Distance</Text>
 
           <View className="flex-row justify-between mb-2">
@@ -141,7 +141,7 @@ const RideDetails = () => {
 
         {/* Fare Summary Card */}
         {ride.status === RideStatus.Cancelled ? (
-          <View className="w-full bg-white rounded-xl shadow-lg p-5">
+          <View className="w-full bg-white rounded-xl p-5">
             <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Cancelation Fare</Text>
@@ -149,7 +149,7 @@ const RideDetails = () => {
             </View>
           </View>
         ) : (
-          <View className="w-full bg-white rounded-xl shadow-lg p-5">
+          <View className="w-full bg-white rounded-xl p-5">
             <Text className="font-semibold text-xl mb-4 text-gray-800">Fare Summary</Text>
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Base Fare</Text>
@@ -190,14 +190,14 @@ const RideDetails = () => {
         )}
 
         {/* Payment Method Card */}
-        <View className="w-full bg-white rounded-xl shadow-lg p-5">
+        <View className="w-full bg-white rounded-xl p-5">
           <Text className="text-gray-700 text-xl font-medium mb-4">Payment Method</Text>
           <Text className="font-medium text-gray-800">{ride.payment_status}</Text>
         </View>
 
         {/* Cancellation Card */}
         {/* {ride.status === RideStatus.Cancelled && ride.cancellation_reason && (
-          <View className="w-full bg-white rounded-xl shadow-lg p-5">
+          <View className="w-full bg-white rounded-xl p-5">
             <Text className="text-red-600 font-semibold text-lg mb-3">Cancellation Reason</Text>
             <Text className="text-gray-800">{ride.cancellation_reason}</Text>
           </View>
