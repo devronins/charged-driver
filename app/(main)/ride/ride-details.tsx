@@ -168,16 +168,23 @@ const RideDetails = () => {
           <Text className="text-gray-900 font-medium">x{ride.surge_multiplier}</Text>
         </View> */}
             <View className="flex-row justify-between mb-2">
-              <Text className="text-gray-700 font-medium">Platform Fee</Text>
-              <Text className="text-gray-900 font-medium">CAD {ride.platform_fee}</Text>
-            </View>
-            <View className="flex-row justify-between mb-2">
               <Text className="text-gray-700 font-medium">Govt Tax</Text>
               <Text className="text-gray-900 font-medium">CAD {ride.govt_tax_percentage}</Text>
             </View>
             <View className="flex-row justify-between mt-3 border-t border-gray-300 pt-2">
               <Text className="font-semibold text-gray-900 text-lg">Total Fare</Text>
-              <Text className="font-semibold text-xl text-gray-900">CAD {ride.total_fare}</Text>
+              <Text className="font-semibold text-lg text-gray-900">CAD {ride.total_fare}</Text>
+            </View>
+            <View className="flex-row justify-between mb-1">
+              <Text className="font-semibold text-gray-900 text-lg">Platform Fee</Text>
+              <Text className="font-semibold text-lg text-gray-900">CAD -{ride.platform_fee}</Text>
+            </View>
+
+            <View className="flex-row justify-between mt-3 border-t border-gray-300 pt-2">
+              <Text className="font-semibold text-tertiary-300 text-lg">Your Earnings</Text>
+              <Text className="font-semibold text-lg text-tertiary-300 ">
+                CAD {ride.driver_earnings}
+              </Text>
             </View>
           </View>
         )}

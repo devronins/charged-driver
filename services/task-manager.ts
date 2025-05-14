@@ -82,7 +82,6 @@ async function updateDriverLocationBackgroundTask(payload: {
   heading: number;
 }): Promise<void> {
   try {
- 
     const rideState: RideInitialStateType | null = await getPersistedSlice('Ride');
     const { data } = rideState?.activeRide
       ? await saveRideLocation(rideState.activeRide.id, {
@@ -91,7 +90,7 @@ async function updateDriverLocationBackgroundTask(payload: {
           heading: payload.heading,
         })
       : await updateVehicleDetails(payload);
-    
+
     console.log('new driver location has been updated to server');
   } catch (error: any) {
     console.log('Background Task Error:', error);
