@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  createRideRating,
   fetchRide,
   fetchRideMapDirection,
   fetchRides,
@@ -7,17 +8,20 @@ import {
   updateRideStatus,
 } from '@/api/axios';
 import { Toast } from '@/utils/toast';
-import { handleUnauthorizedError } from './common';
+import { handleUnauthorizedError, requestLocationPermission } from './common';
 import { firebaseDriverRidesModal } from '@/utils/modals/firebase';
 import { firebaseApi } from '@/api/firebase';
+import { RideModal, RideStatus } from '@/utils/modals/ride';
+import * as Location from 'expo-location';
+import { RideActions } from '@/reducers';
 const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
 
-export const getRideDetails = createAsyncThunk<any, any>(
+export const getRideDetails = createAsyncThunk<any, { rideId: number; navigate?: Function }>(
   'RideSlice/getRideDetails',
   async (params, thunkApi) => {
     try {
-      const { data } = await fetchRide(params?.data?.rideId);
-      return thunkApi.fulfillWithValue(data.data);
+      const { data } = await fetchRide(params?.rideId);
+      return thunkApi.fulfillWithValue({ rideDetails: data.data, navigate: params?.navigate });
     } catch (err) {
       return handleUnauthorizedError(err, thunkApi);
     }
@@ -39,6 +43,17 @@ export const changeRideStatus = createAsyncThunk<
       type: 'success',
       text1: `You have successfully ${params?.ride?.status?.toLowerCase()} your ride.`,
     });
+
+    if (params.ride.status === RideStatus.Completed) {
+      thunkApi.dispatch(
+        RideActions.setReviewModelData({
+          isRattingModelVisible: {
+            ride_id: params.ride.ride_id,
+            isVisible: true,
+          },
+        })
+      );
+    }
 
     return thunkApi.fulfillWithValue({
       activeRide: data.data,
@@ -98,18 +113,47 @@ export const getRideTypes = createAsyncThunk<any, any>(
 export const getRideMapDirectionCoordinates = createAsyncThunk<
   any,
   {
-    coordinates: {
-      origin: { lat: number; lng: number };
-      destination: { lat: number; lng: number };
-      waypoints?: string;
-    };
+    activeRide: RideModal;
   }
->('RideSlice/getRideMapDirectionCoordinates', async (params, thunkApi) => {
+>('RideSlice/getRideMapDirectionCoordinates', async ({ activeRide }, thunkApi) => {
   try {
-    const coords = await fetchRideMapDirection(params.coordinates);
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest });
+
+    const coordsObj =
+      activeRide.status === RideStatus.Started
+        ? {
+            origin: { lat: latitude, lng: longitude },
+            destination: {
+              lat: Number(activeRide.dropoff_lat),
+              lng: Number(activeRide.dropoff_lng),
+            },
+          }
+        : {
+            origin: { lat: latitude, lng: longitude },
+            destination: {
+              lat: Number(activeRide.pickup_lat),
+              lng: Number(activeRide.pickup_lng),
+            },
+          };
+
+    const coords = await fetchRideMapDirection(coordsObj);
     return thunkApi.fulfillWithValue({
       activeRideMapDirectionCoordinates: coords,
     });
+  } catch (err) {
+    return handleUnauthorizedError(err, thunkApi);
+  }
+});
+
+export const addRideRating = createAsyncThunk<
+  any,
+  { rideId: number; ratingData: { rating: number } }
+>('RideSlice/addRideRating', async (params, thunkApi) => {
+  try {
+    const { data } = await createRideRating(params.rideId, params.ratingData);
+    return thunkApi.fulfillWithValue({});
   } catch (err) {
     return handleUnauthorizedError(err, thunkApi);
   }

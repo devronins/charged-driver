@@ -41,14 +41,11 @@ const Rides = () => {
   const { rides, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
   const navigate = useRouter();
-  const { fromRideDetailsScreen } = useLocalSearchParams();
   const [ridesCopy, setRidesCopy] = useState<RideModal[]>([]);
   const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {
-    if (!fromRideDetailsScreen) {
-      dispatch(getRides({}));
-    }
+    dispatch(getRides({}));
   }, []);
 
   useEffect(() => {
@@ -65,8 +62,6 @@ const Rides = () => {
       setRidesCopy(sortedRides);
     }
   }, [rides]);
-
-  console.log(statusOrder);
 
   const handleFilter = (data: { id: number; title: string; value: string }) => {
     if (data.value) {
@@ -96,7 +91,7 @@ const Rides = () => {
 
   const renderRideItem = ({ item: ride }: { item: RideModal }) => (
     <TouchableOpacity
-      className="w-full bg-white p-4 rounded-2xl shadow-md mb-5"
+      className="w-full bg-white p-4 rounded-2xl mb-5"
       onPress={() =>
         dispatch(
           RideActions.setRideDetails({
@@ -164,7 +159,7 @@ const Rides = () => {
           {filterOptions?.map((item) => (
             <TouchableOpacity
               className={twMerge(
-                'flex items-center justify-center py-2 px-4 rounded-full bg-white shadow-md',
+                'flex items-center justify-center py-2 px-4 rounded-full bg-white',
                 item.value === filterValue && 'bg-primary-300'
               )}
               onPress={() => handleFilter(item)}
@@ -181,12 +176,16 @@ const Rides = () => {
           ))}
         </View>
         <View className="w-full flex-1 flex-col mb-12">
-          <FlatList
-            data={ridesCopy}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderRideItem}
-            showsVerticalScrollIndicator={false}
-          />
+          {ridesCopy?.length > 0 ? (
+            <FlatList
+              data={ridesCopy}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderRideItem}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <Text className="w-full text-center text-black text-xl font-medium">No Rides Data</Text>
+          )}
         </View>
       </View>
       <Loader open={loading} />

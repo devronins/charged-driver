@@ -1,7 +1,7 @@
-import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icons from '@/constants/icons';
 import { useAppDispatch, useTypedSelector } from '@/store';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { RideStatus } from '@/utils/modals/ride';
 import { changeRideStatus } from '@/services';
 import Loader from '@/components/ui/Loader';
@@ -57,18 +57,54 @@ const cancelReasonConstants = [
 const moreCancelReasonConstants = [
   {
     id: 1,
-    title: "Don't want to wait",
+    title: "Can't find the rider",
   },
   {
     id: 2,
-    title: 'Personal issue',
+    title: 'Nowhere to stop',
   },
   {
     id: 3,
-    title: 'Need to rest',
+    title: 'Rider’s items don’t fit',
   },
   {
     id: 4,
+    title: 'Too many riders',
+  },
+  {
+    id: 5,
+    title: 'Unaccompanied minor',
+  },
+  {
+    id: 6,
+    title: 'No car seat',
+  },
+  {
+    id: 7,
+    title: 'Rider has an animal',
+  },
+  {
+    id: 8,
+    title: 'Rider behavior',
+  },
+  {
+    id: 9,
+    title: 'Not safe to pick up',
+  },
+  {
+    id: 10,
+    title: "Don't want to wait",
+  },
+  {
+    id: 11,
+    title: 'Personal issue',
+  },
+  {
+    id: 12,
+    title: 'Need to rest',
+  },
+  {
+    id: 13,
     title: 'None of these',
   },
 ];
@@ -100,10 +136,12 @@ const RideCancel = () => {
     ]);
   };
 
+  if (!activeRide) return <Redirect href="/(main)/(tabs)/home" />;
+
   return (
     <ScrollView className="flex-1 bg-secondary-300">
       <View className="flex-1 flex flex-col items-center p-6 gap-5">
-        <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center">
+        {/* <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center">
           <View className="w-full flex items-start justify-center p-5 pb-0">
             <Text className="text-2xl font-semibold text-primary-300">
               Something wrong? Choose an issue:
@@ -125,16 +163,16 @@ const RideCancel = () => {
               </View>
             </TouchableOpacity>
           ))}
-        </View>
+        </View> */}
 
         <View className="w-full h-auto bg-white rounded-lg flex flex-col items-center">
-          <View className="w-full flex items-start justify-center p-5 pb-0">
+          {/* <View className="w-full flex items-start justify-center p-5 pb-0">
             <Text className="text-2xl font-semibold text-primary-300">More issues</Text>
-          </View>
+          </View> */}
           {moreCancelReasonConstants.map((item, index) => (
             <TouchableOpacity
               key={item.id.toString()}
-              className={`w-full flex flex-row items-center justify-between gap-1 p-5 ${index > 0 && 'border-t-[2px] border-secondary-300'}`}
+              className={`w-full flex flex-row items-center justify-between gap-1 ${index > 0 && 'border-t-[2px] border-secondary-300'} ${Platform.OS === 'ios' ? 'p-5' : 'p-4'}`}
               onPress={() => handleChangeRideStatus(RideStatus.Cancelled, item.title)}
             >
               <View className="flex flex-row items-cente justify-center gap-4">

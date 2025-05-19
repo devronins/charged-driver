@@ -2,6 +2,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
+import { getDistance } from 'geolib';
 import { editDriver } from './driver';
 import { GetThunkAPI } from '@reduxjs/toolkit';
 import { Toast } from '@/utils/toast';
@@ -12,8 +13,9 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, Platform } from 'react-native';
 import { DriverActions, RideActions } from '@/reducers';
-import { RideModal } from '@/utils/modals/ride';
+import { RideModal, RideStatus } from '@/utils/modals/ride';
 import { fetchRideMapDirection } from '@/api/axios';
+import { Coordinates } from '@/utils/modals/common';
 
 export type PickedImageModal = {
   uri: string;
@@ -250,27 +252,30 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
     await requestLocationPermission();
     locationSubscriber = await Location.watchPositionAsync(
       {
-        accuracy: Location.Accuracy.High,
-        distanceInterval: 1,
+        accuracy: Location.Accuracy.Highest,
+        distanceInterval: 50, // in meters
       },
       async (location) => {
         const { latitude, longitude } = location.coords;
 
-        const coords = await fetchRideMapDirection({
-          origin: { lat: latitude, lng: longitude },
-          destination: {
-            lat: Number(activeRide.dropoff_lat),
-            lng: Number(activeRide.dropoff_lng),
-          },
-          waypoints: [
-            {
-              lat: Number(activeRide.pickup_lat),
-              lng: Number(activeRide.pickup_lng),
-            },
-          ]
-            .map((wp) => `${wp.lat},${wp.lng}`)
-            .join('|'),
-        });
+        const coordsObj =
+          activeRide.status === RideStatus.Started
+            ? {
+                origin: { lat: latitude, lng: longitude },
+                destination: {
+                  lat: Number(activeRide.dropoff_lat),
+                  lng: Number(activeRide.dropoff_lng),
+                },
+              }
+            : {
+                origin: { lat: latitude, lng: longitude },
+                destination: {
+                  lat: Number(activeRide.pickup_lat),
+                  lng: Number(activeRide.pickup_lng),
+                },
+              };
+
+        const coords = await fetchRideMapDirection(coordsObj);
         dispatch(
           DriverActions.setDriverLocation({
             last_location_lat: latitude,
@@ -279,7 +284,7 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
         );
         dispatch(
           RideActions.setActiveRideMapDirection({
-            activeRideMapDirectionCoordinates: [{ latitude, longitude }, ...coords],
+            activeRideMapDirectionCoordinates: coords,
           })
         );
       }
@@ -301,4 +306,17 @@ export const startDriverLocationTracking = async (dispatch: Function, activeRide
 export const stopDriverLocationTracking = () => {
   locationSubscriber?.remove();
   locationSubscriber = null;
+};
+
+export const calculateDistance = (coords: {
+  from: Coordinates;
+  to: Coordinates;
+}): { distanceInMeters: number; distanceInKilometers: number } => {
+  const distanceInMeters = getDistance(coords.from, coords.to);
+  const distanceInKilometers = distanceInMeters / 1000;
+
+  return {
+    distanceInMeters,
+    distanceInKilometers: parseFloat(distanceInKilometers.toFixed(3)),
+  };
 };

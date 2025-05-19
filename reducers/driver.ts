@@ -51,6 +51,9 @@ const DriverSlice = createSlice({
         state.driverDetails.last_location_lng = action.payload.last_location_lng;
       }
     },
+    setDriverDetailsLoading: (state, action: { payload: { driverDetailsLoading: boolean } }) => {
+      state.driverDetailsLoading = action.payload.driverDetailsLoading;
+    },
   }, // action methods
   extraReducers: (builder) => {
     builder.addCase(registerDriver.pending, (state) => {

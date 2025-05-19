@@ -2,7 +2,7 @@ import { firebaseApi } from '@/api/firebase';
 import RideRequests from '@/components/ride/ride-requests';
 import Icons from '@/constants/icons';
 import { VehicleActions } from '@/reducers';
-import { appStateTaskHandler, getDriver } from '@/services';
+import { appStateTaskHandler } from '@/services';
 import { useAppDispatch, useTypedSelector } from '@/store';
 import { Redirect, Stack, useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
@@ -19,14 +19,14 @@ const Layout = () => {
 
   useEffect(() => {
     if (activeRide) {
-      firebaseApi.stopFirebaseDriverRideListener();
+      firebaseApi.stopFirebaseDriverRideListener(dispatch);
     } else if (driverDetails?.is_online) {
       firebaseApi.startFirebaseDriverRideListner(dispatch, driverDetails);
     } else if (driverDetails?.is_online === false) {
-      firebaseApi.stopFirebaseDriverRideListener();
+      firebaseApi.stopFirebaseDriverRideListener(dispatch);
     }
 
-    return () => firebaseApi.stopFirebaseDriverRideListener();
+    return () => firebaseApi.stopFirebaseDriverRideListener(dispatch);
   }, [driverDetails, activeRide]);
 
   useEffect(() => {
@@ -154,10 +154,10 @@ const Layout = () => {
         />
 
         <Stack.Screen
-          name="ride/ride-cancel-screen"
+          name="ride/ride-cancel-reason"
           //@ts-ignore
           options={({ navigation }) => ({
-            headerTitle: 'Cancelations reasons',
+            headerTitle: 'Cancelation Reasons',
             headerTitleAlign: 'center', // for android
             headerTitleStyle: {
               color: '#007FFF',
@@ -167,7 +167,7 @@ const Layout = () => {
             headerLeft: () => (
               <TouchableOpacity
                 className="w-[90px] h-10 flex items-start justify-center px-1"
-                onPressIn={() => navigate.push('/home')}
+                onPressIn={() => navigation.goBack()}
               >
                 <Icons.ChevronLeft size={30} color="#5A5660" />
               </TouchableOpacity>
@@ -189,12 +189,7 @@ const Layout = () => {
             headerLeft: () => (
               <TouchableOpacity
                 className="w-[90px] h-10 flex items-start justify-center px-1"
-                onPressIn={() =>
-                  navigate.push({
-                    pathname: '/ride/rides',
-                    params: { fromRideDetailsScreen: 'true' },
-                  })
-                }
+                onPressIn={() => navigation.goBack()}
               >
                 <Icons.ChevronLeft size={30} color="#5A5660" />
               </TouchableOpacity>

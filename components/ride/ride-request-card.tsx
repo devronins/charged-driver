@@ -71,7 +71,7 @@ const RideCard = ({ item, index }: { item: firebaseDriverRidesModal; index: numb
         </View>
 
         <View className="flex-row justify-between items-center mt-2 mb-3">
-          <Text className="text-text-100 text-sm">Fare: ₹{item.fare?.toFixed(2)}</Text>
+          <Text className="text-text-100 text-sm">Fare: CAD {item.fare?.toFixed(2)}</Text>
           <Text className="text-text-100 text-sm">By: {item.requested_by}</Text>
         </View>
 

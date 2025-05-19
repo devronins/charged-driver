@@ -28,6 +28,7 @@ import {
   PawPrint,
   AlertCircle,
   AlertTriangle,
+  Star,
 } from 'lucide-react-native';
 
 export default {
@@ -59,4 +60,5 @@ export default {
   PawPrint,
   AlertCircle,
   AlertTriangle,
+  Star,
 };

@@ -5,9 +5,10 @@ import { MapPin } from 'lucide-react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { RideStatus } from '@/utils/modals/ride';
 import { RideActions } from '@/reducers';
+import { getRideDetails } from '@/services';
 
 const RideInProgressCard = () => {
-  const { activeRide } = useTypedSelector((state) => state.Ride);
+  const { activeRide, loading } = useTypedSelector((state) => state.Ride);
   const dispatch = useAppDispatch();
   const navigate = useRouter();
   const pathname = usePathname();
@@ -29,8 +30,12 @@ const RideInProgressCard = () => {
 
   const handelNavigate = (status: RideStatus) => {
     if (status === RideStatus.Cancelled) {
-      dispatch(RideActions.setActiveRide({ activeRide: null })); //clear the current active ride
-      navigate.push('/ride/rides');
+      dispatch(
+        getRideDetails({
+          rideId: activeRide.id,
+          navigate: () => navigate.push('/ride/ride-details'),
+        })
+      );
     } else if (status === RideStatus.Accepted || status === RideStatus.Started) {
       navigate.push('/ride/active-ride');
     }
@@ -55,8 +60,9 @@ const RideInProgressCard = () => {
         </View>
 
         <TouchableOpacity
+          disabled={loading}
           onPress={() => handelNavigate(activeRide.status)}
-          className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'}`}
+          className={`bg-primary-300 py-2 rounded-full items-center ${activeRide.status === RideStatus.Cancelled && 'bg-red-500'} ${loading && 'opacity-60'}`}
         >
           <Text className="text-white font-medium text-sm">
             {activeRide.status === RideStatus.Accepted || activeRide.status === RideStatus.Started

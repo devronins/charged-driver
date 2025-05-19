@@ -229,9 +229,10 @@ export const firebaseApi = {
     }
   },
 
-  stopFirebaseDriverRideListener: () => {
+  stopFirebaseDriverRideListener: (dispatch: Function) => {
     const unsubscribe = listenerMap.get(firebaseCollectionName.DriverRides);
     if (unsubscribe) {
+      dispatch(RideActions.removeAllRideRequest({}));
       console.log(
         'Stopping Firestore listener for Collection...',
         firebaseCollectionName.DriverRides
@@ -265,8 +266,8 @@ export const firebaseApi = {
           console.log('Changes detected in:', firebaseCollectionName.Rides, data?.[0]);
           if (data?.[0]) {
             dispatch(
-              RideActions.setActiveRide({
-                activeRide: data?.[0],
+              RideActions.setActiveRideStatus({
+                status: data?.[0]?.status,
               })
             );
           }

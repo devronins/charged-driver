@@ -132,7 +132,7 @@ export const fetchRideMapDirection = async (payload: {
 }): Promise<{ latitude: number; longitude: number }[]> => {
   try {
     const { data } = await axiosInstance.get(
-      `https://maps.googleapis.com/maps/api/directions/json?origin=${payload.origin.lat},${payload.origin.lng}&destination=${payload.destination.lat},${payload.destination.lng}&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}${
+      `https://maps.googleapis.com/maps/api/directions/json?origin=${payload.origin.lat},${payload.origin.lng}&destination=${payload.destination.lat},${payload.destination.lng}&mode=driving&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}${
         payload?.waypoints ? `&waypoints=${payload?.waypoints}` : ''
       }`
     );
@@ -152,6 +152,8 @@ export const fetchRideMapDirection = async (payload: {
     throw error;
   }
 };
+export const createRideRating = (id: number, data: any) =>
+  axiosInstance.post(`/driver/ride/addrating/${id}`, data);
 
 //---------------------------------------------------------------------upload image
 export const fileUpload = (formData: any) =>

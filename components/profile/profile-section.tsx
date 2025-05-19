@@ -3,13 +3,14 @@ import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-nati
 import Icons from '@/constants/icons';
 import images from '@/constants/images';
 import {
+  getDriver,
   PickerSourceEnumType,
   pickImageFromCamera,
   pickImageFromGallery,
   uploadDriverProfileImage,
 } from '@/services';
 import { Model } from '../ui/model';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toast } from '@/utils/toast';
 import FilePicker from '../ui/file-picker';
 import LottieView from 'lottie-react-native';
@@ -57,6 +58,10 @@ const ProfileSection = () => {
       });
     }
   };
+
+  useEffect(() => {
+    dispatch(getDriver({}));
+  }, []);
   return (
     <View className="w-full h-auto p-7 bg-white rounded-lg flex flex-col items-center">
       <View className="flex flex-col items-center gap-0">
