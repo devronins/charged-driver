@@ -152,6 +152,8 @@ export const fetchRideMapDirection = async (payload: {
     throw error;
   }
 };
+export const createRideRating = (id: number, data: any) =>
+  axiosInstance.post(`/driver/ride/addrating/${id}`, data);
 
 //---------------------------------------------------------------------upload image
 export const fileUpload = (formData: any) =>

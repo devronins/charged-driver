@@ -1,4 +1,5 @@
 import {
+  addRideRating,
   cancelRideRequest,
   changeRideStatus,
   getRideDetails,
@@ -11,6 +12,10 @@ import { RideModal, RideStatus, RideTypeModal } from '@/utils/modals/ride';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface RideInitialStateType {
+  isRattingModelVisible: null | {
+    ride_id: number;
+    isVisible: boolean;
+  };
   activeRide: RideModal | null;
   rideDetails: RideModal | null;
   activeRideMapDirectionCoordinates: { latitude: number; longitude: number }[];
@@ -18,10 +23,12 @@ export interface RideInitialStateType {
   rides: RideModal[];
   rideTypes: RideTypeModal[];
   loading: boolean;
+  addRideRatingLoading: boolean;
   error: boolean;
 }
 
 const initialState: RideInitialStateType = {
+  isRattingModelVisible: null,
   rideDetails: null,
   activeRide: null,
   activeRideMapDirectionCoordinates: [],
@@ -29,6 +36,7 @@ const initialState: RideInitialStateType = {
   rides: [],
   rideTypes: [],
   loading: false,
+  addRideRatingLoading: false,
   error: false,
 };
 
@@ -70,6 +78,21 @@ const RideSlice = createSlice({
     },
     setActiveRideMapDirection: (state, action) => {
       state.activeRideMapDirectionCoordinates = action.payload.activeRideMapDirectionCoordinates;
+    },
+    setReviewModelData: (
+      state,
+      action: {
+        payload: {
+          isRattingModelVisible: {
+            ride_id: number;
+            isVisible: boolean;
+          } | null;
+        };
+      }
+    ) => {
+      state.isRattingModelVisible = action.payload.isRattingModelVisible
+        ? action.payload.isRattingModelVisible
+        : null;
     },
   }, // action methods
   extraReducers: (builder) => {
@@ -177,6 +200,21 @@ const RideSlice = createSlice({
     builder.addCase(getRideDetails.rejected, (state, action) => {
       state.error = true;
       state.loading = false;
+    });
+
+    builder.addCase(addRideRating.pending, (state) => {
+      state.addRideRatingLoading = true;
+      state.error = false;
+    });
+    builder.addCase(addRideRating.fulfilled, (state, action) => {
+      state.addRideRatingLoading = false;
+      state.activeRide = null;
+      //close model once driver successfully submitted review
+      state.isRattingModelVisible = null;
+    });
+    builder.addCase(addRideRating.rejected, (state, action) => {
+      state.error = true;
+      state.addRideRatingLoading = false;
     });
   },
 });

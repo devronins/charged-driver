@@ -4,11 +4,13 @@ import InputFieldTextArea from '@/components/ui/InputFieldTextArea';
 import { Model } from '@/components/ui/model';
 import Icons from '@/constants/icons';
 import images from '@/constants/images';
-import { useTypedSelector } from '@/store';
+import { RideActions } from '@/reducers';
+import { addRideRating } from '@/services';
+import { useAppDispatch, useTypedSelector } from '@/store';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
 import { CalendarDays, Car, CheckCircle2, Clock4, Flag, MapPin, X } from 'lucide-react-native';
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -19,12 +21,40 @@ import {
   View,
 } from 'react-native';
 import { ScrollView } from 'react-native';
+import { LottieView } from '@/utils/lottie';
+import { LoaderJson } from '@/constants/animation';
 
 const RideDetails = () => {
-  const { rideDetails: ride } = useTypedSelector((state) => state.Ride);
-  const [rating, setRating] = useState(0);
+  const {
+    rideDetails: ride,
+    isRattingModelVisible,
+    addRideRatingLoading,
+  } = useTypedSelector((state) => state.Ride);
+  const [rating, setRating] = useState(1);
   const [ratingDescription, setRatingDescription] = useState<string | undefined>(undefined);
-  const [isRatingModelVisible, setIsRatingModelVisible] = useState(true);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // in case driver click on back button, then in that case we change review model state
+    return () => {
+      if (isRattingModelVisible) {
+        dispatch(RideActions.setReviewModelData({ isRattingModelVisible: null }));
+      }
+    };
+  }, []);
+
+  const handleAddRatingSubmit = () => {
+    if (ride) {
+      dispatch(
+        addRideRating({
+          rideId: ride.id,
+          ratingData: {
+            rating: rating,
+          },
+        })
+      );
+    }
+  };
 
   if (!ride) {
     return <Text>No Ride Details Found</Text>;
@@ -224,9 +254,13 @@ const RideDetails = () => {
 
       <Model
         animationType="slide"
-        open={isRatingModelVisible}
+        open={
+          isRattingModelVisible && isRattingModelVisible.ride_id === ride.id
+            ? isRattingModelVisible.isVisible
+            : false
+        }
         className="flex-1 flex items-center justify-center bg-black/30 p-6"
-        setValue={() => setIsRatingModelVisible(false)}
+        setValue={() => {}}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -260,6 +294,7 @@ const RideDetails = () => {
               </View>
               <View className="w-full flex items-center justify-center">
                 <InputFieldTextArea
+                  editable={!addRideRatingLoading}
                   inputStyle="h-28"
                   placeholder="Let us know your experience"
                   value={ratingDescription}
@@ -269,15 +304,27 @@ const RideDetails = () => {
                 />
               </View>
               <CustomButton
-                title="Submit Review"
+                IconLeft={
+                  addRideRatingLoading ? (
+                    <LottieView
+                      source={LoaderJson}
+                      style={{ width: 25, height: 25 }}
+                      loop
+                      autoPlay
+                    />
+                  ) : null
+                }
+                title={addRideRatingLoading ? '' : 'Submit Review'}
                 className={`${Platform.OS === 'ios' ? 'py-2' : 'py-3'}`}
-                onPress={() => {}}
-                disabled={false}
+                onPress={() => handleAddRatingSubmit()}
+                disabled={addRideRatingLoading}
               />
             </View>
             <TouchableOpacity
               className="absolute top-1 right-1"
-              onPress={() => setIsRatingModelVisible(false)}
+              onPress={() =>
+                dispatch(RideActions.setReviewModelData({ isRattingModelVisible: null }))
+              }
             >
               <Icons.Close size={23} color={'black'} />
             </TouchableOpacity>
