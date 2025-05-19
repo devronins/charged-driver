@@ -17,10 +17,7 @@ const coordinatesObj = {
 };
 
 const OnlineOffline = () => {
-  const { location } = useTypedSelector((state) => state.Permission);
-  const { driverDetails, accessToken, driverDetailsLoading } = useTypedSelector(
-    (state) => state.Driver
-  );
+  const { driverDetails, driverDetailsLoading } = useTypedSelector((state) => state.Driver);
   const dispatch = useAppDispatch();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isOnline, setIsOnline] = useState(driverDetails?.is_online || false);
@@ -81,6 +78,10 @@ const OnlineOffline = () => {
       ]);
     }
   };
+
+  useEffect(() => {
+    setIsOnline(driverDetails?.is_online || false);
+  }, [driverDetails?.is_online]);
 
   return (
     <View className="absolute bottom-8 z-10 self-center">
