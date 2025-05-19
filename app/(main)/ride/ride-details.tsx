@@ -50,6 +50,7 @@ const RideDetails = () => {
           rideId: ride.id,
           ratingData: {
             rating: rating,
+            review: ratingDescription 
           },
         })
       );

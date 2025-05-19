@@ -149,7 +149,7 @@ export const getRideMapDirectionCoordinates = createAsyncThunk<
 
 export const addRideRating = createAsyncThunk<
   any,
-  { rideId: number; ratingData: { rating: number } }
+  { rideId: number; ratingData: { rating: number, review?: string } }
 >('RideSlice/addRideRating', async (params, thunkApi) => {
   try {
     const { data } = await createRideRating(params.rideId, params.ratingData);
