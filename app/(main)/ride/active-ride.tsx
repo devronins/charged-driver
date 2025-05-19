@@ -65,7 +65,7 @@ const ActiveRide = () => {
         })
       );
     }
-  }, [activeRide?.status]);
+  }, []);
 
   useEffect(() => {
     if (activeRide?.status === RideStatus.Started || activeRide?.status === RideStatus.Accepted) {
