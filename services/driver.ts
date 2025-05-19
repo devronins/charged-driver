@@ -79,8 +79,8 @@ export const loginDriver = createAsyncThunk<any, any>(
           (item: RideModal) =>
             item.status === RideStatus.Accepted || item.status === RideStatus.Started
         ) || null;
-        
-      thunkApi.dispatch( RideActions.setActiveRide({ activeRide }))
+
+      thunkApi.dispatch(RideActions.setActiveRide({ activeRide }));
 
       Toast.show({
         type: 'success',

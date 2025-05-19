@@ -1,12 +1,30 @@
+import CustomButton from '@/components/ui/CustomButton';
+import InputField from '@/components/ui/InputField';
+import InputFieldTextArea from '@/components/ui/InputFieldTextArea';
+import { Model } from '@/components/ui/model';
+import Icons from '@/constants/icons';
+import images from '@/constants/images';
 import { useTypedSelector } from '@/store';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
 import { CalendarDays, Car, CheckCircle2, Clock4, Flag, MapPin, X } from 'lucide-react-native';
 import moment from 'moment';
-import { Text, View } from 'react-native';
+import { useState } from 'react';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native';
 
 const RideDetails = () => {
   const { rideDetails: ride } = useTypedSelector((state) => state.Ride);
+  const [rating, setRating] = useState(0);
+  const [ratingDescription, setRatingDescription] = useState<string | undefined>(undefined);
+  const [isRatingModelVisible, setIsRatingModelVisible] = useState(true);
 
   if (!ride) {
     return <Text>No Ride Details Found</Text>;
@@ -203,6 +221,69 @@ const RideDetails = () => {
           </View>
         )} */}
       </View>
+
+      <Model
+        animationType="slide"
+        open={isRatingModelVisible}
+        className="flex-1 flex items-center justify-center bg-black/30 p-6"
+        setValue={() => setIsRatingModelVisible(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ width: '100%' }}
+        >
+          <View className="relative w-full bg-white p-6 rounded-lg flex flex-col gap-5">
+            <View className="w-full flex flex-col justify-center items-center gap-2">
+              <View className="flex items-center justify-center">
+                <Text className="text-2xl">Share your experience</Text>
+              </View>
+              <View className="flex items-center justify-center">
+                <Image
+                  source={images.AvatarImage}
+                  className="h-[70px] w-[70px] rounded-full border-border-300 "
+                  resizeMode="cover"
+                />
+              </View>
+            </View>
+            <View className="w-full flex flex-col justify-center items-center gap-3">
+              <View className="flex flex-row items-center justify-center gap-2">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <TouchableOpacity key={i} onPress={() => setRating(i)}>
+                    <Icons.Star
+                      size={32}
+                      color="#FFD700" // gold color
+                      fill={i <= rating ? '#FFD700' : 'transparent'} // filled if rating selected
+                      strokeWidth={1.5}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <View className="w-full flex items-center justify-center">
+                <InputFieldTextArea
+                  inputStyle="h-28"
+                  placeholder="Let us know your experience"
+                  value={ratingDescription}
+                  onChangeText={(value) => setRatingDescription(value)}
+                  multiline
+                  numberOfLines={5}
+                />
+              </View>
+              <CustomButton
+                title="Submit Review"
+                className={`${Platform.OS === 'ios' ? 'py-2' : 'py-3'}`}
+                onPress={() => {}}
+                disabled={false}
+              />
+            </View>
+            <TouchableOpacity
+              className="absolute top-1 right-1"
+              onPress={() => setIsRatingModelVisible(false)}
+            >
+              <Icons.Close size={23} color={'black'} />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </Model>
     </ScrollView>
   );
 };
