@@ -45,8 +45,13 @@ axiosInstance.interceptors.response.use(
           const { accessToken } = await firebaseApi.getNewAccessToken();
           await AsyncStorage.setItem('accessToken', accessToken);
 
-          // Set the new Authorization header and retry the request
+          // Retry with new token
+          originalRequest.headers = originalRequest.headers || {};
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+          // Optional: set new default Authorization
+          axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
           return axiosInstance(originalRequest);
         } catch (tokenRefreshError) {
           // Optional: logout or redirect

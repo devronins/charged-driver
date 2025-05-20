@@ -9,6 +9,7 @@ import { Toast } from '@/utils/toast';
 import {
   hasStartedLocationUpdatesBackgroundTask,
   startLocationUpdatesBackgroundTask,
+  stopLocationUpdatesBackgroundTask,
 } from './task-manager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, Platform } from 'react-native';
@@ -199,6 +200,7 @@ export async function appStateTaskHandler(dispatch: Function) {
     }
   } catch (error: any) {
     await dispatch(editDriver({ driverDetails: { is_online: false } }));
+    await stopLocationUpdatesBackgroundTask();
     Alert.alert(error.data.type, error.data.message, [
       { text: 'Cancel', style: 'cancel' },
       {

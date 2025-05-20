@@ -38,10 +38,14 @@ const Layout = () => {
   }, [activeRide]);
 
   useEffect(() => {
-    if (appState === 'active' && (driverDetails?.is_online || activeRide)) {
+    if (
+      Platform.OS === 'ios' &&
+      appState === 'active' &&
+      (driverDetails?.is_online || activeRide)
+    ) {
       appStateTaskHandler(dispatch);
     }
-  }, [driverDetails, activeRide]);
+  }, [driverDetails, activeRide, appState]);
 
   if (!isLogin) return <Redirect href="/(auth)/login" />;
 
