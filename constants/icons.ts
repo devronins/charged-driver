@@ -29,6 +29,7 @@ import {
   AlertCircle,
   AlertTriangle,
   Star,
+  Landmark,
 } from 'lucide-react-native';
 
 export default {
@@ -61,4 +62,5 @@ export default {
   AlertCircle,
   AlertTriangle,
   Star,
+  Landmark,
 };

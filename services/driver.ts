@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  createDriverBankAccount,
   fetchDocumentTypes,
   fetchDriver,
   fetchRides,
@@ -17,7 +18,7 @@ import { DriverModal } from '@/utils/modals/driver';
 import { stopLocationUpdatesBackgroundTask } from './task-manager';
 import { getRides } from './ride';
 import { RideModal, RideStatus } from '@/utils/modals/ride';
-const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issues
+const FormData = global.FormData; // sometime default formdata not loaded in react native, so we manually loaded this to prevent issue
 
 export const registerDriver = createAsyncThunk<any, any>(
   'DriverSlice/registerDriver',
@@ -246,3 +247,17 @@ export const uploadDriverProfileImage = createAsyncThunk<
     return handleUnauthorizedError(err, thunkApi);
   }
 });
+
+export const addDriverBankAccount = createAsyncThunk<any, any>(
+  'DriverSlice/addDriverBankAccount',
+  async (params, thunkApi) => {
+    try {
+      const { data } = await createDriverBankAccount();
+      return thunkApi.fulfillWithValue({
+        addDriverBankAccountUrlDetails: data,
+      });
+    } catch (err) {
+      return handleUnauthorizedError(err, thunkApi);
+    }
+  }
+);

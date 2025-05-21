@@ -18,18 +18,24 @@ const navigationContants = [
   },
   {
     id: 3,
+    labelIcon: Icons.Landmark,
+    title: 'Bank Info',
+    href: 'profile/bank-infromation',
+  },
+  {
+    id: 4,
     labelIcon: Icons.Clock,
     title: 'Ride History',
     href: 'ride/rides',
   },
   {
-    id: 4,
+    id: 5,
     labelIcon: Icons.Wallet,
     title: 'Earnings',
     href: '#',
   },
   {
-    id: 5,
+    id: 6,
     labelIcon: Icons.HelpCircle,
     title: 'Help & Support',
     href: '#',

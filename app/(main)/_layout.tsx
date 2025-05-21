@@ -87,6 +87,41 @@ const Layout = () => {
             },
           })}
         />
+
+        <Stack.Screen
+          name="profile/bank-infromation"
+          //@ts-ignore
+          options={({ navigation }) => ({
+            headerTitle: 'Bank Information',
+            headerTitleAlign: 'center', // for android
+            headerTitleStyle: {
+              color: '#007FFF',
+              paddingLeft: 0,
+              text: 'center',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                className="h-auto flex items-start justify-center"
+                onPressIn={() => navigation.goBack()}
+              >
+                <Icons.ChevronLeft size={30} color="#5A5660" />
+              </TouchableOpacity>
+            ),
+            // headerRight: () => {
+            //   return vehicleDetails ? (
+            //     <TouchableOpacity
+            //       className="h-auto flex items-end justify-center px-2"
+            //       onPressIn={() => {
+            //         dispatch(VehicleActions.setIsEditMode({ status: !isEditMode }));
+            //       }}
+            //     >
+            //       <Text className="text-primary-300">{isEditMode ? 'Cancel' : 'Edit'}</Text>
+            //     </TouchableOpacity>
+            //   ) : null;
+            // },
+          })}
+        />
+
         <Stack.Screen
           name="profile/driver-document"
           //@ts-ignore

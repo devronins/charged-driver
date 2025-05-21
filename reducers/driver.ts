@@ -1,4 +1,5 @@
 import {
+  DriverAddBankAccountUrlModal,
   DriverDocumentTypesModal,
   DriverModal,
   DriverUploadedDocumentModal,
@@ -13,6 +14,7 @@ import {
   getDriverDocumentTypes,
   uploadDriverProfileImage,
   editDriver,
+  addDriverBankAccount,
 } from '@/services/driver';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -25,6 +27,8 @@ export interface DriverInitialStateType {
   driverUploadedDocuments: DriverUploadedDocumentModal[];
   driverDocumentTypes: DriverDocumentTypesModal[];
   driverDocumentLoading: boolean;
+  addDriverBankAccountUrlDetails: DriverAddBankAccountUrlModal | null;
+  addDriverBankAccountUrlDetailsLoading: boolean;
   error: boolean;
 }
 
@@ -37,6 +41,8 @@ const initialState: DriverInitialStateType = {
   driverUploadedDocuments: [],
   driverDocumentTypes: [],
   driverDocumentLoading: false,
+  addDriverBankAccountUrlDetails: null,
+  addDriverBankAccountUrlDetailsLoading: false,
   error: false,
 };
 
@@ -180,6 +186,26 @@ const DriverSlice = createSlice({
     builder.addCase(getDriverDocumentTypes.rejected, (state, action) => {
       state.error = true;
       state.driverDocumentLoading = false;
+    });
+
+    //----------------------------------------------------------  driver bank acount
+    builder.addCase(addDriverBankAccount.pending, (state) => {
+      state.addDriverBankAccountUrlDetailsLoading = true;
+      state.error = false;
+    });
+    builder.addCase(
+      addDriverBankAccount.fulfilled,
+      (
+        state,
+        action: { payload: { addDriverBankAccountUrlDetails: DriverAddBankAccountUrlModal } }
+      ) => {
+        state.addDriverBankAccountUrlDetailsLoading = false;
+        state.addDriverBankAccountUrlDetails = action.payload.addDriverBankAccountUrlDetails;
+      }
+    );
+    builder.addCase(addDriverBankAccount.rejected, (state, action) => {
+      state.error = true;
+      state.addDriverBankAccountUrlDetailsLoading = false;
     });
   },
 });

@@ -65,6 +65,10 @@ export interface DriverDocumentTypesModal {
   created_at: Date;
 }
 
+export interface DriverAddBankAccountUrlModal {
+  url: string;
+}
+
 export const DriverType = {
   Admin: 1,
   Driver: 2,

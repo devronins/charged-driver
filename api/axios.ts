@@ -63,15 +63,16 @@ axiosInstance.interceptors.response.use(
       errorResponse.status = error.response.status;
       errorResponse.message = error.message;
       errorResponse.data = error.response.data as any;
+      return Promise.reject(errorResponse);
     } else if (error.request) {
       // The request was made but no response was received
       errorResponse.message = 'Request Error';
+      return Promise.reject(errorResponse);
     } else {
       // Something happened in setting up the request
       errorResponse.message = error.message;
+      return Promise.reject(errorResponse);
     }
-
-    return Promise.reject(errorResponse);
   }
 );
 
@@ -106,6 +107,7 @@ export const saveRideLocation = (
     heading: number;
   }
 ) => axiosInstance.post(`/driver/saveridelocation/${id}`, data);
+export const createDriverBankAccount = () => axiosInstance.get('/payment/createdriveraccount');
 
 //----------------------------------------------------------------------Driver vehicles
 export const createVehicleDetails = (data: any) => axiosInstance.post(`/driver/details`, data);
