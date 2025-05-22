@@ -13,6 +13,7 @@ import {
   signInWithEmailAndPassword,
   getReactNativePersistence,
   initializeAuth,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -157,13 +158,22 @@ export const firebaseApi = {
   getNewAccessToken: async () => {
     try {
       const auth = getAuth();
-      if (auth.currentUser) {
-        const newToken = await auth.currentUser.getIdToken(true);
-        return { accessToken: newToken };
-      }
-      throw { code: 'auth/current-user-session-not-found' };
+
+      const user = await new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          unsubscribe(); // Clean up the listener
+          if (user) {
+            resolve(user);
+          } else {
+            reject({ code: 'auth/current-user-session-not-found' });
+          }
+        });
+      });
+
+      const newToken = await (user as any).getIdToken(true);
+      return { accessToken: newToken };
     } catch (error: any) {
-      console.log('136>>>>>>>', error);
+      console.log('getNewAccessToken Error:', error);
       throw formatFirebaseError(error.code);
     }
   },
