@@ -64,7 +64,7 @@ const Earnings = () => {
 
             <View className="w-1/2 flex items-center justify-center ">
               <Text className="text-lg font-bold text-gray-800">
-                ${(filteredEarnings.total / (filteredEarnings.rides.length || 1)).toFixed(2)}
+                CAD {(filteredEarnings.total / (filteredEarnings.rides.length || 1)).toFixed(2)}
               </Text>
               <Text className="text-xs text-gray-500">Avg / Ride</Text>
             </View>
@@ -79,6 +79,13 @@ const Earnings = () => {
               <EarningsItem date={item.created_at} fare={Number(item.driver_earnings)} />
             )}
             scrollEnabled={false}
+            ListEmptyComponent={
+              <View className="flex items-center justify-center pt-4">
+                <Text className="mt-2 text-base text-gray-500 text-center">
+                  No earnings found for the selected period.
+                </Text>
+              </View>
+            }
           />
         </View>
       </ScrollView>
