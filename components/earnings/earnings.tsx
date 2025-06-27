@@ -54,15 +54,15 @@ const Earnings = () => {
             ))}
           </View>
 
-          <View className="flex-row justify-around items-center pt-4 border-t border-gray-200">
-            <View className="items-center">
+          <View className="flex-row items-center pt-4 border-t border-gray-200">
+            <View className="w-1/2 flex items-center justify-center border-r border-gray-200">
               <Text className="text-lg font-bold text-gray-800">
                 {filteredEarnings.rides.length}
               </Text>
               <Text className="text-xs text-gray-500">Rides</Text>
             </View>
-            <View className="w-px h-10 bg-gray-200" />
-            <View className="items-center">
+
+            <View className="w-1/2 flex items-center justify-center ">
               <Text className="text-lg font-bold text-gray-800">
                 ${(filteredEarnings.total / (filteredEarnings.rides.length || 1)).toFixed(2)}
               </Text>
