@@ -180,7 +180,7 @@ const Layout = () => {
             headerLeft: () => (
               <TouchableOpacity
                 className="w-[90px] h-10 flex items-start justify-center px-1"
-                onPressIn={() => navigate.push('/home')}
+                onPressIn={() => navigate.back()}
               >
                 <Icons.ChevronLeft size={30} color="#5A5660" />
               </TouchableOpacity>

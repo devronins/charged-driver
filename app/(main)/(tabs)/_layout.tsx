@@ -66,7 +66,7 @@ export default function Layout() {
           }}
         />
         <Tabs.Screen
-          name="earning"
+          name="earnings"
           options={{
             title: 'Earnings',
             headerTitleStyle: tabScreenHeaderStyles.headerTitleStyle,

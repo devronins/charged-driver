@@ -32,7 +32,7 @@ const navigationContants = [
     id: 5,
     labelIcon: Icons.Wallet,
     title: 'Earnings',
-    href: '#',
+    href: '/earnings',
   },
   {
     id: 6,
